@@ -1,0 +1,36 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Границы</title></head><body>
+<pre id="out">…</pre>
+<script>
+var files = [['figma-frame.png', 1440/1096], ['render.png', 1]];
+function load(src){return new Promise(function(r){var i=new Image();i.onload=function(){r(i)};i.src=src;});}
+function analys(img, k){
+  var W=img.width, H=img.height;
+  var c=document.createElement('canvas'); c.width=W; c.height=H;
+  var x=c.getContext('2d'); x.drawImage(img,0,0);
+  var d=x.getImageData(0,0,W,H).data;
+  var empty=[];
+  for(var y=0;y<H;y++){
+    var min=999,max=-1;
+    for(var px=0;px<W;px++){
+      var i=(y*W+px)*4, lum=(d[i]*3+d[i+1]*6+d[i+2])/10;
+      if(lum<min)min=lum; if(lum>max)max=lum;
+    }
+    empty.push((max-min)<12);
+  }
+  var runs=[],cur=null;
+  for(var y=0;y<H;y++){
+    if(empty[y]){ if(!cur){cur={from:y,to:y};runs.push(cur);} else cur.to=y; } else cur=null;
+  }
+  return runs.filter(function(r){return r.to-r.from>=6;}).map(function(r){
+    return {from:Math.round(r.from*k), to:Math.round(r.to*k), len:Math.round((r.to-r.from+1)*k)};
+  });
+}
+Promise.all(files.map(function(f){return load(f[0])})).then(function(imgs){
+  var L=[];
+  imgs.forEach(function(im,idx){
+    L.push('--- '+files[idx][0]+' ('+im.width+'x'+im.height+') — пустые полосы при 1440 ---');
+    analys(im,files[idx][1]).forEach(function(r){ L.push('  '+r.from+'..'+r.to+'   '+r.len); });
+  });
+  document.getElementById('out').textContent='RESULT\n'+L.join('\n')+'\nEND';
+});
+</script></body></html>

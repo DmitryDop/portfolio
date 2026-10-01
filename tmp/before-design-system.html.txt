@@ -1,0 +1,13 @@
+header :: y=0 h=88 bottom=88
+sub-header :: y=88 h=104 bottom=192
+1 div.sub-header :: y=88 h=104 bottom=192
+2 section.case-hero :: y=192 h=490 bottom=682
+3 section.stats :: y=682 h=116 bottom=798
+4 section.info-columns :: y=798 h=320 bottom=1118
+5 section.case-section :: y=1118 h=400 bottom=1518
+6 section.case-section :: y=1518 h=256 bottom=1774
+7 section.case-section :: y=1774 h=235 bottom=2009
+8 section.case-section :: y=2009 h=318 bottom=2327
+9 section.case-section :: y=2327 h=472 bottom=2799
+footer :: y=2799 h=304 bottom=3103
+docHeight=6000

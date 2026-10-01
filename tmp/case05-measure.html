@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Наш Дом Pro — кейс Дмитрия Дружкова</title>
+<meta name="description" content="Редизайн iOS-приложения «Наш Дом Pro» для сотрудников управляющей компании: интервью с пользователями, проверка ключевых сценариев на прототипе, новый главный экран, раздел заявок и UI Kit.">
+
+<!--
+  Источник макета: Figma «A», фрейм «Портфолио/Наш Дом Pro» (node 785:4922,
+  1440×4475). Общие стили, скрипт и ассеты лежат в корне сайта, поэтому пути
+  начинаются с «../». Шапка и подвал здесь — копия разметки главной: сборки
+  в проекте нет, поэтому шаблон дублируется руками.
+
+  Арифметика фрейма: 88 (шапка) + 104 (суб-хедер) + 490 (хиро) + 3489 (семь
+  секций) + 304 (подвал) = 4475. Секция = высота правой колонки + 64 снизу,
+  у первой секции ещё 64 сверху (--top); текст центрируется по правой колонке,
+  поэтому вся вертикаль воспроизводится правилами кейсов 01—04 как есть.
+
+  Отличия этого фрейма от кейса 04:
+  • секций семь, а не шесть, и последняя — без номера: у неё заголовок в две
+    строки (785:8256) и заглушка пустого состояния из UI Kit (801:12419);
+  • кадр внутри белой карточки не всегда 624: своей ширины из макета —
+    600 / 532 / 624 / 375, отсюда модификаторы с width в блоке 12 style.css;
+  • в секции 01 поверх кадра подпись «Интерфейс до редизайна» (818:12454) —
+    в HTML, а не в картинке: в макете она набрана Neue Montreal и с опечаткой;
+  • в секции 02 после абзаца стоит ссылка на презентацию (788:9143) — новый
+    для кейсов элемент, стиль .case-section__link;
+  • первая фраза секции 06 — не акцентная строка, а начало того же абзаца
+    (в макете это один текстовый узел 785:5252), поэтому <br>, а не __summary.
+
+  Ссылки дал Дмитрий 2026-09-30. Кнопка «Открыть Figma» ведёт в файл «НДП» —
+  не в тот, из которого собран фрейм (как и в кейсе 04).
+
+  Картинки секций — 2x, выгружены по одному узлу через Figma MCP
+  (download_assets, scale 2) ровно по рамкам макета: 1200×864, 1064×732,
+  1248×964, 1200×800, 1200×800, 1200×698, 750×424. Кроп задавать не пришлось,
+  поэтому object-fit: cover ничего не обрезает.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<!-- Метка «JS доступен»: без неё блоки с .reveal остаются видимыми -->
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113074775', 'ym');
+
+    ym(113074775, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+    /* Счётчик инициализирован с ssr:true — автоматический хит отключён, и без
+       этого вызова просмотры страницы кейса не попадают в статистику */
+    ym(113074775, 'hit', location.href);
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<!-- Пиксель Метрики для случая с выключенным JS — как на главной, вынесен в body -->
+<!-- Yandex.Metrika counter -->
+<noscript><div><img src="https://mc.yandex.ru/watch/113074775" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- Шапка кейса (785:4923): белая полоса 88 с нижней границей, бренд слева.
+     Состояния «поверх фото» у неё нет — стили в блоке 12 -->
+<header class="header header--solid" id="header">
+  <div class="header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__name">ДМИТРИЙ ДРУЖКОВ</span>
+      <span class="brand__role">— ПРОДУКТОВЫЙ ДИЗАЙНЕР</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../index.html#about">Обо мне</a></li>
+        <li><a class="nav__link" href="../index.html#work">Мои работы</a></li>
+        <li><a class="nav__link" href="../index.html#contacts">Контакты</a></li>
+      </ul>
+      <a class="btn btn--cta" href="../index.html#contacts">Связаться</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button"
+            aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- СУБ-ХЕДЕР (785:4933): возврат к работам и кнопка на файл «НДП» —
+       ссылка от Дмитрия, 2026-09-30 -->
+  <div class="sub-header">
+    <div class="container">
+      <div class="sub-header__row">
+        <a class="sub-header__back" href="../index.html#work">← Мои работы</a>
+        <a class="btn--figma" href="https://www.figma.com/design/vxzMSFaVfC86G6xlbajDXI/%D0%9D%D0%94%D0%9F?node-id=0-1&amp;t=LQbNwphHmorM5WqA-1" target="_blank" rel="noopener">
+          <img src="../assets/icons/case/figma.png" alt="" width="16" height="16">
+          Открыть Figma ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ХИРО (785:4941): колонки 671 + 32 + 672, высота 490 = медиа 426 + pb 64.
+       Обложка — тот же кадр, что у карточки «05» на главной: в макете на месте
+       картинки стоит фоновый прямоугольник 672×426 без отдельной выгрузки -->
+  <section class="case-hero">
+    <div class="container">
+      <div class="case-hero__inner">
+
+        <div class="case-hero__text">
+          <div class="case-hero__head">
+            <p class="case-hero__num">05</p>
+            <!-- Перенос задан вручную, как в кейсах 01—04: в макете заголовок
+                 стоит в три строки (бокс 671×231), а замена Neue Montreal на
+                 Inter Tight делает естественный перенос непредсказуемым -->
+            <h1 class="case-hero__title">Наш Дом Pro —<br>мобильное<br>приложение</h1>
+          </div>
+
+          <p class="case-hero__lead">Редизайн iOS-приложения для сотрудников управляющей компании: исследование пользователей, проверка ключевых сценариев, проектирование нового интерфейса и UI Kit.</p>
+
+          <ul class="case-hero__tags">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX Research</li>
+            <li class="pill pill--accent">iOS</li>
+          </ul>
+        </div>
+
+        <div class="case-hero__media">
+          <img src="../assets/img/project-05.png" alt="Два экрана приложения «Наш Дом Pro» — сводка по заявкам и главная с новостями — на сиреневом фоне"
+               width="1536" height="1024" fetchpriority="high">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 КОНТЕКСТ (785:4958): первая секция после хиро, поэтому --top.
+       Справа белая карточка 672×480 с кадром 600×432 и подписью поверх него -->
+  <section class="case-section case-section--top" aria-labelledby="case-01">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">01</p>
+          <h2 class="case-section__title" id="case-01">Контекст</h2>
+          <div class="case-section__body">
+            <p>«Наш Дом Pro» — мобильное приложение для сотрудников управляющей компании. Через него работают с объектами ЖК: проводят обходы, фиксируют нарушения, создают и контролируют заявки, находят информацию о жильцах и работают с отключением услуг. Задача редизайна — разобраться в реальных сценариях сотрудников и пересобрать ключевые разделы приложения вокруг их ежедневной работы.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--old-ui">
+            <p class="case-media__label">Интерфейс до редизайна</p>
+            <img src="../assets/img/case-05/section-01.png" alt="Три экрана приложения до редизайна: список заявок с показателями, экран «Мои в работе» и карточка заявки №1238944" width="1200" height="864" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 ИССЛЕДОВАНИЕ (785:5012): справа карточка 672×414 с кадром 532×366.
+       После абзаца — ссылка на презентацию (788:9143), гэп 16 даёт
+       .case-section__text -->
+  <section class="case-section" aria-labelledby="case-02">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">02</p>
+          <h2 class="case-section__title" id="case-02">Исследование</h2>
+          <div class="case-section__body">
+            <p>Провёл пользовательские интервью с сотрудниками, работающими с приложением. Собрал проблемы, потребности и особенности использования продукта в реальных рабочих сценариях, после чего систематизировал результаты в отдельной презентации.</p>
+          </div>
+          <p class="case-section__link"><a href="https://www.figma.com/proto/khJakUSfehGdamel1ZFdPd/%D0%9D%D0%B0%D1%88-%D0%94%D0%BE%D0%BC-Pro?node-id=4499-4393&amp;p=f&amp;viewport=-4000%2C448%2C0.5&amp;t=zCoufPVyyuPR0Jkw-1&amp;scaling=contain&amp;content-scaling=fixed&amp;starting-point-node-id=4499%3A4393&amp;page-id=4499%3A4392" target="_blank" rel="noopener">Ссылка на презентацию</a></p>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--research">
+            <img src="../assets/img/case-05/section-02.png" alt="Слайд презентации с результатами интервью: лента заявок, гипотезы по сокращению карточки и предложения по сортировке" width="1064" height="732" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 ПРОВЕРКА КЛЮЧЕВЫХ СЦЕНАРИЕВ (785:5219): справа карточка 672×530
+       с кадром 624×482 — единственный кадр во всю ширину карточки -->
+  <section class="case-section" aria-labelledby="case-03">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">03</p>
+          <h2 class="case-section__title" id="case-03">Проверка ключевых сценариев</h2>
+          <div class="case-section__body">
+            <p>На основе результатов интервью собрал интерактивный прототип ключевых сценариев: главная страница, создание заявки и просмотр заявки. Прототип позволил проверить структуру и последовательность действий до детальной проработки интерфейса.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--prototype">
+            <img src="../assets/img/case-05/section-03.png" alt="Холст интерактивного прототипа: главная, создание заявки и просмотр заявки, связанные переходами" width="1248" height="964" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 ГЛАВНАЯ (785:5229): справа карточка 672×448 с кадром 600×400 -->
+  <section class="case-section" aria-labelledby="case-04">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">04</p>
+          <h2 class="case-section__title" id="case-04">Главная</h2>
+          <div class="case-section__body">
+            <p>После исследования и проверки сценариев спроектировал новый главный экран приложения. Пересобрал структуру и приоритеты контента, чтобы основные рабочие действия и актуальная информация были доступны непосредственно с главной.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--home">
+            <img src="../assets/img/case-05/section-04.png" alt="Два экрана новой главной: сводка по заявкам с показателями и раздел новостей с лентой публикаций" width="1200" height="800" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ЗАЯВКИ (785:5241): справа карточка 672×448 с кадром 600×400 —
+       та же пропорция, что в секции 04 -->
+  <section class="case-section" aria-labelledby="case-05">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">05</p>
+          <h2 class="case-section__title" id="case-05">Заявки</h2>
+          <div class="case-section__body">
+            <p>Начал переработку раздела заявок: создание новой заявки, просмотр карточки, статусы, участники, вложения и связанные действия. Сценарий проектировался на компонентах нового UI Kit и учитывал разные состояния заявки.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--requests">
+            <img src="../assets/img/case-05/section-05.png" alt="Три экрана раздела заявок: создание новой заявки, карточка заявки со статусами и участниками, меню действий" width="1200" height="800" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 UI KIT (785:5248): справа карточка 672×397 с кадром 600×349.
+       Первая фраза — начало того же абзаца (один узел 785:5252 в макете),
+       поэтому <br>, а не акцентная строка .case-section__summary -->
+  <section class="case-section" aria-labelledby="case-06">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">06</p>
+          <h2 class="case-section__title" id="case-06">UI Kit</h2>
+          <div class="case-section__body">
+            <p>Единая база для мобильного приложения<br>Параллельно с продуктовыми сценариями собирал и развивал UI Kit приложения: базовые элементы, формы, состояния, навигацию и компоненты для сложных рабочих сценариев.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--ui-kit">
+            <img src="../assets/img/case-05/section-06.png" alt="Компоненты UI Kit: круговые индикаторы прогресса, набор кнопок, алерт с предупреждением о наводнении, карточка сотрудника и стек тостов в шести состояниях" width="1200" height="698" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 ФИНАЛ (785:8253): секция без номера — у неё только заголовок в две
+       строки и абзац. Справа карточка 672×260 с заглушкой пустого состояния
+       из UI Kit (801:12419) -->
+  <section class="case-section" aria-labelledby="case-07">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <!-- Перенос вручную: в макете две строки (672×80), а Inter Tight
+               укладывает эту фразу в одну — левая колонка сжалась бы -->
+          <h2 class="case-section__title" id="case-07">Работа остановилась на этапе<br>проектирования</h2>
+          <div class="case-section__body">
+            <p>Редизайн продолжался: после главной страницы и новостей началась детальная проработка раздела заявок. Проект не был завершён — моя работа над продуктом закончилась из-за сокращения команды.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--empty">
+            <img src="../assets/img/case-05/section-07.png" alt="Заглушка пустого состояния из UI Kit: лист с грустным лицом, подпись «Как-то так» и кнопка «Перевернуть календарь»" width="750" height="424" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ПОДВАЛ — тот же, что на главной: три колонки, обо мне / компетенции / контакты -->
+<footer class="footer footer--flush" id="about">
+  <div class="container">
+    <div class="footer__grid">
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Обо мне</h2>
+        <div class="footer__card">
+          <p class="footer__text">Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена.</p>
+          <a class="footer__cv" href="https://dopler.lineband.ru/CVDDV.pdf"
+             target="_blank" rel="noopener">Скачать CV · PDF</a>
+        </div>
+      </section>
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Компетенции</h2>
+        <div class="footer__card">
+          <ul class="footer__skills">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX/UI</li>
+            <li class="pill pill--accent">Complex Products</li>
+            <li class="pill pill--accent">Design Leadership</li>
+            <li class="pill pill--accent">Research</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="footer__col reveal" id="contacts">
+        <h2 class="footer__title">Контакты</h2>
+        <div class="footer__card">
+          <ul class="footer__contacts">
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-email.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="mailto:dopler@lineband.ru">dopler@lineband.ru</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-telegram.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="https://t.me/Dmitry_Druzhkov" target="_blank" rel="noopener">@Dmitry_Druzhkov</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-phone.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="tel:+79037624574">+7 903 762 45 74</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+<style>
+  /* В headless reveal-анимация может не доехать — блоки должны быть видны */
+  .reveal { opacity: 1 !important; transform: none !important; }
+</style>
+<script>
+window.addEventListener('load', function () {
+  var out = [];
+  function m(el, label) {
+    if (!el) { out.push(label + ' MISSING'); return; }
+    var r = el.getBoundingClientRect();
+    out.push(label + ' y=' + Math.round(r.top + window.scrollY) +
+             ' h=' + Math.round(r.height) +
+             ' bottom=' + Math.round(r.bottom + window.scrollY) +
+             ' w=' + Math.round(r.width));
+  }
+  m(document.querySelector('.header'), 'header');
+  m(document.querySelector('.sub-header'), 'sub-header');
+  m(document.querySelector('.case-hero'), 'hero');
+  Array.prototype.forEach.call(document.querySelectorAll('.case-section'), function (el, i) {
+    var n = (i + 1 < 10 ? '0' : '') + (i + 1);
+    m(el, 'sec-' + n);
+    m(el.querySelector('.case-media'), '    card');
+    m(el.querySelector('.case-media__shot'), '    shot');
+    m(el.querySelector('.case-section__text'), '    text');
+  });
+  m(document.querySelector('footer'), 'footer');
+  out.push('scrollW=' + document.documentElement.scrollWidth +
+           ' clientW=' + document.documentElement.clientWidth);
+  out.push('docHeight=' + document.documentElement.scrollHeight);
+  Array.prototype.forEach.call(document.images, function (im) {
+    if (!im.naturalWidth) out.push('BROKEN ' + im.getAttribute('src'));
+  });
+  var pre = document.createElement('pre');
+  pre.id = 'MEASURE';
+  pre.textContent = 'MEASURE\n' + out.join('\n');
+  document.body.appendChild(pre);
+});
+</script>
+</body>
+</html>

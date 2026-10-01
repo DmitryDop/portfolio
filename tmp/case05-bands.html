@@ -1,0 +1,51 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Полосы кейса 05</title></head><body>
+<pre id="out">…</pre>
+<script>
+var FW = 1440, FH = 4475;
+var IMGS = [['макет', 'case05-figma-frame.png', 1319, 4096],
+            ['вёрстка', 'case05-render.png', 1440, 4475]];
+var BANDS = [
+  ['01 подпись+кадр', 690, 1350, 700, 1250],
+  ['02 текст+ссылка', 112, 680, 1370, 1710],
+  ['06 текст',        112, 680, 3470, 3700],
+  ['07 текст',        112, 680, 3860, 4110],
+  ['07 карточка',     720, 1345, 3860, 4110]
+];
+function load(src){return new Promise(function(r){var i=new Image();i.onload=function(){r(i)};i.src=src;});}
+function rows(img, kx, ky, band){
+  var x0 = band[1], x1 = band[2], y0 = band[3], y1 = band[4];
+  var w = Math.round((x1-x0)*kx), h = Math.round((y1-y0)*ky);
+  var c = document.createElement('canvas'); c.width = w; c.height = h;
+  var x = c.getContext('2d');
+  x.drawImage(img, x0*kx, y0*ky, (x1-x0)*kx, (y1-y0)*ky, 0, 0, w, h);
+  var d = x.getImageData(0,0,w,h).data;
+  var dark = [];
+  for (var yy=0; yy<h; yy++){
+    var n=0;
+    for (var xx=0; xx<w; xx++){
+      var i=(yy*w+xx)*4, lum=(d[i]*3+d[i+1]*6+d[i+2])/10;
+      if (lum<170) n++;
+    }
+    dark.push(n > 1);
+  }
+  var runs=[], cur=null;
+  for (var yy2=0; yy2<h; yy2++){
+    if (dark[yy2]) { if(!cur){cur={a:yy2,b:yy2};runs.push(cur);} else cur.b=yy2; } else cur=null;
+  }
+  return runs.filter(function(r){return r.b-r.a>=2;}).map(function(r){
+    return [Math.round(y0 + r.a/ky), Math.round(y0 + r.b/ky)];
+  });
+}
+Promise.all(IMGS.map(function(t){return load(t[1]);})).then(function(imgs){
+  var L = [];
+  BANDS.forEach(function(band){
+    L.push('--- ' + band[0] + '  x ' + band[1] + '…' + band[2]);
+    imgs.forEach(function(im, i){
+      var t = IMGS[i], kx = t[2]/FW, ky = t[3]/FH;
+      L.push('  ' + t[0] + ': ' + rows(im, kx, ky, band).map(function(r){
+        return r[0] + '..' + r[1] + ' (' + (r[1]-r[0]) + ')'; }).join('  |  '));
+    });
+  });
+  document.getElementById('out').textContent = 'BANDS\n' + L.join('\n') + '\nEND';
+});
+</script></body></html>

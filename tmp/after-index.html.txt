@@ -1,0 +1,7 @@
+header :: y=0 h=100 bottom=100
+1 section.hero :: y=0 h=493 bottom=493
+2 section.stats :: y=533 h=96 bottom=629
+3 section.section :: y=677 h=1282 bottom=1959
+4 footer.footer :: y=1991 h=336 bottom=2327
+footer :: y=1991 h=336 bottom=2327
+docHeight=6000

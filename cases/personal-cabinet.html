@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Личный кабинет сотрудника — кейс Дмитрия Дружкова</title>
+<meta name="description" content="Как я собрал личный кабинет сотрудника в корпоративном портале MIS: информационная структура профиля, его состояния, рабочие сценарии и интеграция с 1С.">
+
+<!--
+  Источник макета: Figma «A», фрейм «Портфолио/Личный кабинет» (node 710:253,
+  1440×3751). Общие стили, скрипт и ассеты лежат в корне сайта, поэтому пути
+  начинаются с «../». Шапка и подвал здесь — копия разметки главной: сборки
+  в проекте нет, а кейсов будет шесть, поэтому шаблон пока дублируется руками.
+
+  Отличия этого фрейма от кейсов 01—03:
+  • нет блока показателей и нет инфо-карточек «Задача / Моя роль / Результат» —
+    после хиро сразу идут секции;
+  • все шесть секций построены по одному шаблону: слева номер, заголовок и
+    абзац, справа белая карточка 672 с полями 24 и кадром 624 внутри. В 02 и 03
+    правые колонки были просто кадром в рамке;
+  • у секции 02 после абзаца стоит акцентная строка (711:26444) — тот же
+    .case-section__summary, что в секции 05 кейса 01;
+  • высоты правых колонок разные — 349 / 360 / 402 / 376 / 470 / 360 — отсюда
+    пропорции кадров внутри карточек, они вынесены в блок 11 style.css.
+
+  Ссылку на кнопке «Открыть Figma» дал Дмитрий 2026-09-28: файл «ЛК». Это не тот
+  файл, из которого собран фрейм, — в остальных кейсах кнопка ведёт в источник.
+
+  Картинки секций — той же плотности, что в кейсах 01—03: 2x. Выгружены по одному
+  узлу через Figma MCP (download_assets, scale 2), кадры совпали с рамками макета
+  пиксель в пиксель: 1248×602, 1248×624, 1248×708, 1248×656, 1248×845, 1248×624.
+  Кроп задавать не пришлось — это готовые вырезки, а не исходники крупнее рамки.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<!-- Метка «JS доступен»: без неё блоки с .reveal остаются видимыми -->
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113074775', 'ym');
+
+    ym(113074775, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+    /* Счётчик инициализирован с ssr:true — автоматический хит отключён, и без
+       этого вызова просмотры страницы кейса не попадают в статистику */
+    ym(113074775, 'hit', location.href);
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<!-- Пиксель Метрики для случая с выключенным JS — как на главной, вынесен в body -->
+<!-- Yandex.Metrika counter -->
+<noscript><div><img src="https://mc.yandex.ru/watch/113074775" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- Шапка кейса (710:254): белая полоса 88 с нижней границей, бренд слева.
+     Состояния «поверх фото» у неё нет — стили в блоке 11 -->
+<header class="header header--solid" id="header">
+  <div class="header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__name">ДМИТРИЙ ДРУЖКОВ</span>
+      <span class="brand__role">— ПРОДУКТОВЫЙ ДИЗАЙНЕР</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../index.html#about">Обо мне</a></li>
+        <li><a class="nav__link" href="../index.html#work">Мои работы</a></li>
+        <li><a class="nav__link" href="../index.html#contacts">Контакты</a></li>
+      </ul>
+      <a class="btn btn--cta" href="../index.html#contacts">Связаться</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button"
+            aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- СУБ-ХЕДЕР (710:264): возврат к работам и кнопка на файл «ЛК» —
+       ссылка от Дмитрия, 2026-09-28 -->
+  <div class="sub-header">
+    <div class="container">
+      <div class="sub-header__row">
+        <a class="sub-header__back" href="../index.html#work">← Мои работы</a>
+        <a class="btn--figma" href="https://www.figma.com/design/QzwSQb0egfazaAkBPY0HAw/%D0%9B%D0%9A?node-id=0-1&amp;t=rd62eLqAIPr77hea-1" target="_blank" rel="noopener">
+          <img src="../assets/icons/case/figma.png" alt="" width="16" height="16">
+          Открыть Figma ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ХИРО (710:272): колонки 671 + 32 + 672, высота 490 = медиа 426 + pb 64.
+       Обложка — тот же кадр, что у карточки «04» на главной: во фрейме на месте
+       картинки стоит пустой прямоугольник 672×426, отдельной выгрузки нет -->
+  <section class="case-hero">
+    <div class="container">
+      <div class="case-hero__inner">
+
+        <div class="case-hero__text">
+          <div class="case-hero__head">
+            <p class="case-hero__num">04</p>
+            <!-- Перенос задан вручную, как в кейсах 01—03: в макете заголовок
+                 стоит в две строки (бокс 671×154), а замена Neue Montreal на
+                 Inter Tight делает естественный перенос непредсказуемым -->
+            <h1 class="case-hero__title">Личный кабинет<br>сотрудника</h1>
+          </div>
+
+          <p class="case-hero__lead">Многофункциональный кабинет сотрудника внутри корпоративного портала</p>
+
+          <ul class="case-hero__tags">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">Web</li>
+            <li class="pill pill--accent">B2B</li>
+          </ul>
+        </div>
+
+        <div class="case-hero__media">
+          <img src="../assets/img/project-04.png" alt="Личный кабинет сотрудника в портале MIS: на ноутбуке и в смартфоне"
+               width="1536" height="1024" fetchpriority="high">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 КОНТЕКСТ (710:289): первая секция после хиро, поэтому --top.
+       Справа белая карточка 672×349 с кадром 624×301 -->
+  <section class="case-section case-section--top" aria-labelledby="case-01">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">01</p>
+          <h2 class="case-section__title" id="case-01">Контекст</h2>
+          <div class="case-section__body">
+            <p>Профиль создавался как часть многофункционального кабинета сотрудника внутри корпоративного портала. Его задача — собрать в одном месте информацию о сотруднике и связанные с ним рабочие сценарии, часть которых раньше была доступна в 1С. Требования к профилю формировались на основе user stories, собранных HR-аналитиками у руководителей разных уровней и рядовых сотрудников.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--profile">
+            <img src="../assets/img/case-04/section-01.png" alt="Профиль сотрудника целиком: фотография с кнопкой «Сказать спасибо», контакты, руководитель, стаж и офис, ниже — блок «Планируемое отсутствие»" width="1248" height="602" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 ОТ ТРЕБОВАНИЙ К СТРУКТУРЕ (710:296): справа карточка 672×360
+       с кадром 624×312 — это ровно пропорция .case-media__shot (2:1),
+       модификатор не нужен. Акцентная строка — отдельный абзац после тела,
+       гэп 16 даёт .case-section__text -->
+  <section class="case-section" aria-labelledby="case-02">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">02</p>
+          <h2 class="case-section__title" id="case-02">От требований к структуре</h2>
+          <div class="case-section__body">
+            <p>На основе собранных требований сформировал информационную структуру профиля и начал прорабатывать ключевые сценарии. В процессе проектирования от руководителей поступили новые вводные, которые существенно изменили приоритеты. Вместо адаптации первоначального решения пересобрал концепцию профиля с учётом новых данных.</p>
+          </div>
+          <p class="case-section__summary">Новые требования изменили структуру и приоритеты информации в профиле.</p>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot">
+            <img src="../assets/img/case-04/section-02.png" alt="Профиль сотрудника в двух состояниях: карточка с руководителем и статусом «В декретном отпуске» и раздел с контактными данными и планируемым отсутствием" width="1248" height="624" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 ПРОВЕРКА РЕШЕНИЯ (710:342): справа карточка 672×402 с кадром 624×354 -->
+  <section class="case-section" aria-labelledby="case-03">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">03</p>
+          <h2 class="case-section__title" id="case-03">Проверка решения</h2>
+          <div class="case-section__body">
+            <p>Готовые макеты представили заказчикам и сотрудникам HR. Основные сценарии и структура профиля были приняты сразу, дальнейшие изменения носили преимущественно уточняющий характер.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--review">
+            <img src="../assets/img/case-04/section-03.png" alt="Страница «Мои подчинённые»: карточки сотрудников со статусами «Отпуск», «Планируется» и «Декрет», поверх — панели «Эффективность» и «Проекты»" width="1248" height="708" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 СОСТОЯНИЯ ПРОФИЛЯ (710:382): справа карточка 672×376 с кадром 624×328 -->
+  <section class="case-section" aria-labelledby="case-04">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">04</p>
+          <h2 class="case-section__title" id="case-04">Состояния профиля</h2>
+          <div class="case-section__body">
+            <p>Профиль проектировался не как статичная карточка сотрудника, а как рабочий интерфейс с различными состояниями. В зависимости от ситуации пользователь получает дополнительную информацию и соответствующие действия.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--status">
+            <img src="../assets/img/case-04/section-04.png" alt="Четыре состояния сотрудника: «Я в отпуске», «Я в командировке», «Отсутствует», «Я в декрете» — цветные карточки с датами и заместителем" width="1248" height="656" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 РАБОЧИЕ СЦЕНАРИИ (711:32729): справа карточка 672×470 с кадром 624×422.
+       Во фрейме высота кадра 422,156 — картинка была отмасштабирована, поэтому
+       пропорция нормализована до 624/422 -->
+  <section class="case-section" aria-labelledby="case-05">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">05</p>
+          <h2 class="case-section__title" id="case-05">Рабочие сценарии</h2>
+          <div class="case-section__body">
+            <p>В профиль добавили реальные сценарии сотрудников: назначения в подразделения, отсутствие, адаптацию, достижения и обратную связь. Интерфейс показывает важную информацию в контексте сотрудника и помогает руководителям быстрее ориентироваться в его текущем статусе.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--scenarios">
+            <img src="../assets/img/case-04/section-05.png" alt="Сценарии профиля: «Планируемое отсутствие», «Достижения», «1256 спасибо», «Сотрудники на адаптации» и уведомление о полученном достижении" width="1248" height="845" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 ИНТЕГРАЦИИ (731:33617): справа карточка 672×360 с кадром 624×312 —
+       та же пропорция 2:1, что в секции 02 -->
+  <section class="case-section" aria-labelledby="case-06">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">06</p>
+          <h2 class="case-section__title" id="case-06">Интеграции</h2>
+          <div class="case-section__body">
+            <p>Кабинет стал единой точкой доступа к данным сотрудника и связанным рабочим сервисам. Часть данных поступает из 1С, а профиль используется как единый интерфейс для работы с кадровыми и внутренними сервисами.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot">
+            <img src="../assets/img/case-04/section-06.png" alt="Схема интеграции: 1С с кадровыми данными, корпоративный портал как единая точка доступа и блок внутренних сервисов" width="1248" height="624" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ПОДВАЛ — тот же, что на главной: три колонки, обо мне / компетенции / контакты -->
+<footer class="footer footer--flush" id="about">
+  <div class="container">
+    <div class="footer__grid">
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Обо мне</h2>
+        <div class="footer__card">
+          <p class="footer__text">Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена.</p>
+          <a class="footer__cv" href="https://dopler.lineband.ru/CVDDV.pdf"
+             target="_blank" rel="noopener">Скачать CV · PDF</a>
+        </div>
+      </section>
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Компетенции</h2>
+        <div class="footer__card">
+          <ul class="footer__skills">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX/UI</li>
+            <li class="pill pill--accent">Complex Products</li>
+            <li class="pill pill--accent">Design Leadership</li>
+            <li class="pill pill--accent">Research</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="footer__col reveal" id="contacts">
+        <h2 class="footer__title">Контакты</h2>
+        <div class="footer__card">
+          <ul class="footer__contacts">
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-email.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="mailto:dopler@lineband.ru">dopler@lineband.ru</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-telegram.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="https://t.me/Dmitry_Druzhkov" target="_blank" rel="noopener">@Dmitry_Druzhkov</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-phone.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="tel:+79037624574">+7 903 762 45 74</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

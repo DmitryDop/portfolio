@@ -1,0 +1,1564 @@
+/* ============================================================================
+   Дмитрий Дружков — портфолио
+   Источник: Figma «A», экраны «Портфолио/СД» (node 258:1907, 1440×2284) и
+   «Портфолио/BRU» (node 402:3427, 1440×1368). Различаются блоком работ —
+   он переключается табами.
+   Токены собраны из переменных Figma (Dimensions/Spacing, Text-Icon, Corner Radius).
+
+   ОГЛАВЛЕНИЕ
+   01. Токены
+   02. База (reset, типографика, утилиты)
+   03. Шапка и навигация
+   04. Хиро
+   05. Показатели
+   06. Заголовок секции
+   07. Табы, проекты и заглушка
+   08. Подвал
+   09. Плашки (pill / tag)
+   10. Зависит от JS (табы, появление при скролле)
+   11. Страница кейса
+   ========================================================================= */
+
+/* ---------------------------------------------------------------------------
+   Шрифт.
+   В макете — Neue Montreal (Pangram Pangram, платный). Он стоит первым в стеке:
+   если установлен в системе, подхватится сам. Замена — Inter Tight (Google Fonts).
+   Чтобы подключить лицензионные файлы, положите .woff2 в fonts/ и раскомментируйте:
+
+   @font-face {
+     font-family: 'Neue Montreal';
+     src: url('fonts/PPNeueMontreal-Regular.woff2') format('woff2');
+     font-weight: 400; font-display: swap;
+   }
+   @font-face {
+     font-family: 'Neue Montreal';
+     src: url('fonts/PPNeueMontreal-Medium.woff2') format('woff2');
+     font-weight: 500; font-display: swap;
+   }
+   @font-face {
+     font-family: 'Neue Montreal';
+     src: url('fonts/PPNeueMontreal-Bold.woff2') format('woff2');
+     font-weight: 700; font-display: swap;
+   }
+   --------------------------------------------------------------------------- */
+
+/* ============================== 01. ТОКЕНЫ ================================ */
+
+:root {
+  /* Цвета — Figma: Text-Icon/*, Surface/Primary */
+  /* Фон страницы. В макете главной он #efe9e6, в макете кейса — #f9f3f0;
+     2026-09-26 Дмитрий решил свести к одному значению. Главная выверена против
+     своего фрейма, расхождение с ним принято осознанно */
+  --color-page:        #f9f3f0;
+  --color-surface:     #ffffff;
+  --color-text:        #032964;   /* Text-Icon/Primary */
+  --color-text-muted:  #7489aa;   /* Text-Icon/Secondary */
+  /* Один акцент на всю страницу. В макете рядом живут два почти равных
+     значения — #ea5e00 у подчёркивания таба, рамки заглушки и ссылок на CV и
+     #ea5e01 у кнопки; 2026-09-26 Дмитрий решил свести их к одному. Разница —
+     единица в синем канале */
+  --color-accent:      #ea5e01;   /* акцент макета */
+  --color-accent-2:    #ff4c1f;   /* второй стоп градиента кнопки */
+  --color-tag-bg:      #efefef;
+  --color-tag-text:    #758aaa;
+  --color-pill-border: #e9bea1;
+  --color-hairline:    rgba(3, 41, 100, .17);  /* хайрлайн в stat-divider.svg */
+  /* Фон баннера кейса 03 (563:1346). В макете это сырой #ae7965, а не переменная
+     палитры, — как обводка суб-хедера, поэтому отдельный токен */
+  --color-band:        #ae7965;
+  /* Обводка шапки и суб-хедера кейса. В макете это сырой #e5eaef (не переменная),
+     но заметно светлее --color-hairline, поэтому отдельный токен */
+  --color-border-soft: #e5eaef;
+
+  /* Типографика — Figma: Font Size/*, Line Height/* */
+  --font-primary: 'Neue Montreal', 'Inter Tight', system-ui, -apple-system,
+                  'Segoe UI', Roboto, sans-serif;
+  --fs-body-md: 16px;  --lh-body-md: 24px;
+  --fs-body-sm: 14px;  --lh-body-sm: 20px;
+  --fs-h-sm:    20px;  --lh-h-sm:    24px;
+  --fs-h-xl:    40px;  --lh-h-xl:    48px;
+  /* Заголовки секций кейса — 32/40 при 1440 (Headline/H2). Ниже кегль уходит
+     вниз: 2.22vw — это ровно 32 от 1440 */
+  --fs-h-lg:    clamp(26px, 2.22vw, 32px);
+  --lh-h-lg:    1.25;
+  --fs-hero:    clamp(34px, 5vw, 72px);      /* 72px при 1440 */
+  --fs-h-fluid: clamp(26px, 2.78vw, 40px);   /* 40px при 1440 */
+
+  /* Отступы — Figma: Dimensions/Spacing */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs:  8px;
+  --space-sm:  12px;
+  --space-md:  16px;
+  --space-lg:  24px;
+  --space-xl:  32px;
+  --space-2xl: 40px;
+  --space-3xl: 64px;   /* нижняя отбивка секций кейса (442:1152 и далее) */
+
+  /* Радиусы — Figma: Dimensions/Corner Radius */
+  --radius-md:   16px;
+  --radius-lg:   24px;
+  --radius-pill: 32px;
+
+  /* Лэйаут — геометрия фрейма 1440 */
+  --page-max:      1440px;
+  --gutter:        32px;
+  --case-media:    672px;  /* правая колонка секций кейса: 672 + 32 + 672 = 1376 */
+  --hero-height:   clamp(420px, 34.24vw, 560px);  /* 493px при 1440 */
+  --hero-inset:    24px;   /* контент хиро стоит на 24px правее секций (в макете — 56 от края) */
+}
+
+/* На телефоне гуттер 24: макет только для 1440, а 32 на 375px съедают шестую
+   часть ширины. Переопределяю токен, а не .container, — тогда тот же отступ
+   получает и шапка (.header__inner), и контент не расходится с ней по краю. */
+@media (max-width: 720px) {
+  :root { --gutter: 24px; }
+}
+
+/* ============================== 02. БАЗА ================================== */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body, h1, h2, h3, p, ul, figure { margin: 0; }
+ul { padding: 0; list-style: none; }
+
+/* Классовые display (grid у .projects) перебивают браузерное правило [hidden] —
+   возвращаем атрибуту силу: им переключаются панели табов */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  background: var(--color-page);
+  color: var(--color-text);
+  font-family: var(--font-primary);
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  font-weight: 400;
+  /* Figma рисует текст grayscale-сглаживанием (без цветных каёмок); macOS по
+     умолчанию — субпиксельно, и текст выходит заметно жирнее макета.
+     Замер плотности «чернил» внутри бокса строки (рендер 1440, файл против
+     файла): описание карточки 32.7% без свойства → 27.1% со свойством против
+     23.7% в макете; надзаголовок секции 45.5% → 38.6% против 38.3%. Свойство
+     приближает к макету 9 областей из 10 (исключение — «20+»: у Neue Montreal
+     цифры плотнее, чем даёт Inter Tight при любом сглаживании). Действует
+     только на macOS/iOS, на Windows и Linux игнорируется. */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;              /* хиро-фото шире вьюпорта */
+}
+
+img { max-width: 100%; }
+/* :where() — нулевая специфичность, чтобы правило не перебивало растяжку
+   ассетов (например, SVG-разделителя в блоке показателей) */
+:where(img[width][height]) { height: auto; }
+
+a { color: inherit; }
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Контейнер: 1440 с полями 32 (секции и подвал стоят на 32 от края) */
+.container {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* ========================= 03. ШАПКА И НАВИГАЦИЯ ========================== */
+
+/* В макете навигация лежит поверх хиро: top 60, right 32.
+   При скролле шапка фиксируется и получает фон (состояние .is-scrolled) */
+.header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 50;
+  transition: background-color .3s ease, box-shadow .3s ease;
+}
+
+.header__inner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  max-width: var(--page-max);
+  margin-inline: auto;
+  padding: 60px var(--gutter) 0;
+  transition: padding .3s ease;
+}
+
+.nav { display: flex; align-items: center; gap: var(--space-xl); }
+.nav__list { display: flex; align-items: center; gap: var(--space-xl); }
+
+.nav__link {
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  color: #fff;
+  text-decoration: none;
+  transition: color .2s ease, opacity .2s ease;
+}
+.nav__link:hover { color: var(--color-accent); }
+.nav__link.is-active { color: var(--color-accent); }
+
+.btn--cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: 12px;
+  background-image: linear-gradient(-67.4794deg, #ff4c1f 1.95%, #ea5e01 77.27%);
+  color: #fff;
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: filter .2s ease;
+}
+.btn--cta:hover { filter: brightness(1.08); }
+
+/* Бургер — только на узких экранах (в макете его нет, мобильного фрейма тоже) */
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  cursor: pointer;
+}
+.burger__line {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: #fff;
+  transition: transform .3s ease, opacity .3s ease, background-color .3s ease;
+}
+
+/* Состояние после прокрутки */
+.header.is-scrolled {
+  background: rgba(249, 243, 240, .86);   /* тот же фон, что --color-page */
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 1px 0 var(--color-hairline);
+}
+.header.is-scrolled .header__inner { padding-top: 16px; padding-bottom: 16px; }
+.header.is-scrolled .nav__link { color: var(--color-text); }
+.header.is-scrolled .nav__link:hover,
+.header.is-scrolled .nav__link.is-active { color: var(--color-accent); }
+.header.is-scrolled .burger__line { background: var(--color-text); }
+
+@media (max-width: 900px) {
+  .header__inner { padding-top: 20px; }
+
+  .burger { display: flex; }
+
+  /* Меню уезжает в выпадающую панель под шапкой */
+  .nav {
+    position: fixed;
+    inset: 76px var(--space-md) auto var(--space-md);
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: 0 16px 48px rgba(3, 41, 100, .16);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    /* visibility — дискретное свойство: с задержкой 0s в закрытом состоянии
+       панель прячется только после затухания, а при открытии становится
+       доступной для клика и фокуса сразу (иначе первые ~125 мс она «мертва») */
+    transition: opacity .25s ease, transform .25s ease, visibility 0s linear .25s;
+  }
+  .nav.is-open {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition: opacity .25s ease, transform .25s ease, visibility 0s;
+  }
+
+  .nav__list { flex-direction: column; align-items: stretch; gap: 0; }
+  .nav__link {
+    display: block;
+    padding: var(--space-sm) var(--space-xs);
+    color: var(--color-text);
+    font-size: 18px;
+  }
+
+  .btn--cta { align-self: flex-start; margin-top: var(--space-2xs); }
+
+  /* Бургер в крестик */
+  .burger[aria-expanded="true"] .burger__line:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .burger[aria-expanded="true"] .burger__line:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded="true"] .burger__line:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+}
+
+/* ================================ 04. ХИРО ================================ */
+
+.hero {
+  position: relative;
+  height: var(--hero-height);
+  overflow: hidden;
+}
+
+/* Фото: в макете бокс 1741px (120.9% вьюпорта), картинка внутри 107.57%×202.65%
+   от бокса, прижата к верхнему левому углу. Итог при 1440: изображение 130.06vw
+   шириной со сдвигом -10.45vw, видна верхняя половина. Формула сохранена,
+   чтобы кроп не менялся на промежуточных ширинах. */
+.hero__media { position: absolute; inset: 0; overflow: hidden; }
+.hero__media img {
+  position: absolute;
+  top: 0;
+  left: -10.45vw;
+  width: 130.06vw;
+  max-width: none;
+  height: auto;
+}
+
+/* Размытие левой части кадра. Раньше его делал backdrop-filter на скриме, но он
+   размывает фон строго внутри своего бокса и обрывается по краю резкой
+   вертикальной линией (939px при 1440), а по краю ещё и выцветает. Здесь это
+   размытая копия того же кадра поверх оригинала: кроп она наследует из правила
+   .hero__media img выше, поэтому совпадает с ним пиксель в пиксель.
+   Маска гаснет в тех же координатах, что и затемнение из макета — 73.18% от
+   65.21vw = 47.72vw, до края скрима 65.21vw. Пересчёт в доли бокса копии:
+   (47.72 + 10.45) / 130.06 = 44.7% и (65.21 + 10.45) / 130.06 = 58.2%. */
+.hero__blur {
+  filter: blur(8px);
+  -webkit-mask-image: linear-gradient(90deg, #000 44.7%, rgba(0, 0, 0, 0) 58.2%);
+          mask-image: linear-gradient(90deg, #000 44.7%, rgba(0, 0, 0, 0) 58.2%);
+}
+
+/* Затемнение слева под текст: Figma 258:1911 — 939px, градиент 91.55° */
+.hero__scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 65.21vw;
+  height: 100%;
+  background-image: linear-gradient(91.5535deg,
+                    rgba(0, 0, 0, .56) 73.18%,
+                    rgba(0, 0, 0, 0) 99.405%);
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  max-width: 765px;
+  margin-left: var(--hero-inset);
+  padding-top: 60px;
+}
+
+.hero__eyebrow {
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  color: #fff;
+}
+
+.hero__title {
+  font-size: var(--fs-hero);
+  line-height: 1.08;
+  font-weight: 700;
+  color: #fff;
+}
+.hero__title-accent { color: var(--color-accent); }
+
+.hero__subtitle {
+  font-size: 24px;
+  line-height: 32px;
+  color: rgba(255, 255, 255, .9);
+}
+
+.hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+@media (max-width: 1024px) {
+  /* Кроп по формуле на узких экранах обрезал бы фото — переходим на cover */
+  .hero { height: auto; min-height: 560px; padding-bottom: var(--space-2xl); }
+  .hero__media img {
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 68% 18%;
+  }
+  .hero__scrim {
+    width: 100%;
+    background-image: linear-gradient(180deg,
+                      rgba(0, 0, 0, .74) 0%,
+                      rgba(0, 0, 0, .58) 55%,
+                      rgba(0, 0, 0, .38) 100%);
+  }
+  /* Здесь затемнение по всей ширине, резкого края нет — размытие идёт без маски */
+  .hero__blur {
+    -webkit-mask-image: none;
+            mask-image: none;
+  }
+  .hero__content { margin-left: 0; max-width: 620px; padding-top: 112px; }
+  .hero__subtitle { font-size: 20px; line-height: 28px; }
+}
+
+@media (max-width: 720px) {
+  .hero { min-height: 520px; }
+  .hero__content { padding-top: 96px; gap: var(--space-md); }
+  .hero__subtitle { font-size: 17px; line-height: 25px; }
+  .hero__media img { object-position: 64% 12%; }
+}
+
+/* ============================= 05. ПОКАЗАТЕЛИ ============================= */
+
+.stats { margin-top: var(--space-2xl); }
+
+/* Строка показателей идёт по общей сетке — от гуттера до гуттера, как заголовок
+   секции, карточки и подвал. В макете Frame 47 (259:2268 / 402:3441) шириной 1375,
+   но его содержимое набрано под 1328 (4 × 308 + 3 × 32) и прижато влево, из-за чего
+   справа остаётся 47px пустоты. В BRU-фрейме тот же блок сдвинут на 56 от края.
+   Это ошибка макета: колонки тянутся по ширине строки, разделители — 32px между ними. */
+.stats__row {
+  display: flex;
+  align-items: stretch;
+}
+
+.stats__item {
+  display: flex;
+  flex: 1 1 0;
+  align-items: flex-start;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+.stats__icon {
+  display: flex;
+  flex: 0 0 48px;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 56px;
+  background: rgba(255, 255, 255, .4);
+}
+
+/* Колонка текста в макете — 244px (Frame 30 в 258:1960) при иконке 48 и зазоре 16.
+   Раньше эта ширина получалась сама из бокса 308; теперь боксы тянутся по сетке (320),
+   и без ограничения подпись «ускорение доставки дизайна в СТРАНЕ» (247px) перестала
+   переноситься — блок стал 76 вместо 96 и вся страница ниже уехала на 20px вверх.
+   В макете у четвёртого показателя подпись в две строки (бокс 40), поэтому ширина
+   колонки текста зафиксирована по макету. */
+.stats__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  max-width: 244px;
+}
+
+/* В макете цифры набраны стилем Headline/H1 — переменная называется
+   weight/600, но разрешается в числовой вес 700 (проверено замером «чернил»:
+   при 600 строка светлее макета, при 700 совпадает) */
+.stats__value {
+  font-size: var(--fs-h-xl);
+  line-height: var(--lh-h-xl);
+  font-weight: 700;
+}
+.stats__label { font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); }
+
+/* Разделитель — SVG из макета, растянут на высоту строки (так же, как в Figma) */
+.stats__divider { display: block; flex: 0 0 32px; align-self: stretch; }
+.stats__divider img { display: block; width: 100%; height: 100%; }
+
+/* Ниже 1024 колонки встают в сетку 2×2. Вертикальный SVG-разделитель в сетке
+   не работает, поэтому здесь — хайрлайн того же цвета и прозрачности. */
+@media (max-width: 1024px) {
+  .stats { margin-top: var(--space-xl); }
+  .stats__row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    /* По горизонтали — 32, как разделитель в макете: в 2×2 блок должен держать
+       тот же ритм, что и в четыре колонки (раньше здесь оставалось 24) */
+    gap: 0 var(--space-xl);
+  }
+  /* 244px — ширина колонки из макета для четырёх колонок в ряд; в сетке 2×2
+     ограничение снимается, иначе подписи переносятся без нужды */
+  .stats__text { max-width: none; }
+  .stats__divider { display: none; }
+  .stats__item {
+    padding: var(--space-md) 0;
+    border-top: 1px solid var(--color-hairline);
+  }
+  .stats__value { font-size: 32px; line-height: 40px; }
+}
+
+@media (max-width: 640px) {
+  .stats__row { grid-template-columns: 1fr; gap: 0; }
+  .stats__icon { flex-basis: 40px; width: 40px; height: 40px; }
+  .stats__value { font-size: 28px; line-height: 36px; }
+}
+
+/* ========================= 06. ЗАГОЛОВОК СЕКЦИИ =========================== */
+
+.section { margin-top: 48px; }
+
+.section__eyebrow {
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body-sm);
+  font-weight: 500;
+  color: var(--color-text-muted);
+}
+
+/* В макете бокс заголовка — 51px при кегле 40 (блок Title = 20 + 12 + 51 +
+   12 + 84 = 179). При line-height 1.2 бокс равен 48 и всё ниже уезжает на 3px
+   вверх; 51/40 = 1.275. У заголовков подвала тот же стиль, но бокс 48px —
+   там остаётся 1.2 (см. 08) */
+.section__title {
+  margin-top: var(--space-sm);
+  font-size: var(--fs-h-fluid);
+  line-height: 1.275;
+  font-weight: 700;
+}
+
+/* ==================== 07. ТАБЫ, ПРОЕКТЫ И ЗАГЛУШКА ======================= */
+
+/* Табы портфолио. Контейнер: поле 16 сверху, гэп 32; таб: поля 8 по вертикали и
+   подчёркивание 4px у активного (Figma 402:3423 → 8 + 32 + 8 + 4 = 52).
+   Линия есть у обоих табов, у неактивного прозрачная: так контейнер не меняет
+   высоту при переключении (68 = 16 + 52 в обоих фреймах).
+   Переключатель работает только на JS — без него ряд скрыт (см. 10) */
+.tabs {
+  display: none;
+  flex-wrap: wrap;                /* на узких экранах второй таб уходит на строку */
+  align-items: flex-start;
+  gap: var(--space-xl);
+  margin-top: var(--space-sm);
+  padding: var(--space-md) 0 0;
+}
+
+.tabs__tab {
+  padding: var(--space-xs) 0;
+  border: 0;
+  border-bottom: 4px solid transparent;
+  background: none;
+  font-family: inherit;
+  font-size: var(--fs-h-sm);
+  line-height: 32px;              /* Line Height/lg из макета */
+  font-weight: 500;
+  color: var(--color-text);
+  cursor: pointer;
+  transition: color .2s ease;
+}
+.tabs__tab:hover { color: var(--color-accent); }
+.tabs__tab[aria-selected="true"] {
+  border-bottom-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* Панель таба: период дат и содержимое (в разметке — обёртка вокруг .projects
+   или .empty). Период (Figma 940:9329 «period» в кадре «Портфолио/Стрвнв» и
+   949:11216 в «Портфолио/Bankiru») — блок 40 = поле 16 сверху + строка 16/24,
+   вес 500, во всю ширину. Отбивки 12 от табов и 32 до содержимого: карточки и
+   рамка Banki.ru встают на 247 от начала заголовка — как в обоих кадрах */
+.panel__period {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-md);
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  font-weight: 500;
+}
+
+/* Блок Banki.ru (Figma 760:6379, узел 760:6413): рамка с одной ссылкой внутри —
+   1375 × 162 = 64 + 32 + 64 + 2 (поля 64, строка ссылки 32). В прежнем макете
+   над ссылкой стоял текст-заглушка, в новом его нет */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: var(--space-xl);
+  padding: 64px 48px;
+  border: 1px solid var(--color-accent);
+  border-radius: var(--radius-lg);
+}
+
+/* Ссылка на портфолио-прототип (Figma 821:12455): строка 20/32, акцент и
+   подчёркивание. Она в блоке одна, поэтому верхней отбивки у неё нет */
+.empty__link {
+  font-size: var(--fs-h-sm);
+  line-height: 32px;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: underline;
+}
+
+/* На телефоне строка ссылки при кегле 20 и полях 48 не влезает в одну строку:
+   нужно ~300px, а есть 231. Уменьшаем кегль и боковые поля — при 16 и полях 24
+   тексту нужно ~240 из 279 (375px). Высота блока: 48 + 24 + 48 + 2 */
+@media (max-width: 720px) {
+  .empty { padding: 48px 24px; }
+  .empty__link { font-size: 16px; line-height: 24px; }
+}
+
+.projects {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  /* Макет (обновлён): 32 и между колонками, и между рядами — до этой правки
+     между рядами было 24 */
+  column-gap: var(--space-xl);
+  row-gap: var(--space-xl);
+  margin-top: var(--space-xl);
+}
+
+/* Карточка кликабельна целиком: внутри лежит ссылка на страницу кейса,
+   растянутая на всю площадь карточки, — см. .project__link ниже */
+.project { position: relative; display: flex; flex-direction: column; cursor: pointer; }
+
+/* Обводка фокуса повторяет силуэт карточки: у неё скруглены верх (по картинке)
+   и низ (по белой части), а глобальное :focus-visible { border-radius: 4px }
+   нарисовало бы прямоугольник */
+.project:focus-visible { border-radius: var(--radius-lg); }
+
+/* Карточка с готовым кейсом (пока такая одна). Ссылка — отдельный слой на уровне
+   карточки, растянутый на всю её площадь: кликается и картинка, и белая часть.
+   Лежит выше картинки (у .project__media z-index 2): внутри .project__body ссылку
+   не разместить — тело само образует контекст наложения (z-index 1), и любое
+   его содержимое остаётся под картинкой */
+.project__link { position: absolute; inset: 0; z-index: 3; border-radius: var(--radius-lg); }
+
+/* Картинка лежит поверх белой карточки и заходит на неё на 24px — так в макете
+   получаются скруглённые нижние углы изображения */
+.project__media {
+  position: relative;
+  z-index: 2;
+  aspect-ratio: 3 / 2;           /* 437 × 291 в макете */
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  margin-bottom: -24px;
+}
+.project__media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease;
+}
+
+/* При наведении картинка плавно приближается. 1.06 при 437px — это ~13px кропа
+   с каждого края: движение читается, но композиция кадра не разваливается и
+   карточка не «прыгает». Масштаб только у картинки: у .project__media стоит
+   overflow: hidden, поэтому кадр не вылезает за скруглённые углы. */
+.project:hover .project__media img,
+.project:focus-visible .project__media img { transform: scale(1.06); }
+
+.project__body {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.project__head { display: flex; flex-direction: column; gap: var(--space-2xs); }
+
+.project__num {
+  font-size: var(--fs-h-sm);
+  line-height: var(--lh-h-sm);
+  font-weight: 700;              /* тот же стиль Headline/H4, что и у показателей */
+  color: var(--color-accent);
+}
+
+.project__title {
+  font-size: var(--fs-h-sm);
+  line-height: var(--lh-h-sm);
+  font-weight: 700;
+}
+
+.project__desc {
+  flex: 1 1 auto;
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  color: var(--color-text-muted);
+}
+
+.project__tags { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+@media (min-width: 1025px) {
+  /* В макете высота белой части карточки — 260px; фиксируем, чтобы карточка
+     не «плыла» из-за метрик шрифта-заменителя */
+  .project__body { min-height: 260px; }
+}
+
+@media (max-width: 1100px) {
+  .projects { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 700px) {
+  /* 24 в один столбец — сознательно (решение Дмитрия), хотя с 701 и выше 32 */
+  .projects { grid-template-columns: 1fr; gap: var(--space-lg); }
+  .project__body { padding: var(--space-xl) var(--space-md) var(--space-md); }
+}
+
+/* ================================ 08. ПОДВАЛ ============================== */
+
+/* В макете подвал — блок с внутренними полями 32/32, отбитый от сетки на 32
+   (гэп авто-лэйаута секции), и страница заканчивается по его нижнему краю:
+   677 + 1313 + 32 + 238 + 32 = 2292 = высота фрейма.
+   В BRU-фрейме отбивка та же: 872 + 162 + 32 = 1066 */
+.footer { margin-top: var(--space-xl); padding: 32px 0; }
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-xl);
+  /* В макете все три карточки одной высоты (Frame 51 = 166 у всех колонок),
+     то есть ряд растянут по самой высокой колонке, а карточка добирает остаток
+     (у неё flex: 1 1 auto). При align-items: start низ карточек рваный:
+     замер до правки — 168 / 166 / 152 */
+  align-items: stretch;
+}
+
+.footer__col { display: flex; flex-direction: column; gap: var(--space-lg); }
+
+.footer__title {
+  font-size: var(--fs-h-fluid);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.footer__card {
+  flex: 1 1 auto;
+  /* Карточка «Обо мне» (обновлённый макет): текст 120 + гэп 8 + ссылка 24
+     + поля 24/24 = 200. Гэп карточки 8 — из макета (текст кончается на 144,
+     ссылка начинается на 152); у карточек с одним ребёнком он ни на что
+     не влияет */
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.footer__text { font-size: var(--fs-body-md); line-height: var(--lh-body-md); }
+
+/* «Скачать CV · PDF» (Figma 412:700): 16/24, акцент, без подчёркивания.
+   В макете филл — сырой #ea5e00, в коде — единый токен акцента #ea5e01
+   (см. комментарий к токену в :root) */
+.footer__cv {
+  align-self: flex-start;
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  color: var(--color-accent);
+  text-decoration: none;
+}
+.footer__cv:hover { text-decoration: underline; }
+
+.footer__skills { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+.footer__contacts { display: flex; flex-direction: column; gap: var(--space-md); }
+
+.contact { display: flex; align-items: center; gap: var(--space-xs); }
+
+.contact__link {
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color .2s ease;
+}
+.contact__link:hover { color: var(--color-accent); }
+
+@media (max-width: 1100px) {
+  .footer__grid { grid-template-columns: repeat(2, 1fr); }
+  .footer__col:last-child { grid-column: 1 / -1; }
+}
+
+@media (max-width: 720px) {
+  .footer__grid { grid-template-columns: 1fr; gap: var(--space-lg); }
+  .footer__col:last-child { grid-column: auto; }
+  .footer__col { gap: var(--space-md); }
+  .footer__card { padding: var(--space-md); }
+  .contact__link { white-space: normal; }
+}
+
+/* ========================= 09. ПЛАШКИ (PILL / TAG) ======================== */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-body-sm);
+  line-height: 16px;
+  white-space: nowrap;
+}
+
+.pill--ghost {
+  border: 1px solid rgba(255, 255, 255, .5);
+  color: rgba(255, 255, 255, .9);
+}
+
+.pill--accent {
+  border: 1px solid var(--color-pill-border);
+  color: var(--color-accent);
+}
+
+.tag {
+  padding: var(--space-3xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  background: var(--color-tag-bg);
+  color: var(--color-tag-text);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body-sm);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .pill, .tag { white-space: normal; }
+}
+
+/* ============ 10. ЗАВИСИТ ОТ JS (ТАБЫ, ПОЯВЛЕНИЕ ПРИ СКРОЛЛЕ) ============ */
+/* Класс .js вешает inline-скрипт в <head>: без JS контент остаётся видимым,
+   а переключатель портфолио не показывается — он всё равно не работает */
+
+.js .tabs { display: flex; }
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .6s ease, transform .6s ease;
+}
+.js .reveal.is-visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .project__media img { transition: none; }   /* приближение — сразу, без разгона */
+  * { scroll-behavior: auto !important; }
+}
+
+html { scroll-behavior: smooth; }
+
+/* Якоря: фиксированная шапка не должна накрывать заголовок цели */
+#work, #about, #contacts { scroll-margin-top: 96px; }
+
+/* ========================= 11. СТРАНИЦА КЕЙСА ============================= */
+/* Источник: Figma «A», фрейм «Портфолио/Страна/DS» (node 442:901, 1440×3132).
+   Секции идут встык, без внешних отступов — вертикальный ритм даёт внутренняя
+   нижняя отбивка 64. Общий каркас секции — .case-section__inner.
+   С главной переиспользуются .container, .nav, .btn--cta, .pill--accent,
+   .stats, .footer*, .reveal. */
+
+/* ------------------------------- Шапка ----------------------------------- */
+/* В макете это не навигация поверх фото, а белая полоса 88 с нижней границей
+   (442:1126): бренд слева, меню справа. Поэтому фон постоянный, а состояние
+   .is-scrolled (прозрачная → плотная) ей не нужно.
+   Липкость — отступление от макета: фрейм рисует полосу в потоке, но страница
+   кейса 3132 высотой, и вместе с шапкой пропадало бы меню. В покое липкая
+   полоса выглядит так же.
+   Порог для .is-scrolled js/main.js берёт у .hero (main.js:16,22), а на кейсе
+   .hero нет — порог падает в запасные 80px. Гасим эффект селектором, а не
+   правкой скрипта: на главной поведение остаётся нетронутым. */
+.header--solid {
+  position: sticky;
+  top: 0;
+  inset: auto;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-soft);
+}
+
+/* Меню отбивается вправо margin-left, а не justify-content: с бургером детей
+   трое, и space-between увёл бы меню в середину.
+   Нижнее поле на 1px меньше макетного: в Figma обводка нарисована внутри бокса
+   88, поэтому полоса вместе с линией должна остаться 88, а не 89
+   (24 + строка 40 + 23 + 1 = 88) */
+.header--solid .header__inner {
+  justify-content: flex-start;
+  padding: 24px var(--gutter) calc(var(--space-lg) - 1px);
+}
+.header--solid .nav { margin-left: auto; }
+/* Ниже 900 меню уходит из потока (position: fixed, блок 03), и отбивка у .nav
+   перестаёт работать — бургер прилипал бы к бренду. Прижимаем его самого;
+   на десктопе бургер скрыт, правило безвредно */
+.header--solid .burger { margin-left: auto; }
+.header--solid .nav__link { color: var(--color-text); }
+.header--solid .burger__line { background: var(--color-text); }
+
+/* Правила ниже перебивают .header.is-scrolled из блока 03 порядком в файле */
+.header--solid.is-scrolled { background: var(--color-surface); box-shadow: none; }
+.header--solid.is-scrolled .header__inner {
+  padding-top: 24px;
+  padding-bottom: calc(var(--space-lg) - 1px);
+}
+.header--solid.is-scrolled .nav__link { color: var(--color-text); }
+.header--solid.is-scrolled .burger__line { background: var(--color-text); }
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.brand__name {
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  font-weight: 700;
+  color: var(--color-text);
+}
+.brand__role {
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body-sm);
+  color: var(--color-text-muted);
+}
+.brand:hover .brand__name { color: var(--color-accent); }
+
+@media (max-width: 900px) {
+  /* Шапка сжимается до 76 (16 + бургер 44 + 15 + обводка 1) — ровно под
+     выпадающую панель меню, которая в блоке 03 стоит на inset-top 76 */
+  .header--solid .header__inner,
+  .header--solid.is-scrolled .header__inner {
+    padding: 16px var(--gutter) calc(var(--space-md) - 1px);
+  }
+}
+
+@media (max-width: 480px) {
+  /* «— ПРОДУКТОВЫЙ ДИЗАЙНЕР» рядом с бургером перестаёт влезать: бренд 366
+     (381 в макете, но шрифт-заменитель уже) + бургер 44 + гуттеры 48 = 458,
+     а при 480 доступно 432. Порог с запасом на подстановку Neue Montreal */
+  .brand__role { display: none; }
+}
+
+/* ---------------------- Суб-хедер: возврат и кнопка ---------------------- */
+/* 442:1145 — 104 = pt 32 + строка 40 + pb 32, обе колонки по краям контейнера.
+   Обводки снизу у фрейма нет: в прошлой ревизии макета была, отсюда вычет 1px,
+   который здесь больше не нужен. Фон — Surface/Primary, как у шапки */
+.sub-header {
+  background: var(--color-surface);
+}
+.sub-header__row {
+  display: flex;
+  flex-wrap: wrap;                /* на узких кнопка уходит на вторую строку */
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  min-height: 40px;
+  padding-top: var(--space-xl);
+  padding-bottom: var(--space-xl);
+}
+
+/* «← Мои работы» (442:1147): 16/24, вес 500, цвет Text-Icon/Secondary */
+.sub-header__back {
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: color .2s ease;
+}
+.sub-header__back:hover { color: var(--color-accent); }
+
+/* Кнопка на UI-кит (442:1148): 173×40 = поля 18/10, иконка 16, гэп 8, строка 20.
+   Высота задана явно: в Figma обводка 1px лежит внутри бокса 40 */
+.btn--figma {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: var(--space-xs);
+  height: 40px;
+  padding: 10px 18px;
+  border: 1px solid var(--color-border-soft);
+  border-radius: 12px;
+  background: var(--color-surface);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color .2s ease, color .2s ease;
+}
+.btn--figma:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.btn--figma img { display: block; flex: 0 0 auto; width: 16px; height: 16px; }
+
+/* ----------------------------- Хиро кейса -------------------------------- */
+/* 442:1152 — 490 = медиа 426 + pb 64. Колонки 671 + 32 + 672 = 1375 при
+   контейнере 1376, то есть каждая — половина минус половина гэпа (та же
+   ошибка округления, что 319.75 против 320).
+   Фон — Surface/Primary: фрейм залит белым, и вместе с суб-хедером они дают
+   одну белую полосу до показателей. Без заливки просвечивал --color-page */
+.case-hero {
+  padding-bottom: var(--space-3xl);
+  background: var(--color-surface);
+}
+
+.case-hero__inner { display: flex; align-items: center; gap: var(--space-xl); }
+
+.case-hero__text {
+  display: flex;
+  flex: 1 1 calc(50% - var(--space-md));
+  flex-direction: column;
+  gap: var(--space-lg);
+  min-width: 0;
+}
+
+.case-hero__head { display: flex; flex-direction: column; gap: var(--space-xs); }
+
+/* «01» — 20/24, вес 700, акцент (442:1155). Стиль Headline/H4, как у показателей */
+.case-hero__num {
+  font-size: var(--fs-h-sm);
+  line-height: var(--lh-body-md);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+/* Заголовок в макете — 64/1.2 в две строки. Перенос задан в разметке (<br> после
+   «—»): замена Neue Montreal на Inter Tight делает естественный перенос
+   ненадёжным.
+   Кегль уходит в clamp, а двухколоночная раскладка обрывается не на 1024, а на
+   1160. Замер: при 64px строка «дизайн-система» занимает 503px, а колонка в две
+   колонки — (vw − 96) / 2. Ниже 1160 колонка становится уже 503, слово
+   переносится по дефису и заголовок ломается на третью строку (на 1100 высота
+   заголовка 230.4 вместо макетных 153.6) */
+.case-hero__title {
+  font-size: clamp(34px, 8vw, 64px);
+  line-height: 1.2;
+  font-weight: 700;
+}
+
+.case-hero__lead { font-size: var(--fs-body-md); line-height: var(--lh-body-md); }
+
+/* Средний сегмент лида — Bold в акценте (442:1157). В макете контейнер помечен
+   font-bold, но крайние сегменты отрисованы Regular (проверено по рендеру
+   фрейма); жирный и оранжевый — только «17 цифровых продуктов компании» */
+.case-hero__lead strong { font-weight: 700; color: var(--color-accent); }
+
+.case-hero__tags { display: flex; flex-wrap: wrap; gap: var(--space-xs); }
+
+.case-hero__media {
+  flex: 0 1 calc(50% - var(--space-md));
+  aspect-ratio: 672 / 426;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.case-hero__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+@media (max-width: 1160px) {
+  /* Двухколоночные блоки кейса встают в одну колонку; текст первым — он и так
+     первый в разметке. Порог 1160 — из замера строки заголовка, см. выше */
+  .case-hero__inner { flex-direction: column; align-items: stretch; }
+  /* Отбивки сверху у хиро в одну колонку больше нет. Она спасала номер «01»
+     от прилипания к границе суб-хедера, когда у того было pb 16; теперь pb 32,
+     а хиро залит тем же белым — границы не видно, и отступ только отодвигал
+     «01». В двух колонках отбивки и не было: номер отходит вертикальным
+     центрированием, а высота хиро 490 = медиа 426 + pb 64 держит макет */
+  /* В колонке flex-basis в процентах стал бы высотой */
+  .case-hero__media { flex: 0 0 auto; width: 100%; }
+}
+
+/* ---------------------- Показатели кейса (484:297) ----------------------- */
+/* 116 = pt 40 + строка 76. Идут встык с хиро, у которого своя нижняя отбивка
+   64, поэтому внешний отступ секции с главной заменён внутренним. Иконок на
+   кейсе нет — состав тот же, что на главной, минус .stats__icon */
+.stats--plain { margin-top: 0; padding-top: var(--space-2xl); }
+/* 244 — ширина колонки текста для четырёх показателей главной; здесь подписи
+   короткие («продуктов», «до внедрения»), ограничение только мешало бы */
+.stats--plain .stats__text { max-width: none; }
+
+/* --------------------- Инфо-карточки (442:1199) -------------------------- */
+/* py 64, три карточки с гэпом 32. 437 / 438 / 437 в макете — та же ошибка
+   округления, что 319.75 против 320, поэтому колонки равные */
+.info-columns { padding: var(--space-3xl) 0; }
+.info-columns__row { display: flex; align-items: stretch; gap: var(--space-xl); }
+
+.info-card {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+.info-card__head { display: flex; align-items: center; gap: var(--space-xs); }
+.info-card__icon { display: block; flex: 0 0 auto; width: 24px; height: 24px; }
+/* 20/32 — Title/T2 из макета */
+.info-card__title { font-size: var(--fs-h-sm); line-height: 32px; font-weight: 500; }
+.info-card__text { font-size: var(--fs-body-md); line-height: var(--lh-body-md); }
+
+/* ---------------------- Секции 01–05: каркас ----------------------------- */
+/* Все пять секций построены одинаково (442:1223, 442:1233, 451:1287, 452:1364,
+   483:257): две колонки 672 + 32 + 672, выравнивание по центру, нижняя отбивка
+   64. Слева номер, заголовок 32/40 и текст 16/24, справа картинка или карточка */
+
+.case-section { padding-bottom: var(--space-3xl); }
+
+/* Секции, которым нужна ещё и верхняя отбивка 64. Ритм фреймов кейсов — ровно
+   64 между всеми блоками, но нижняя отбивка секции даёт промежуток только
+   ПОСЛЕ себя, а перед такой секцией его неоткуда взять. Случаев два:
+   • первая секция после хиро — во фрейме 553:426 полоса 682..745 пустая:
+     белая плита хиро кончается на 682, а контент секции 01 начинается на 746;
+   • секция сразу после цветной полосы .case-band (реактор, 563:1116) —
+     отбивка полосы 64 лежит ВНУТРИ её собственного фона, поэтому 64 перед
+     секцией задаётся ей самой.
+   У кейса 01 промежуток перед первой секцией закрывал .info-columns
+   со своим padding 64 0 */
+.case-section--top { padding-top: var(--space-3xl); }
+.case-section__inner { display: flex; align-items: center; gap: var(--space-xl); }
+
+.case-section__text {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+}
+
+/* Номер секции — 16/24, вес 700, акцент. В макете набран переменной weight/600,
+   которая разрешается в числовой 700 — как у цифр показателей (см. блок 05) */
+.case-section__num {
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.case-section__title {
+  font-size: var(--fs-h-lg);
+  line-height: var(--lh-h-lg);
+  font-weight: 700;
+}
+
+/* Тексты секции — один поток: в макете это абзацы без отбивки между собой
+   (контейнер с нулевым интерлиньяжем, у каждого абзаца mb 0), перенос строки
+   совпадает с концом предложения. Отбивку даёт только гэп 16 до блока целиком */
+.case-section__body { font-size: var(--fs-body-md); line-height: var(--lh-body-md); }
+
+/* Акцентная строка в конце текста 05 (484:381) */
+.case-section__summary { font-weight: 700; color: var(--color-accent); }
+
+/* «Ссылка на презентацию» в секции 02 кейса 05 (788:9143): 16/24, акцент, но
+   вес 400 — это не .case-section__summary, у той 700 */
+.case-section__link { font-size: var(--fs-body-md); line-height: var(--lh-body-md); }
+.case-section__link a { color: var(--color-accent); text-decoration: none; }
+.case-section__link a:hover { text-decoration: underline; }
+
+/* Правая колонка: картинка или карточка. В макете ровно 672 при контейнере 1376 */
+.case-media { flex: 0 0 var(--case-media); min-width: 0; }
+
+/* Скриншот в рамке 24 радиуса (442:1228): 672×336, object-cover — в макете
+   кадр обрезан по рамке (исходник 1376×768, соотношение другое) */
+.case-media--context {
+  aspect-ratio: 672 / 336;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.case-media--context img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Секция 05 кейса 02 — те же правила, другое соотношение.
+   Замер фрейма 553:426: блок 736..1408 × 2362..2794, то есть 672×432, а не 336:
+   в кейсе 01 здесь стояла белая карточка с коллажем, в 02 — готовый кадр
+   с тремя мобильными экранами */
+.case-media--mobile {
+  aspect-ratio: 672 / 432;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.case-media--mobile img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Секция 01 кейса 03 (563:1084): рамка 672×349 с overflow-clip, внутри стоит
+   исходник 672×603 в собственной высоте, то есть обрезан по низу. Пропорция
+   672/349 не совпадает ни с --context (336), ни с --mobile (432) — высота
+   задана под конкретный скриншот, поэтому отдельный модификатор.
+   object-position 50% 0 повторяет верхний кроп макета: в кадре должны
+   остаться шапка «Шахматки» с фильтрами и строка статусов квартир */
+.case-media--tall {
+  aspect-ratio: 672 / 349;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+.case-media--tall img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+}
+
+/* Скриншот внутри белой карточки секции «Дизайн-система» (563:2655).
+   Пропорция 1344/672 = 2:1, поля карточки 24 при её ширине 672 дают кадр 624.
+   Своего радиуса у кадра нет: в макете скруглён только контейнер, а кадр
+   до его краёв не доходит */
+.case-media__shot { aspect-ratio: 1344 / 672; max-width: 100%; overflow: hidden; }
+.case-media__shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* Кейс 04 «Личный кабинет сотрудника» (710:253): все шесть секций построены
+   одинаково — белая карточка 672 с полями 24 и кадром 624 внутри, но высоты
+   кадров разные, поэтому базовая пропорция 2:1 подходит только секциям 02 и 06
+   (624×312). Остальные четыре заданы отдельно; ширина кадра везде одна, 624,
+   потому что её даёт та же карточка. Высоты — из макета: 301, 354, 328, 422.
+   Картинки выгружены кропом ровно по этим рамкам, поэтому object-fit: cover
+   ничего не обрезает и кроп-позицию задавать не нужно. */
+.case-media__shot--profile   { aspect-ratio: 624 / 301; }   /* секция 01, 738:33805 */
+.case-media__shot--review    { aspect-ratio: 624 / 354; }   /* секция 03, 711:32086 */
+.case-media__shot--status    { aspect-ratio: 624 / 328; }   /* секция 04, 711:27683 */
+/* Секция 05 (731:33615) во фрейме 624×422,156: картинку в макете отмасштабировали,
+   отсюда дробная высота. Нормализовано до 624/422 — расхождение 0,16 px */
+.case-media__shot--scenarios { aspect-ratio: 624 / 422; }
+
+/* Белая карточка секции: поля 24, радиус 24, гэп 24 (451:1317, 452:1369, 483:262) */
+.media-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.media-card__title { font-size: var(--fs-h-sm); line-height: 32px; font-weight: 500; }
+
+/* Секция 05: в макете у карточки 672×408 клип 624×352 стоит в точке (24,24),
+   поэтому снизу остаётся 32, а не 24. Отличие от карточек 03 и 04 — из макета,
+   не ошибка выравнивания: секция там 472 = 24 + 352 + 32 + pb 64 */
+.media-card--product { padding-bottom: 32px; }
+
+/* Кейс 05 «Наш Дом Pro» (785:4922). Правая колонка — та же белая карточка, что
+   в 04, но кадр внутри не 624, а своей ширины из макета (600 / 532 / 624 /
+   375), поэтому модификаторы несут и width, и пропорцию, а кадры уже карточки
+   центрируются полями. Файлы выгружены ровно по этим рамкам, object-fit:
+   cover ничего не режет — кроп-позиция не нужна.
+   Высоты карточек отсюда выходят сами: 48 + кадр = 480 / 414 / 530 / 448 /
+   448 / 397 / 260, то есть вертикаль фрейма сходится без хардкода. */
+.case-media__shot--old-ui    { width: 600px; margin-inline: auto; aspect-ratio: 600 / 432; position: relative; } /* 01, 818:12451 */
+.case-media__shot--research  { width: 532px; margin-inline: auto; aspect-ratio: 532 / 366; }                     /* 02, 788:9147 */
+.case-media__shot--prototype { aspect-ratio: 624 / 482; }                                                        /* 03, 805:12440 */
+.case-media__shot--home      { width: 600px; margin-inline: auto; aspect-ratio: 600 / 400; }                     /* 04, 798:9582 */
+.case-media__shot--requests  { width: 600px; margin-inline: auto; aspect-ratio: 600 / 400; }                     /* 05, 801:12398 */
+.case-media__shot--ui-kit    { width: 600px; margin-inline: auto; aspect-ratio: 600 / 349; }                     /* 06, 801:12403 */
+.case-media__shot--empty     { width: 375px; margin-inline: auto; aspect-ratio: 375 / 212; }                     /* 07, 801:12419 */
+
+/* Кейс 06 «Отпуска» (909:4711). Правая колонка — та же белая карточка, что
+   в 04 и 05, и кадры в ней снова во всю ширину (624), поэтому модификаторы
+   несут только пропорцию. Скругления кадров (16 или 24) запечены в PNG
+   прозрачными углами — border-radius здесь не нужен.
+   Высоты карточек выходят сами: 48 + кадр = 451 / 451 / 403 / 345 / 451 /
+   516 / 260, то есть вертикаль фрейма сходится без хардкода. */
+.case-media__shot--schedule { aspect-ratio: 624 / 403; }  /* 01, 911:5611  — график отпусков */
+.case-media__shot--request  { aspect-ratio: 624 / 403; }  /* 02, 927:6878  — форма заявления */
+.case-media__shot--overlaps { aspect-ratio: 624 / 355; }  /* 03, 927:6978  — пересечения */
+.case-media__shot--manager  { aspect-ratio: 624 / 297; }  /* 04, 928:6985  — заявки руководителя */
+.case-media__shot--statuses { aspect-ratio: 624 / 404; }  /* 05, 941:11209 — статусы и 1С */
+.case-media__shot--app      { aspect-ratio: 624 / 468; }  /* 06, 941:11212 — мобильная версия */
+/* Секция 07 «Результат/итог» переиспользует --empty выше: заглушка из UI Kit
+   (939:9305) в макете того же размера 375×212, что в кейсе 05 (801:12419) */
+
+/* Подпись поверх кадра секции 01 (818:12454): на 8 px ниже верхнего края
+   карточки, по центру кадра. Собрана в HTML, а не в картинке, — иначе в PNG
+   запечётся шрифт Neue Montreal и опечатка макета «Интерфейс до редизайн».
+   У секции 01 макет ставит кадр с отступом 24 слева и 48 справа; выровнено
+   по центру, как в остальных шести секциях, — расхождение 12 px */
+.case-media__label {
+  position: absolute;
+  inset: 8px 0 auto;
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+  font-weight: 700;
+  color: var(--color-accent);
+  text-align: center;
+}
+
+/* ------------------------------- Шаги (02) ------------------------------ */
+/* Четыре карточки с гэпом 16: 4 × 156 + 3 × 16 = 672 — ровно колонка. Равные
+   доли дают те же 156 при ширине колонки 672 */
+.step-cards { display: flex; gap: var(--space-md); }
+
+.step-card {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+/* Иконки шагов в макете лежат в обёртке 20 с внутренним боксом 24 (451:1270,
+   451:1279, 451:1284), то есть обрезаны по 2px с каждой стороны — нормализованы
+   до 20 равномерно. Фон бейджа — тот же, что фон страницы */
+.step-card__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  background: var(--color-page);
+}
+.step-card__icon { display: block; width: 20px; height: 20px; }
+.step-card__label { font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); text-align: center; }
+
+/* --------------- Сетка карточек «Что было сделано» (02) ------------------ */
+/* Единственная новая композиция кейса 02. В 01 здесь четыре .step-card в ряд,
+   в 02 — 2×2 карточек с иконкой, заголовком и текстом (замер фрейма 553:426).
+   Сетка: две колонки по 328 с гэпом 16 — 328 + 16 + 328 = 672, ровно колонка
+   секции. Карточка 328×168 разложена точно: поля 16 + бейдж 40 + гэп 16
+   + текст 4×20 + поля 16 = 168. Ряды тянутся по самой высокой карточке: в
+   макете «Главная страница» набрана в три строки, но её бокс всё равно 168,
+   как у соседки в четыре */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-md);
+  /* Ряды равной высоты: во фрейме все четыре карточки 328×168, и в карточке
+     с тремя строками текста пустота остаётся снизу (в «Главной странице»
+     текст кончается на 130,5 при боксе 168). Inter Tight на 6,9% уже
+     Neue Montreal, поэтому у нас текст ложится в меньшее число строк —
+     без выравнивания ряд схлопнулся бы до 148 и секция была бы на 20 ниже */
+  grid-auto-rows: 1fr;
+}
+
+.feature-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  min-width: 0;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+
+/* Иконка лежит в круглом бейдже 40 с фоном страницы — тот же приём, что
+   у .step-card__badge. Замер: глиф 20 начинается на 16 от края карточки,
+   заголовок — на 64, то есть бейдж 40 + гэп 8 */
+.feature-card__head { display: flex; align-items: center; gap: var(--space-xs); }
+
+.feature-card__badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 100px;
+  background: var(--color-page);
+}
+.feature-card__icon { display: block; width: 20px; height: 20px; }
+
+/* Заголовок — 20/32, тот же Title/T2, что у .info-card__title и .media-card__title.
+   Текст — Body/S 14/20 (замер: базовые линии идут через 20) */
+.feature-card__title { font-size: var(--fs-h-sm); line-height: 32px; font-weight: 500; }
+.feature-card__text { font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); }
+
+@media (max-width: 480px) {
+  /* Две колонки по 328 на 375 не влезают: карточка становится 175, текст
+     в ней — 143, и строка рвётся по два слова. В столбик карточка снова 400.
+     Равные ряды здесь отменяются: в одну колонку они растянули бы все четыре
+     карточки по самой высокой, а выравнивать в макете было нечего — там
+     сравнивались два столбца, а не четыре строки подряд */
+  .feature-grid { grid-template-columns: 1fr; grid-auto-rows: auto; }
+}
+
+/* --------------------------- Демо токенов (03) -------------------------- */
+/* Четыре колонки с гэпом 24 (451:1319): «Цвета» по содержимому, остальные три
+   тянутся поровну — как flex 1 0 0 в макете */
+.token-demos { display: flex; gap: var(--space-lg); }
+.token-demo { display: flex; flex: 1 1 0; flex-direction: column; gap: var(--space-xs); min-width: 0; }
+.token-demo--colors { flex: 0 0 auto; }
+.token-demo__label { font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); color: var(--color-text-muted); }
+
+/* Образцы палитры — содержимое (значения самой системы), поэтому сырые цвета,
+   а не токены страницы */
+.token-demo__swatches { display: flex; gap: var(--space-2xs); }
+.token-demo__swatch { width: 32px; height: 32px; border-radius: 8px; }
+.token-demo__swatch--purple { background: #92278f; }
+.token-demo__swatch--blue   { background: #5282ff; }
+.token-demo__swatch--orange { background: var(--color-accent); }
+.token-demo__swatch--navy   { background: rgba(1, 35, 69, .65); }
+
+/* «Aa» набраны Inter: слой в макете помечен Inter Bold/Medium/Regular. Это
+   демонстрация гарнитуры системы, а не текст страницы, поэтому здесь второе
+   семейство — подмножество из двух глифов, см. <link> с text=Aa в разметке */
+.token-demo__type {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-family: 'Inter', var(--font-primary);
+  line-height: normal;
+  color: var(--color-text);
+}
+.token-demo__type span:nth-child(1) { font-size: 32px; font-weight: 700; }
+.token-demo__type span:nth-child(2) { font-size: 24px; font-weight: 500; }
+.token-demo__type span:nth-child(3) { font-size: 16px; font-weight: 400; }
+
+/* Отступы: 16.5 / 33 / 49.5 с шагом 8.25 и радиусом 4.125 в макете — нормализованы
+   до 16 / 32 / 48, шаг 8, радиус 4, высота 32 */
+.token-demo__spacing { display: flex; align-items: center; gap: var(--space-xs); }
+.token-demo__step { height: 32px; border-radius: 4px; background: #d9e7ff; }
+.token-demo__step--1 { width: 16px; }
+.token-demo__step--2 { width: 32px; }
+.token-demo__step--3 { width: 48px; }
+
+.token-demo__shadows { display: flex; gap: var(--space-xs); }
+.token-demo__shadow { width: 32px; height: 32px; border-radius: 4px; background: var(--color-surface); }
+.token-demo__shadow--1 { box-shadow: 0 4px 8px rgba(3, 41, 100, .1); }
+.token-demo__shadow--2 { box-shadow: 0 8px 16px rgba(3, 41, 100, .15); }
+
+/* --------------------- Коллажи (секции 04 и 05) -------------------------- */
+/* Единственное место в макете, где композиция задана абсолютными координатами
+   (454:1434 и 483:263). Картинки оставлены отдельными <img> — для портфолио
+   важно, чтобы их можно было заменить, — поэтому позиции заданы в процентах от
+   рамки-кропа: при 1440 рамка ровно 624 шириной и совпадает с макетом, ниже
+   композиция масштабируется целиком. В комментариях — пиксели макета: центр
+   картинки и её размер до поворота (размеры из API даны как bounding box
+   повёрнутых прямоугольников, центры боксов совпадают с центрами картинок) */
+.collage { position: relative; overflow: hidden; background: var(--color-surface); }
+.collage__item { position: absolute; transform: translate(-50%, -50%); }
+.collage__item img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* 04 — веер из четырёх скриншотов, рамка 624×206 */
+.collage--components { aspect-ratio: 624 / 206; }
+.collage__item--tilt { transform: translate(-50%, -50%) rotate(5.21deg); }
+.collage__item--tilt-small { transform: translate(-50%, -50%) rotate(5.17deg); }
+
+/* Координаты слоёв — из codegen кадра 454:1434, где дети группы заданы в системе
+   самой рамки-кропа. Прибавлять origin группы (454:1435) не нужно: проверено
+   замером пикселей — иначе веер уезжает на 117 px вверх. В комментариях —
+   центр и размер в пикселях макета при рамке 624×206 */
+.collage__item--1 { left: 35.30%; top: 41.20%; width: 69.38%; height: 130.48%; }  /* 220.2 / 84.9 · 432.9×268.8 */
+.collage__item--2 { left: 61.91%; top: 48.56%; width: 87.61%; height: 151.11%;    /* 386.3 / 100.0 · 546.7×311.3 */
+                     box-shadow: -13px 1px 14px rgba(0, 0, 0, .35); }
+.collage__item--3 { left: 73.74%; top: 54.13%; width: 75.67%; height: 182.38%;    /* 460.1 / 111.5 · 472.2×375.7 */
+                     box-shadow: -21px 1px 25px rgba(0, 0, 0, .25); }
+.collage__item--4 { left: 85.07%; top: 80.40%; width: 62.36%; height: 178.10%;    /* 530.9 / 165.6 · 389.1×366.9 */
+                     box-shadow: -13px 1px 14px rgba(0, 0, 0, .1); }
+
+/* Исходник третьего кадра снят с обрезкой по вертикали: в макете картинка стоит
+   на 108.79 % высоты рамки со сдвигом −8.79 % сверху (454:1438), то есть
+   видно её нижнюю часть. Соотношения остальных кадров совпадают с рамками */
+.collage__item--3 img { object-position: 50% 100%; }
+
+/* 05 — два наложенных экрана, рамка 624×352. Тот же принцип: координаты детей
+   группы 483:264 даны в системе рамки, без origin группы */
+.collage--product { aspect-ratio: 624 / 352; }
+
+.collage__item--filters   { left: 49.92%; top: 54.69%;   width: 98.56%;  height: 109.38%; }  /* 311.5 / 192.5 · 615×385 */
+.collage__item--questions { left: 80.45%; top: 138.35%;  width: 108.33%; height: 210.80%;    /* 502.0 / 487.0 · 676×742 */
+                            box-shadow: 0 4px 60px 16px rgba(0, 0, 0, .15); }
+
+/* Подвал кейса прижат к последней секции: во фрейме он начинается ровно на её
+   нижней отбивке 64 (2828), а у .footer главной свои 32 сверху.
+   Одного margin-top: 0 мало: внутреннее поле 32 сверху давало до «Обо мне» 96
+   вместо 64 — столько же, сколько между секциями, — поэтому у кейса снято и оно.
+   Нижнее поле 32 остаётся: страница кончается по нижнему краю карточек */
+.footer--flush { margin-top: 0; padding-top: 0; }
+
+/* --------------------- Баннер с прототипом (кейс 03) --------------------- */
+/* 563:1346 — цветная полоса во всю ширину фрейма: px 32, py 64, гэп 32 между
+   текстовым блоком и карточкой. Свои поля 64 сверху и снизу лежат ВНУТРИ фона,
+   поэтому белый промежуток до соседних секций даёт только их нижняя отбивка —
+   итого ровно 64, как и между остальными блоками фрейма */
+.case-band {
+  padding: var(--space-3xl) 0;
+  background: var(--color-band);
+  color: var(--color-surface);
+}
+
+.case-band__inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xl);
+}
+
+/* Текстовый блок (563:1347): гэп 16 между заголовком и абзацами, по центру */
+.case-band__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  width: 100%;
+  text-align: center;
+}
+
+/* Заголовок — 32/40, вес 700, две строки. Перенос задан в разметке: в макете
+   это два абзаца с whitespace-pre-wrap, а не естественный перенос */
+.case-band__title {
+  font-size: var(--fs-h-lg);
+  line-height: var(--lh-h-lg);
+  font-weight: 700;
+}
+
+/* Абзацы — один поток 16/24 шириной 800 (563:1350): в макете это два <p>
+   без отбивки между ними, как в .case-section__body */
+.case-band__text {
+  width: 100%;
+  max-width: 800px;
+  font-size: var(--fs-body-md);
+  line-height: var(--lh-body-md);
+}
+
+/* Белая карточка 563:1359 во всю ширину контейнера: кадр 3468/1728 заполняет
+   её целиком, поэтому скругление 24 достаётся картинке от контейнера */
+.case-band__media {
+  width: 100%;
+  aspect-ratio: 3468 / 1728;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+}
+.case-band__media img { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+/* ---------------------- Секции кейса на узких экранах -------------------- */
+@media (max-width: 1160px) {
+  /* Двухколоночные секции встают в одну колонку; текст первым — он и так первый
+     в разметке. Порог тот же, что у хиро: выведен из ширины заголовка */
+  .case-section__inner { flex-direction: column; align-items: stretch; }
+  /* В колонке flex-basis в процентах стал бы высотой */
+  .case-media { flex: 0 0 auto; width: 100%; }
+}
+
+@media (max-width: 1100px) {
+  /* Инфо-карточки: 3 → 2 в ряд */
+  .info-columns__row { flex-wrap: wrap; }
+  .info-card { flex: 1 1 calc(50% - var(--space-md)); }
+}
+
+@media (max-width: 768px) {
+  /* Карточки встают по одной, и гэп 32 по вертикали читается как разрыв между
+     стопками — в столбик нужен 16. Гэп макета (442:1199) задан для трёх в ряд */
+  .info-columns__row { row-gap: var(--space-md); }
+  .info-card { flex: 1 1 100%; }
+  /* Шаги: 4 → 2 в ряд */
+  .step-cards { flex-wrap: wrap; }
+  .step-card { flex: 1 1 calc(50% - var(--space-md)); }
+}
+
+@media (max-width: 720px) {
+  /* Демо токенов: 4 → 2×2. Сеткой, а не переносом: при flex-basis 0 колонки
+     не переносятся — basis 0 всегда влезает */
+  .token-demos {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-lg) var(--space-md);
+  }
+  .info-columns { padding: var(--space-2xl) 0; }
+  /* Баннер 03-го кейса: 64 сверху и снизу на телефоне съедают пятую часть
+     экрана, поэтому отбивка та же, что у .info-columns */
+  .case-band { padding: var(--space-2xl) 0; }
+  .case-band__inner { gap: var(--space-lg); }
+}

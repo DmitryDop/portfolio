@@ -1,0 +1,123 @@
+Currently selected nodes:
+- 760:6379: Портфолио/Bankiru
+
+
+<frame id="760:6379" name="Портфолио/Bankiru" x="4595" y="3368" width="1440" height="1402">
+  <rounded-rectangle id="760:6380" name="ChatGPT Image 25 сент. 2026 г., 16_12_00 2" x="-150" y="0" width="1741" height="493" />
+  <rounded-rectangle id="760:6381" name="Rectangle 41" x="0" y="0" width="939" height="493" />
+  <frame id="760:6382" name="Frame 26" x="56" y="60" width="765" height="350">
+    <text id="760:6383" name="ДМИТРИЙ ДРУЖКОВ" x="0" y="0" width="162" height="24" />
+    <text id="760:6384" name="Продуктовый дизайнер" x="0" y="48" width="765" height="156" />
+    <text id="760:6385" name="Проектирую сложные цифровые продукты и дизайн-системы — от исследования и концепции до внедрения." x="0" y="228" width="765" height="64" />
+    <frame id="760:6386" name="Frame 28" x="0" y="316" width="423" height="34">
+      <frame id="760:6387" name="Frame 27" x="0" y="0" width="126" height="34">
+        <text id="760:6388" name="Product Design" x="17" y="9" width="92" height="16" />
+      </frame>
+      <frame id="760:6389" name="Frame 28" x="134" y="0" width="131" height="34">
+        <text id="760:6390" name="Design Systems" x="17" y="9" width="97" height="16" />
+      </frame>
+      <frame id="760:6391" name="Frame 29" x="273" y="0" width="150" height="34">
+        <text id="760:6392" name="Complex Interfaces" x="17" y="9" width="116" height="16" />
+      </frame>
+    </frame>
+  </frame>
+  <frame id="760:6393" name="stata" x="32" y="533" width="1375" height="96">
+    <instance id="760:6394" name="Frame 32" x="0" y="0" width="319.75" height="96" />
+    <frame id="760:6395" name="Frame 44" x="319.75" y="0" width="32" height="96">
+      <line id="760:6396" name="Line 1" x="16.000003814697266" y="0" width="0.000004196294867142569" height="96" />
+    </frame>
+    <instance id="760:6397" name="Frame 33" x="351.75" y="0" width="319.75" height="96" />
+    <frame id="760:6398" name="Frame 45" x="671.5" y="0" width="32" height="96">
+      <line id="760:6399" name="Line 1" x="16.000003814697266" y="0" width="0.000004196294867142569" height="96" />
+    </frame>
+    <instance id="760:6400" name="Frame 34" x="703.5" y="0" width="319.75" height="96" />
+    <frame id="760:6401" name="Frame 46" x="1023.25" y="0" width="32" height="96">
+      <line id="760:6402" name="Line 1" x="16.000003814697266" y="0" width="0.000004196294867142569" height="96" />
+    </frame>
+    <instance id="760:6403" name="Frame 35" x="1055.25" y="0" width="319.75" height="96" />
+  </frame>
+  <frame id="760:6404" name="Section" x="32" y="677" width="1375" height="765">
+    <frame id="760:6405" name="Title" x="0" y="0" width="1375" height="163">
+      <text id="760:6406" name="ИЗБРАННЫЕ ПРОЕКТЫ" x="0" y="0" width="1375" height="20" />
+      <text id="760:6407" name="Мои работы" x="0" y="32" width="1375" height="51" />
+      <frame id="760:6408" name="Tab_container" x="0" y="95" width="1375" height="68">
+        <frame id="760:6409" name="inactive" x="0" y="16" width="211" height="48">
+          <text id="760:6410" name="Страна Девелопмент" x="0" y="8" width="211" height="32" />
+        </frame>
+        <frame id="760:6411" name="active" x="243" y="16" width="72" height="52">
+          <text id="760:6412" name="Banki.ru" x="0" y="8" width="72" height="32" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="760:6413" name="Frame 58" x="0" y="195" width="1375" height="202">
+      <text id="760:6414" name="Кейсы Bannki.ru—скоро здесь" x="544.5" y="65" width="286" height="32" />
+      <text id="821:12455" name="Посмотреть резюме в Figma" x="549.5" y="105" width="276" height="32" />
+    </frame>
+    <frame id="760:6415" name="row" x="0" y="429" width="1376" height="336">
+      <frame id="760:6416" name="about" x="0" y="32" width="437.3333435058594" height="272">
+        <frame id="760:6417" name="Title" x="0" y="0" width="437.3333435058594" height="48">
+          <text id="760:6418" name="Обо мне" x="0" y="0" width="437.3333435058594" height="48" />
+        </frame>
+        <frame id="760:6419" name="Frame 51" x="0" y="72" width="437.3333435058594" height="200">
+          <text id="760:6420" name="Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена." x="24" y="24" width="389.3333435058594" height="120" />
+          <text id="760:6421" name="Скачать CV · PDF" x="24" y="152" width="128" height="24" />
+        </frame>
+      </frame>
+      <frame id="760:6422" name="Frame 53" x="469.3333435058594" y="32" width="437.33331298828125" height="272">
+        <frame id="760:6423" name="Title" x="0" y="0" width="437.33331298828125" height="48">
+          <text id="760:6424" name="Компетенции" x="0" y="0" width="437.33331298828125" height="48" />
+        </frame>
+        <frame id="760:6425" name="Frame 51" x="0" y="72" width="437.33331298828125" height="200">
+          <frame id="760:6426" name="Frame 27" x="24" y="24" width="126" height="34">
+            <text id="760:6427" name="Product Design" x="17" y="9" width="92" height="16" />
+          </frame>
+          <frame id="760:6428" name="Frame 28" x="158" y="24" width="131" height="34">
+            <text id="760:6429" name="Design Systems" x="17" y="9" width="97" height="16" />
+          </frame>
+          <frame id="760:6430" name="Frame 29" x="297" y="24" width="70" height="34">
+            <text id="760:6431" name="UX/UI" x="17" y="9" width="36" height="16" />
+          </frame>
+          <frame id="760:6432" name="Frame 30" x="24" y="66" width="145" height="34">
+            <text id="760:6433" name="Complex Products" x="17" y="9" width="111" height="16" />
+          </frame>
+          <frame id="760:6434" name="Frame 31" x="177" y="66" width="146" height="34">
+            <text id="760:6435" name="Design Leadership" x="17" y="9" width="112" height="16" />
+          </frame>
+          <frame id="760:6436" name="Frame 32" x="24" y="108" width="91" height="34">
+            <text id="760:6437" name="Research" x="17" y="9" width="57" height="16" />
+          </frame>
+        </frame>
+      </frame>
+      <frame id="760:6438" name="Frame 54" x="938.6666259765625" y="32" width="437.33331298828125" height="272">
+        <frame id="760:6439" name="Title" x="0" y="0" width="437.33331298828125" height="48">
+          <text id="760:6440" name="Контакты" x="0" y="0" width="437.33331298828125" height="48" />
+        </frame>
+        <frame id="760:6441" name="Frame 51" x="0" y="72" width="437.33331298828125" height="200">
+          <frame id="760:6442" name="Frame 57" x="24" y="24" width="165" height="104">
+            <frame id="760:6443" name="Frame 55" x="0" y="0" width="165" height="24">
+              <frame id="760:6444" name="envelope-solid-full 1" x="0" y="0" width="24" height="24" />
+              <text id="760:6446" name="dopler@lineband.ru" x="32" y="0" width="133" height="24" />
+            </frame>
+            <frame id="760:6447" name="Frame 56" x="0" y="40" width="165" height="24">
+              <frame id="760:6448" name="telegram-brands-solid-full 1" x="0" y="0" width="24" height="24" />
+              <text id="760:6450" name="@Dmitry_Druzhkov" x="32" y="0" width="131" height="24" />
+            </frame>
+            <frame id="760:6451" name="Frame 57" x="0" y="80" width="165" height="24">
+              <frame id="760:6452" name="phone-solid-full 1" x="0" y="0" width="24" height="24" />
+              <text id="760:6454" name="+7 903 762 45 74" x="32" y="0" width="119" height="24" />
+            </frame>
+          </frame>
+        </frame>
+      </frame>
+    </frame>
+  </frame>
+  <frame id="760:6455" name="Frame 49" x="956" y="60" width="452" height="40">
+    <text id="760:6456" name="Обо мне" x="0" y="8" width="67" height="24" />
+    <text id="760:6457" name="Мои работы" x="99" y="8" width="98" height="24" />
+    <text id="760:6458" name="Контакты" x="229" y="8" width="78" height="24" />
+    <frame id="760:6459" name="Frame 50" x="339" y="0" width="113" height="40">
+      <text id="760:6460" name="Связаться" x="16" y="8" width="81" height="24" />
+    </frame>
+  </frame>
+</frame>
+IMPORTANT: After you call this tool, you MUST call get_design_context if trying to implement the design, since this tool only returns metadata. If you do not call get_design_context, the agent will not be able to implement the design.

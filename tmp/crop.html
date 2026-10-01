@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#f9f3f0}
+.win{position:relative;overflow:hidden}
+.win img{position:absolute;display:block}
+</style></head><body>
+<div class="win" id="w"><img id="i" src=""></div>
+<script>
+var q=new URLSearchParams(location.search);
+var i=document.getElementById('i'), w=document.getElementById('w');
+i.src=q.get('src');
+i.style.left=(-(+q.get('x')))+'px';
+i.style.top=(-(+q.get('y')))+'px';
+w.style.width=q.get('w')+'px'; w.style.height=q.get('h')+'px';
+</script></body></html>

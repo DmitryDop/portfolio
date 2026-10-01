@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MIS — редизайн корпоративного портала — кейс Дмитрия Дружкова</title>
+<meta name="description" content="Как я переработал информационную архитектуру, навигацию и ключевые разделы корпоративного портала MIS и спроектировал адаптивные версии с фокусом на мобильные сценарии.">
+
+<!--
+  Источник макета: Figma «A», фрейм «Портфолио/MIS» (node 553:426, 1440×H).
+  Общие стили, скрипт и ассеты лежат в корне сайта, поэтому пути начинаются с «../».
+  Шапка и подвал здесь — копия разметки главной: сборки в проекте нет, а кейсов
+  будет шесть, поэтому шаблон пока дублируется руками.
+
+  Отличия этого фрейма от «Страна/DS» (кейс 01): нет блока показателей и нет
+  инфо-карточек «Задача / Моя роль / Результат» — после хиро сразу идут секции.
+  Секция 02 вместо четырёх .step-card использует сетку карточек с иконкой,
+  заголовком и текстом (.feature-grid). Решение Дмитрия от 2026-09-26:
+  собираем ровно как в макете, блоки не добавляем.
+
+  Картинки секций — той же плотности, что в кейсе 01: 2x (1344×672 и 1344×864).
+  Нарезаны из экспорта фрейма @2x, а не выгружены по одной; width/height стоят
+  собственные, размер показа задаёт CSS (.case-media--context / --mobile)
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<!-- Метка «JS доступен»: без неё блоки с .reveal остаются видимыми -->
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113074775', 'ym');
+
+    ym(113074775, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+    /* Счётчик инициализирован с ssr:true — автоматический хит отключён, и без
+       этого вызова просмотры страницы кейса не попадают в статистику */
+    ym(113074775, 'hit', location.href);
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<!-- Пиксель Метрики для случая с выключенным JS — как на главной, вынесен в body -->
+<!-- Yandex.Metrika counter -->
+<noscript><div><img src="https://mc.yandex.ru/watch/113074775" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- Шапка кейса (Figma 553:…): белая полоса 88 с нижней границей, бренд слева.
+     Состояния «поверх фото» у неё нет — стили в блоке 11 -->
+<header class="header header--solid" id="header">
+  <div class="header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__name">ДМИТРИЙ ДРУЖКОВ</span>
+      <span class="brand__role">— ПРОДУКТОВЫЙ ДИЗАЙНЕР</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../index.html#about">Обо мне</a></li>
+        <li><a class="nav__link" href="../index.html#work">Мои работы</a></li>
+        <li><a class="nav__link" href="../index.html#contacts">Контакты</a></li>
+      </ul>
+      <a class="btn btn--cta" href="../index.html#contacts">Связаться</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button"
+            aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- СУБ-ХЕДЕР: возврат к работам и кнопка на исходник макета.
+       У кейса 01 кнопка ведёт на UI-кит СТРАНЫ; здесь своего файла нет,
+       поэтому адрес — фрейм «Главная» в Figma -->
+  <div class="sub-header">
+    <div class="container">
+      <div class="sub-header__row">
+        <a class="sub-header__back" href="../index.html#work">← Мои работы</a>
+        <a class="btn--figma" href="https://www.figma.com/design/2xLVGjEtqomnNs05ZnIgi7/%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F?node-id=0-1&amp;t=D8LCMRVBCzRCXWZe-1" target="_blank" rel="noopener">
+          <img src="../assets/icons/case/figma.png" alt="" width="16" height="16">
+          Открыть Figma ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ХИРО: колонки 672 + 32 + 672, обложка — тот же кадр, что у карточки «02»
+       на главной, отдельная копия не нужна -->
+  <section class="case-hero">
+    <div class="container">
+      <div class="case-hero__inner">
+
+        <div class="case-hero__text">
+          <div class="case-hero__head">
+            <p class="case-hero__num">02</p>
+            <!-- Перенос задан вручную, как в кейсе 01: в макете заголовок стоит
+                 в три строки, а замена Neue Montreal на Inter Tight делает
+                 естественный перенос непредсказуемым -->
+            <h1 class="case-hero__title">MIS — редизайн<br>корпоративного<br>портала</h1>
+          </div>
+
+          <p class="case-hero__lead">Провёл редизайн корпоративного портала для сотрудников: переработал информационную архитектуру, навигацию и ключевые разделы, а также спроектировал адаптивные версии с фокусом на <strong>мобильные сценарии</strong>.</p>
+
+          <ul class="case-hero__tags">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design System</li>
+            <li class="pill pill--accent">Web</li>
+            <li class="pill pill--accent">Mobile</li>
+          </ul>
+        </div>
+
+        <div class="case-hero__media">
+          <img src="../assets/img/project-02.png" alt="Портал MIS на мониторе и в смартфоне"
+               width="1536" height="1024" fetchpriority="high">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 КОНТЕКСТ -->
+  <section class="case-section case-section--top" aria-labelledby="case-01">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">01</p>
+          <h2 class="case-section__title" id="case-01">Контекст</h2>
+          <div class="case-section__body">
+            <p>На основе данных опросов выяснил, что главная страница — основной вход сотрудников в цифровые продукты компании. При этом важная информация была плохо структурирована и терялась среди второстепенного контента. Задача — сделать главную страницу полезной с первого взгляда и упростить доступ к ключевым сервисам и информации.</p>
+          </div>
+        </div>
+
+        <div class="case-media case-media--context reveal">
+          <img src="../assets/img/case-02/section-01.png" alt="Главная страница портала MIS до редизайна" width="1344" height="672" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 ЧТО БЫЛО СДЕЛАНО: сетка 2×2 карточек с иконкой, заголовком и текстом.
+       Иконки — из набора кейса: глиф в бейдже 40 с фоном страницы, как у шагов
+       в кейсе 01. В карточке «Главная страница» глиф — дом с сердцем
+       (в файле иконки он назывался icon-wrapper) -->
+  <section class="case-section" aria-labelledby="case-02">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">02</p>
+          <h2 class="case-section__title" id="case-02">Что было сделано</h2>
+          <div class="case-section__body">
+            <p>Провёл полный редизайн корпоративного портала: переработал информационную архитектуру и навигацию, обновил ключевые сценарии и контентные блоки, а также спроектировал адаптивные версии с фокусом на мобильные устройства.</p>
+          </div>
+        </div>
+
+        <!-- В макете «Проанализировал существующей портал» — согласование сломано,
+             исправлено на «существующий портал» -->
+        <ul class="case-media feature-grid reveal">
+          <li class="feature-card">
+            <div class="feature-card__head">
+              <span class="feature-card__badge">
+                <img class="feature-card__icon" src="../assets/icons/case/search.svg" alt="" width="20" height="20">
+              </span>
+              <p class="feature-card__title">Анализ и аудит</p>
+            </div>
+            <p class="feature-card__text">Проанализировал существующий портал и переработал информационную архитектуру с учётом основных сценариев сотрудников</p>
+          </li>
+          <li class="feature-card">
+            <div class="feature-card__head">
+              <span class="feature-card__badge">
+                <img class="feature-card__icon" src="../assets/icons/case/signs-post.svg" alt="" width="20" height="20">
+              </span>
+              <p class="feature-card__title">Навигация</p>
+            </div>
+            <p class="feature-card__text">Упростил доступ к цифровым продуктам и разделам портала, сделал структуру понятнее и быстрее для поиска нужной информации</p>
+          </li>
+          <li class="feature-card">
+            <div class="feature-card__head">
+              <span class="feature-card__badge">
+                <img class="feature-card__icon" src="../assets/icons/case/house-heart.svg" alt="" width="20" height="20">
+              </span>
+              <p class="feature-card__title">Главная страница</p>
+            </div>
+            <p class="feature-card__text">Пересобрал главный экран: добавил новости, дни рождения, проекты и обновил блок «Лучшие сотрудники»</p>
+          </li>
+          <li class="feature-card">
+            <div class="feature-card__head">
+              <span class="feature-card__badge">
+                <img class="feature-card__icon" src="../assets/icons/case/mobile-screen.svg" alt="" width="20" height="20">
+              </span>
+              <p class="feature-card__title">Адаптив и Mobile</p>
+            </div>
+            <p class="feature-card__text">Спроектировал адаптивные версии портала с отдельным вниманием к мобильному сценарию и приоритетам информации.</p>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 ГЛАВНАЯ КАК ТОЧКА ВХОДА -->
+  <section class="case-section" aria-labelledby="case-03">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">03</p>
+          <h2 class="case-section__title" id="case-03">Главная как точка входа</h2>
+          <div class="case-section__body">
+            <p>Перестроил главную страницу вокруг сценариев, которые сотрудники используют чаще всего. Навигация, новости, проекты и персональные блоки получили понятную визуальную иерархию и стали доступны без поиска по порталу.</p>
+          </div>
+        </div>
+
+        <div class="case-media case-media--context reveal">
+          <img src="../assets/img/case-02/section-03.png" alt="Главная страница портала MIS после редизайна" width="1344" height="672" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 КОНТЕНТ И ПЕРСОНАЛИЗАЦИЯ -->
+  <section class="case-section" aria-labelledby="case-04">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">04</p>
+          <h2 class="case-section__title" id="case-04">Контент и персонализация</h2>
+          <div class="case-section__body">
+            <p>Добавил персональные и социальные сценарии, которые помогают сотрудникам быстрее находить актуальную информацию и взаимодействовать с коллегами. Блок «Дни рождения» получил более заметное и структурированное представление, а «Лучшие сотрудники» — новую визуальную подачу, чтобы информация о достижениях не терялась среди других блоков.</p>
+          </div>
+        </div>
+
+        <div class="case-media case-media--context reveal">
+          <img src="../assets/img/case-02/section-04.png" alt="Блоки «Дни рождения» и «Лучшие сотрудники» на главной портала MIS" width="1344" height="672" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 МОБИЛЬНАЯ ВЕРСИЯ -->
+  <section class="case-section" aria-labelledby="case-05">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">05</p>
+          <h2 class="case-section__title" id="case-05">Мобильная версия</h2>
+          <div class="case-section__body">
+            <p>Отдельное внимание уделил мобильному сценарию. Руководители компании активно используют портал с мобильных устройств, поэтому ключевые сценарии и контент пришлось адаптировать не только технически, но и с точки зрения приоритетов информации.</p>
+          </div>
+        </div>
+
+        <div class="case-media case-media--mobile reveal">
+          <img src="../assets/img/case-02/section-05.png" alt="Мобильная версия портала MIS: три экрана" width="1344" height="864" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ПОДВАЛ — тот же, что на главной: три колонки, обо мне / компетенции / контакты -->
+<footer class="footer footer--flush" id="about">
+  <div class="container">
+    <div class="footer__grid">
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Обо мне</h2>
+        <div class="footer__card">
+          <p class="footer__text">Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена.</p>
+          <a class="footer__cv" href="https://dopler.lineband.ru/CVDDV.pdf"
+             target="_blank" rel="noopener">Скачать CV · PDF</a>
+        </div>
+      </section>
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Компетенции</h2>
+        <div class="footer__card">
+          <ul class="footer__skills">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX/UI</li>
+            <li class="pill pill--accent">Complex Products</li>
+            <li class="pill pill--accent">Design Leadership</li>
+            <li class="pill pill--accent">Research</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="footer__col reveal" id="contacts">
+        <h2 class="footer__title">Контакты</h2>
+        <div class="footer__card">
+          <ul class="footer__contacts">
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-email.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="mailto:dopler@lineband.ru">dopler@lineband.ru</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-telegram.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="https://t.me/Dmitry_Druzhkov" target="_blank" rel="noopener">@Dmitry_Druzhkov</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-phone.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="tel:+79037624574">+7 903 762 45 74</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,440 @@
+const assetPathPrefix = "https://www.figma.com/api/mcp/asset/53eb707e-4a52-4a83-b638-f2c70825ad4d";
+const imgRectangle = `${assetPathPrefix}/b91d6.png`;
+const img1 = `${assetPathPrefix}/e40c1.png`;
+const img202609271137101 = `${assetPathPrefix}/bdbe8.png`;
+const img164331 = `${assetPathPrefix}/e5ec0.png`;
+const imgFigma = `${assetPathPrefix}/3e8e2.svg`;
+const imgSearch = `${assetPathPrefix}/8a528.svg`;
+const imgHexagonNodesRegularFull1 = `${assetPathPrefix}/b2477.svg`;
+const imgArrowsTurnRightSolidFull1 = `${assetPathPrefix}/1b439.svg`;
+const imgVialCircleCheckSolidFull1 = `${assetPathPrefix}/bf0e3.svg`;
+const imgCubesStackedSolidFull1 = `${assetPathPrefix}/b2188.svg`;
+const imgBuildingMagnifyingGlassSolidFull1 = `${assetPathPrefix}/7c127.svg`;
+const imgBuildingCircleCheckSolidFull1 = `${assetPathPrefix}/448ab.svg`;
+const imgHeadSideCircuitSolidFull1 = `${assetPathPrefix}/2ccb2.svg`;
+const imgEnvelopeSolidFull1 = `${assetPathPrefix}/2154f.svg`;
+const imgTelegramBrandsSolidFull1 = `${assetPathPrefix}/228e5.svg`;
+const imgPhoneSolidFull1 = `${assetPathPrefix}/409df.svg`;
+
+export default function Component() {
+  return (
+    <div className="bg-[#f9f3f0] relative size-full" data-node-id="563:1010" data-name="Портфолио/Страна/Реактор">
+      <div className="absolute bg-white border-[#e5eaef] border-b border-solid content-stretch flex items-center justify-between left-0 px-[var(--dimensions\/spacing\/xl,32px)] py-[24px] top-0 w-[1440px]" data-node-id="563:1011" data-name="Header-Nav">
+        <div className="[word-break:break-word] content-stretch flex font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] gap-[8px] items-center relative shrink-0 whitespace-nowrap" data-node-id="563:1012" data-name="brand">
+          <p className="font-bold leading-[var(--line-height\/md,24px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)]" data-node-id="563:1013" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            ДМИТРИЙ ДРУЖКОВ
+          </p>
+          <p className="font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/secondary,#7489aa)] text-[length:var(--font-size\/body\/sm,14px)]" data-node-id="563:1014" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            — ПРОДУКТОВЫЙ ДИЗАЙНЕР
+          </p>
+        </div>
+        <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xl,32px)] items-center relative shrink-0" data-node-id="563:1015">
+          <div className="[word-break:break-word] flex flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal justify-center leading-[0] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1016" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            <p className="leading-[var(--line-height\/md,24px)]">Обо мне</p>
+          </div>
+          <div className="[word-break:break-word] flex flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal justify-center leading-[0] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1017" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            <p className="leading-[var(--line-height\/md,24px)]">Мои работы</p>
+          </div>
+          <div className="[word-break:break-word] flex flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal justify-center leading-[0] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1018" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            <p className="leading-[var(--line-height\/md,24px)]">Контакты</p>
+          </div>
+          <div className="content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[12px] shrink-0" data-node-id="563:1019" style={{ backgroundImage: "linear-gradient(-67.47943532010166deg, rgb(255, 76, 31) 1.9499%, rgb(234, 94, 1) 77.27%)" }}>
+            <div className="[word-break:break-word] flex flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal justify-center leading-[0] relative shrink-0 text-[length:var(--font-size\/body\/md,16px)] text-white whitespace-nowrap" data-node-id="563:1020" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              <p className="leading-[var(--line-height\/md,24px)]">Связаться</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="absolute bg-[var(--surface\/primary,white)] content-stretch flex items-center justify-between left-0 pb-[var(--dimensions\/spacing\/xl,32px)] pt-[32px] px-[var(--dimensions\/spacing\/xl,32px)] top-[88px] w-[1440px]" data-node-id="563:1021" data-name="sub-header-actions">
+        <div className="content-stretch flex items-center relative shrink-0" data-node-id="563:1022" data-name="back-link">
+          <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/md,24px)] relative shrink-0 text-[color:var(--text-icon\/secondary,#7489aa)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1023" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            ← Мои работы
+          </p>
+        </div>
+        <div className="bg-white border border-[#e5eaef] border-solid content-stretch flex gap-[8px] items-center px-[18px] py-[10px] relative rounded-[var(--dimensions\/corner-radius\/sm,12px)] shrink-0" data-node-id="563:1024" data-name="figma-button">
+          <div className="relative shrink-0 size-[16px]" data-node-id="563:1025" data-name="figma">
+            <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgFigma} />
+          </div>
+          <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[#012345] text-[length:var(--font-size\/body\/sm,14px)] whitespace-nowrap" data-node-id="563:1027" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+            Открыть Figma ↗
+          </p>
+        </div>
+      </div>
+      <div className="absolute content-stretch flex flex-col items-start left-0 top-[192px] w-[1440px]" data-node-id="563:1028">
+        <div className="bg-[var(--surface\/primary,white)] content-stretch flex gap-[var(--dimensions\/spacing\/xl,32px)] h-[490px] items-center pb-[var(--dimensions\/spacing\/5xl,64px)] px-[var(--dimensions\/spacing\/xl,32px)] relative shrink-0 w-full" data-node-id="563:1029" data-name="Hero-Block">
+          <div className="content-stretch flex flex-col gap-[24px] items-start relative shrink-0 w-[671px]" data-node-id="563:1030" data-name="hero-left">
+            <div className="[word-break:break-word] content-stretch flex flex-col gap-[8px] items-start relative shrink-0 w-full" data-node-id="563:1031" data-name="title-wrapper">
+              <p className="font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-[var(--weight\/600,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[#ea5e01] text-[length:var(--font-size\/headline\/sm,20px)] whitespace-nowrap" data-node-id="563:1032">
+                03
+              </p>
+              <p className="font-[family-name:var(--font-family\/primary,'Neue_Montreal:Bold')] font-bold leading-[1.2] min-w-full relative shrink-0 text-[64px] text-[color:var(--text-icon\/primary,#032964)] w-[min-content]" data-node-id="563:1033" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                Реактор — шахматка квартир
+              </p>
+            </div>
+            <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/md,24px)] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] w-[min-content]" data-node-id="563:1034" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              Спроектировал и внедрил новый интерфейс шахматки для управления квартирами и ценами внутри корпоративного продукта.
+            </p>
+            <div className="content-stretch flex gap-[8px] items-start relative shrink-0" data-node-id="563:1035">
+              <div className="border border-[rgba(234,94,1,0.5)] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1036">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[14px] text-[rgba(234,94,1,0.9)] whitespace-nowrap" data-node-id="563:1037">
+                  Product Design
+                </p>
+              </div>
+              <div className="border border-[rgba(234,94,1,0.5)] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1038">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[14px] text-[rgba(234,94,1,0.9)] whitespace-nowrap" data-node-id="563:1039">
+                  Design Systems
+                </p>
+              </div>
+              <div className="border border-[rgba(234,94,1,0.5)] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1040">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[14px] text-[rgba(234,94,1,0.9)] whitespace-nowrap" data-node-id="563:1041">
+                  Web
+                </p>
+              </div>
+              <div className="border border-[rgba(234,94,1,0.5)] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1230">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[14px] text-[rgba(234,94,1,0.9)] whitespace-nowrap" data-node-id="563:1231">
+                  B2B
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="content-stretch flex h-[426px] items-start overflow-clip relative rounded-[24px] shrink-0 w-[672px]" data-node-id="563:1044" data-name="hero-right">
+            <div className="flex-[1_0_0] h-full min-w-px relative" data-node-id="563:1045" data-name="Rectangle">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={imgRectangle} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xl,32px)] items-center px-[var(--dimensions\/spacing\/xl,32px)] py-[var(--dimensions\/spacing\/5xl,64px)] relative shrink-0 w-full" data-node-id="563:1079" data-name="Section-Context">
+          <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] gap-[var(--dimensions\/spacing\/md,16px)] items-start min-w-px relative" data-node-id="563:1080" data-name="context-left">
+            <p className="font-[var(--weight\/600,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[#ea5e01] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1081">
+              01
+            </p>
+            <p className="font-bold leading-[var(--line-height\/xl,40px)] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/headline\/lg,32px)] w-[min-content]" data-node-id="563:1082" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              Контекст
+            </p>
+            <div className="font-normal leading-[0] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] w-[min-content]" data-node-id="563:1083" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              <p className="leading-[var(--line-height\/md,24px)] mb-0">«Реактор» — веб-приложение для управления процессами девелопмента и продаж. В рамках редизайна я переработал несколько разделов продукта и перевёл их на новую дизайн-систему.</p>
+              <p className="leading-[var(--line-height\/md,24px)]">Одним из ключевых сценариев стала «Шахматка» — инструмент для работы с квартирами, их статусами и ценами. Команда решила развивать собственное решение внутри продукта вместо использования стороннего сервиса.</p>
+            </div>
+          </div>
+          <div className="content-stretch flex h-[349px] items-start overflow-clip relative rounded-[24px] shrink-0 w-[672px]" data-node-id="563:1084" data-name="context-right">
+            <div className="h-[603px] relative shrink-0 w-[672px]" data-node-id="563:1235" data-name="Один дом 1">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={img1} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xl,32px)] items-center pb-[var(--dimensions\/spacing\/5xl,64px)] px-[var(--dimensions\/spacing\/xl,32px)] relative shrink-0 w-full" data-node-id="563:1086" data-name="Section-Done">
+          <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] gap-[var(--dimensions\/spacing\/md,16px)] items-start min-w-px relative" data-node-id="563:1087" data-name="done-left">
+            <p className="font-[var(--weight\/600,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[#ea5e01] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1088">
+              02
+            </p>
+            <p className="font-bold leading-[var(--line-height\/xl,40px)] min-w-full relative shrink-0 text-[#012345] text-[length:var(--font-size\/headline\/lg,32px)] w-[min-content]" data-node-id="563:1089" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              Что было сделано
+            </p>
+            <div className="font-normal leading-[0] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] w-[min-content] whitespace-pre-wrap" data-node-id="563:1090" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              <p className="leading-[var(--line-height\/md,24px)] mb-0">{`Изучил решения и сценарии работы с шахматками на рынке, чтобы определить привычные пользователям паттерны и сформировать структуру собственного инструмента. `}</p>
+              <p className="leading-[var(--line-height\/md,24px)]">Спроектировал ключевые пользовательские сценарии: просмотр структуры объекта, состояния квартир, работу с ценами и внесение изменений. Собрал интерактивный прототип и проверил его на реальных сотрудниках компании.</p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-start min-w-px relative" data-node-id="563:1237" data-name="done-right">
+            <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-node-id="563:1238" data-name="row">
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] self-stretch" data-node-id="563:1239" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1240" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1241" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1242" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1243" data-name="search">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgSearch} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1245" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Исследование
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1246" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Изучил существующие решения и сценарии работы с шахматкой квартир.
+                </p>
+              </div>
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)]" data-node-id="563:1247" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1248" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1274" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1275" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[24px]" data-node-id="563:1276" data-name="hexagon-nodes-regular-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHexagonNodesRegularFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1253" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Архитектура
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1254" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Спроектировал структуру инструмента, фильтры, состояния квартир и основные действия
+                </p>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-node-id="563:1255" data-name="row">
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] self-stretch" data-node-id="563:1256" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1257" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1258" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1259" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1286" data-name="arrows-turn-right-solid-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgArrowsTurnRightSolidFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1262" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Прототип
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1263" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Собрал интерактивный прототип и проработал ключевые пользовательские сценарии
+                </p>
+              </div>
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] self-stretch" data-node-id="563:1264" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1265" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1266" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1267" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1281" data-name="vial-circle-check-solid-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgVialCircleCheckSolidFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1270" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Тестирование
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1271" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Протестировал прототип с отрудниками и доработал интерфейс по результатам
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="bg-[#ae7965] content-stretch flex flex-col gap-[var(--dimensions\/spacing\/xl,32px)] items-center justify-center px-[var(--dimensions\/spacing\/xl,32px)] py-[var(--dimensions\/spacing\/5xl,64px)] relative shrink-0 w-full" data-node-id="563:1346" data-name="Section-Component">
+          <div className="[word-break:break-word] content-stretch flex flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] gap-[var(--dimensions\/spacing\/md,16px)] items-center justify-center leading-[0] relative shrink-0 text-[color:var(--text-icon\/contrast,white)] text-center w-full" data-node-id="563:1347" data-name="done-left">
+            <div className="font-bold min-w-full relative shrink-0 text-[length:var(--font-size\/headline\/lg,32px)] w-[min-content] whitespace-pre-wrap" data-node-id="563:1349" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              <p className="leading-[var(--line-height\/xl,40px)] mb-0">{`Проверил сценарий `}</p>
+              <p className="leading-[var(--line-height\/xl,40px)]">на реальных пользователях</p>
+            </div>
+            <div className="font-normal relative shrink-0 text-[length:var(--font-size\/body\/md,16px)] w-[800px]" data-node-id="563:1350" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              <p className="leading-[var(--line-height\/md,24px)] mb-0">Собрал интерактивный прототип ключевого пользовательского сценария и протестировал его с тремя сотрудниками, которые работают с системой.</p>
+              <p className="leading-[var(--line-height\/md,24px)]">По результатам тестирования уточнил структуру интерфейса, расположение управляющих элементов и поведение отдельных состояний.</p>
+            </div>
+          </div>
+          <div className="bg-white content-stretch flex flex-col items-start overflow-clip relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] shrink-0 w-full" data-node-id="563:1359">
+            <div className="aspect-[3468/1728] relative shrink-0 w-full" data-node-id="563:1360" data-name="Шахматка 2026-09-27 11-37-10 1">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={img202609271137101} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xl,32px)] items-center px-[var(--dimensions\/spacing\/xl,32px)] py-[var(--dimensions\/spacing\/5xl,64px)] relative shrink-0 w-full" data-node-id="563:1116" data-name="Section-Done">
+          <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] gap-[var(--dimensions\/spacing\/md,16px)] items-start min-w-px relative" data-node-id="563:1117" data-name="done-left">
+            <p className="font-[var(--weight\/600,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[#ea5e01] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1118">
+              03
+            </p>
+            <p className="font-bold leading-[var(--line-height\/xl,40px)] min-w-full relative shrink-0 text-[#012345] text-[length:var(--font-size\/headline\/lg,32px)] w-[min-content]" data-node-id="563:1119" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              Как работает шахматка
+            </p>
+            <div className="font-normal leading-[0] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] w-[min-content]" data-node-id="563:1120" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              <p className="leading-[var(--line-height\/md,24px)] mb-0">Спроектировал «Шахматку» как единый рабочий инструмент для управления квартирами и ценами. Пользователь видит структуру объекта, состояние квартир и ключевые параметры непосредственно в контексте выбранного корпуса или этажа.</p>
+              <p className="leading-[var(--line-height\/md,24px)]">Интерфейс позволяет быстро находить нужные квартиры, проверять их параметры и вносить изменения без перехода между несколькими разделами.</p>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-start min-w-px relative" data-node-id="563:1289" data-name="done-right">
+            <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-node-id="563:1290" data-name="row">
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] self-stretch" data-node-id="563:1291" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1292" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1293" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1294" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1332" data-name="cubes-stacked-solid-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgCubesStackedSolidFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1297" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Обзор
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1298" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Пользователь видит структуру объекта и состояние квартир на одном экране
+                </p>
+              </div>
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)]" data-node-id="563:1299" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1300" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1301" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1302" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1329" data-name="building-magnifying-glass-solid-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBuildingMagnifyingGlassSolidFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1305" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Выбор
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1306" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Фильтры и визуальные состояния помогают быстро найти нужные квартиры
+                </p>
+              </div>
+            </div>
+            <div className="content-stretch flex gap-[16px] items-start relative shrink-0 w-full" data-node-id="563:1307" data-name="row">
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] self-stretch" data-node-id="563:1308" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1309" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1310" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1311" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1337" data-name="building-circle-check-solid-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgBuildingCircleCheckSolidFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1314" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Цена
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1315" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Детальная информация и доступные действия появляются непосредственно в контексте выбранного объекта
+                </p>
+              </div>
+              <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-center min-w-px p-[var(--dimensions\/spacing\/md,16px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] self-stretch" data-node-id="563:1316" data-name="step-item-0">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1317" data-name="title">
+                  <div className="bg-[#f9f3f0] content-stretch flex items-center justify-center relative rounded-[100px] shrink-0 size-[40px]" data-node-id="563:1318" data-name="icon-badge">
+                    <div className="content-stretch flex items-center justify-center overflow-clip relative shrink-0 size-[20px]" data-node-id="563:1319" data-name="icon-wrapper">
+                      <div className="relative shrink-0 size-[20px]" data-node-id="563:1342" data-name="head-side-circuit-solid-full 1">
+                        <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgHeadSideCircuitSolidFull1} />
+                      </div>
+                    </div>
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-medium leading-[var(--line-height\/lg,32px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/title\/md,20px)] whitespace-nowrap" data-node-id="563:1322" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                    Изменение
+                  </p>
+                </div>
+                <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-normal leading-[var(--line-height\/sm,20px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/sm,14px)] w-full" data-node-id="563:1323" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                  Интерфейс помогает проверить параметры перед применением изменения
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xl,32px)] items-center pb-[64px] pt-[var(--dimensions\/spacing\/5xl,64px)] px-[var(--dimensions\/spacing\/xl,32px)] relative shrink-0 w-full" data-node-id="563:1160" data-name="Section-Product">
+          <div className="[word-break:break-word] content-stretch flex flex-[1_0_0] flex-col font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] gap-[var(--dimensions\/spacing\/md,16px)] items-start min-w-px relative" data-node-id="563:1161" data-name="done-left">
+            <p className="font-[var(--weight\/600,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[#ea5e01] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1162">
+              05
+            </p>
+            <p className="font-bold leading-[var(--line-height\/xl,40px)] min-w-full relative shrink-0 text-[#012345] text-[length:var(--font-size\/headline\/lg,32px)] w-[min-content]" data-node-id="563:1163" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              Дизайн-система
+            </p>
+            <p className="font-normal leading-[var(--line-height\/md,24px)] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] w-[min-content]" data-node-id="563:1164" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+              После проверки сценариев интерфейс был переведён на новую дизайн-систему продукта. Использовал унифицированные компоненты, состояния и паттерны, чтобы шахматка соответствовала остальным разделам «Реактора» и могла масштабироваться вместе с продуктом.
+            </p>
+          </div>
+          <div className="bg-[var(--surface\/primary,white)] content-stretch flex flex-col gap-[var(--dimensions\/spacing\/lg,24px)] items-start p-[var(--dimensions\/spacing\/lg,24px)] relative rounded-[24px] shrink-0 w-[672px]" data-node-id="563:1166" data-name="arch-right">
+            <div className="aspect-[1344/672] relative shrink-0 w-full" data-node-id="563:2655" data-name="16433 1">
+              <img alt="" className="absolute inset-0 max-w-none object-cover pointer-events-none size-full" src={img164331} />
+            </div>
+          </div>
+        </div>
+        <div className="content-stretch flex gap-[32px] items-start pb-[var(--dimensions\/spacing\/xl,32px)] px-[var(--dimensions\/spacing\/xl,32px)] relative shrink-0 w-full" data-node-id="563:1171" data-name="row">
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/lg,24px)] items-start min-w-px relative self-stretch" data-node-id="563:1172" data-name="about">
+            <div className="content-stretch flex flex-col gap-[var(--dimensions\/spacing\/sm,12px)] h-[48px] items-start relative shrink-0 w-full" data-node-id="563:1173" data-name="Title">
+              <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-bold leading-[var(--line-height\/2xl,48px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/headline\/xl,40px)] w-full" data-node-id="563:1174" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                Обо мне
+              </p>
+            </div>
+            <div className="[word-break:break-word] bg-[var(--surface\/primary,white)] content-stretch flex flex-col font-normal gap-[8px] items-start p-[var(--dimensions\/spacing\/lg,24px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] shrink-0 w-full" data-node-id="563:1175">
+              <p className="font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] leading-[var(--line-height\/md,24px)] min-w-full relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] w-[min-content]" data-node-id="563:1176" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена.
+              </p>
+              <a className="block cursor-pointer font-['Neue_Montreal:Regular'] leading-[24px] relative shrink-0 text-[#ea5e01] text-[16px] whitespace-nowrap" href="https://dopler.lineband.ru/dmitry/CVDDV.pdf" data-node-id="563:1177" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }} target="_blank">
+                Скачать CV · PDF
+              </a>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/lg,24px)] items-start min-w-px relative self-stretch" data-node-id="563:1178">
+            <div className="content-stretch flex flex-col gap-[var(--dimensions\/spacing\/sm,12px)] h-[48px] items-start relative shrink-0 w-full" data-node-id="563:1179" data-name="Title">
+              <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-bold leading-[var(--line-height\/2xl,48px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/headline\/xl,40px)] w-full" data-node-id="563:1180" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                Компетенции
+              </p>
+            </div>
+            <div className="bg-[var(--surface\/primary,white)] content-start flex flex-[1_0_0] flex-wrap gap-[8px] items-start min-h-px p-[var(--dimensions\/spacing\/lg,24px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] w-full" data-node-id="563:1181">
+              <div className="border border-[#e9bea1] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1182">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[#ea5e01] text-[14px] whitespace-nowrap" data-node-id="563:1183">
+                  Product Design
+                </p>
+              </div>
+              <div className="border border-[#e9bea1] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1184">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[#ea5e01] text-[14px] whitespace-nowrap" data-node-id="563:1185">
+                  Design Systems
+                </p>
+              </div>
+              <div className="border border-[#e9bea1] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1186">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[#ea5e01] text-[14px] whitespace-nowrap" data-node-id="563:1187">{`UX/UI `}</p>
+              </div>
+              <div className="border border-[#e9bea1] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1188">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[#ea5e01] text-[14px] whitespace-nowrap" data-node-id="563:1189">
+                  Complex Products
+                </p>
+              </div>
+              <div className="border border-[#e9bea1] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1190">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[#ea5e01] text-[14px] whitespace-nowrap" data-node-id="563:1191">
+                  Design Leadership
+                </p>
+              </div>
+              <div className="border border-[#e9bea1] border-solid content-stretch flex items-center justify-center px-[16px] py-[8px] relative rounded-[32px] shrink-0" data-node-id="563:1192">
+                <p className="[word-break:break-word] font-['Neue_Montreal:Regular'] leading-[16px] not-italic relative shrink-0 text-[#ea5e01] text-[14px] whitespace-nowrap" data-node-id="563:1193">
+                  Research
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="content-stretch flex flex-[1_0_0] flex-col gap-[var(--dimensions\/spacing\/lg,24px)] items-start min-w-px relative self-stretch" data-node-id="563:1194">
+            <div className="content-stretch flex flex-col gap-[var(--dimensions\/spacing\/sm,12px)] h-[48px] items-start relative shrink-0 w-full" data-node-id="563:1195" data-name="Title">
+              <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-bold leading-[var(--line-height\/2xl,48px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/headline\/xl,40px)] w-full" data-node-id="563:1196" style={{ fontVariationSettings: '"CTGR" 0, "wdth" 100' }}>
+                Контакты
+              </p>
+            </div>
+            <div className="bg-[var(--surface\/primary,white)] content-start flex flex-[1_0_0] flex-wrap gap-y-[8px] items-start min-h-px p-[var(--dimensions\/spacing\/lg,24px)] relative rounded-[var(--dimensions\/corner-radius\/lg,24px)] w-full" data-node-id="563:1197">
+              <div className="content-stretch flex flex-col gap-[var(--dimensions\/spacing\/md,16px)] items-start relative shrink-0 w-[165px]" data-node-id="563:1198">
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1199">
+                  <div className="relative shrink-0 size-[24px]" data-node-id="563:1200" data-name="envelope-solid-full 1">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgEnvelopeSolidFull1} />
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-[var(--weight\/400,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1202">
+                    dopler@lineband.ru
+                  </p>
+                </div>
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1203">
+                  <div className="relative shrink-0 size-[24px]" data-node-id="563:1204" data-name="telegram-brands-solid-full 1">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgTelegramBrandsSolidFull1} />
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-[var(--weight\/400,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1206">
+                    @Dmitry_Druzhkov
+                  </p>
+                </div>
+                <div className="content-stretch flex gap-[var(--dimensions\/spacing\/xs,8px)] items-center relative shrink-0 w-full" data-node-id="563:1207">
+                  <div className="relative shrink-0 size-[24px]" data-node-id="563:1208" data-name="phone-solid-full 1">
+                    <img alt="" className="absolute block inset-0 max-w-none size-full" src={imgPhoneSolidFull1} />
+                  </div>
+                  <p className="[word-break:break-word] font-[family-name:var(--font-family\/primary,'Neue_Montreal:Weight')] font-[var(--weight\/400,normal)] leading-[var(--line-height\/md,24px)] relative shrink-0 text-[color:var(--text-icon\/primary,#032964)] text-[length:var(--font-size\/body\/md,16px)] whitespace-nowrap" data-node-id="563:1210">
+                    +7 903 762 45 74
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+SUPER CRITICAL: The generated React+Tailwind code MUST be converted to match the target project's technology stack and styling system.
+1. Analyze the target codebase to identify: technology stack, styling approach, component patterns, and design tokens
+2. Convert React syntax to the target framework/library
+3. Transform all Tailwind classes to the target styling system while preserving exact visual design
+4. Follow the project's existing patterns and conventions
+DO NOT install any Tailwind as a dependency unless the user instructs you to do so.
+
+Node ids have been added to the code as data attributes, e.g. `data-node-id="1:2"`.
+These styles are contained in the design: Text/md/bold: Font(family: "Font Family/primary", style: Weight/600, size: Font Size/Body/md, weight: 700, lineHeight: Line Height/md, letterSpacing: 0), Text/sm/regular: Font(family: "Font Family/primary", style: Weight/400, size: Font Size/Body/sm, weight: 400, lineHeight: Line Height/sm, letterSpacing: 0), Text/md/regular: Font(family: "Font Family/primary", style: Weight/400, size: Font Size/Body/md, weight: 400, lineHeight: Line Height/md, letterSpacing: 0), Text/md/medium: Font(family: "Font Family/primary", style: Weight/500, size: Font Size/Body/md, weight: 500, lineHeight: Line Height/md, letterSpacing: 0), Text/sm/medium: Font(family: "Font Family/primary", style: Weight/500, size: Font Size/Body/sm, weight: 500, lineHeight: Line Height/sm, letterSpacing: 0), Headline/H4: Font(family: "Font Family/primary", style: Weight/600, size: Font Size/Headline/sm, weight: 700, lineHeight: Line Height/md, letterSpacing: 0), Headline/H2: Font(family: "Font Family/primary", style: Weight/600, size: Font Size/Headline/lg, weight: 700, lineHeight: Line Height/xl, letterSpacing: 0), Title/T2: Font(family: "Font Family/primary", style: Weight/500, size: Font Size/Title/md, weight: 500, lineHeight: Line Height/lg, letterSpacing: 0), Headline/H1: Font(family: "Font Family/primary", style: Weight/600, size: Font Size/Headline/xl, weight: 700, lineHeight: Line Height/2xl, letterSpacing: 0).
+Images and SVGs will be stored as constants, e.g. const image = `${assetPathPrefix}/<asset file name>`, where assetPathPrefix is declared once at the top of the code and every asset URL interpolates it. These constants will be used in the code as the source for the image, ex: <img src={image} />. Image assets are stored on a remote server for 7 days and can be fetched using the provided URLs until they expire.
+[IMAGE]
+[Image: source: /Users/dmitry/.claude/projects/-Users-dmitry-site-1/35758bb4-3829-4e0f-ab54-b07323fe3e44/tool-results/mcp-plugin_figma_figma-blob-1790501571394-11qprm.png]

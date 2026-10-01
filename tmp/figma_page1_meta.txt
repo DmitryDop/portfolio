@@ -1,0 +1,176 @@
+<canvas id="0:1" name="Page 1" x="0" y="0" width="0" height="0">
+  <frame id="1:778" name="Frame 2" x="-1947" y="0" width="1830" height="1756">
+    <rounded-rectangle id="2:88" name="Rectangle 37" x="724" y="866" width="959" height="249" />
+    <frame id="1:838" name="Frame 3" x="137" y="518" width="766" height="144">
+      <text id="1:783" name="Type@51" x="0" y="0" width="766" height="72" />
+      <text id="1:837" name="Type@51" x="0" y="88" width="766" height="56" />
+    </frame>
+    <frame id="1:839" name="Frame 4" x="140" y="744" width="660" height="192">
+      <text id="1:788" name="Type@38" x="0" y="0" width="660" height="48" />
+      <text id="1:834" name="Type@38" x="0" y="64" width="660" height="40" />
+      <text id="1:835" name="Type@38" x="0" y="120" width="660" height="32" />
+      <text id="1:836" name="Type@38" x="0" y="168" width="660" height="24" />
+    </frame>
+    <frame id="1:840" name="Frame 5" x="146" y="971" width="557" height="120">
+      <text id="1:820" name="Type@21" x="0" y="0" width="557" height="32" />
+      <text id="1:830" name="Type@21" x="0" y="48" width="557" height="32" />
+      <text id="1:833" name="Type@16" x="0" y="96" width="557" height="24" />
+    </frame>
+    <frame id="1:841" name="Frame 6" x="137" y="1195" width="497" height="236">
+      <text id="1:803" name="Type@16" x="0" y="0" width="497" height="72" />
+      <text id="1:821" name="Type@16" x="0" y="88" width="497" height="60" />
+      <text id="1:824" name="Type@16" x="0" y="164" width="497" height="32" />
+      <text id="1:827" name="Type@16" x="0" y="212" width="497" height="24" />
+    </frame>
+    <text id="22:49" name="Type@16" x="107" y="1554" width="77" height="76" />
+    <text id="22:53" name="Type@16" x="406" y="1592" width="77" height="76" />
+    <frame id="2:7" name="circle-user-light-full 1" x="105" y="1195" width="24" height="24" />
+    <frame id="2:9" name="circle-user-solid-full (1) 1" x="73" y="1195" width="24" height="24" />
+    <frame id="2:86" name="Frame 9" x="1342" y="518" width="151" height="580">
+      <rounded-rectangle id="2:52" name="Rectangle 15" x="0" y="0" width="151" height="58" />
+      <rounded-rectangle id="2:51" name="Rectangle 14" x="0" y="58" width="151" height="58" />
+      <rounded-rectangle id="2:50" name="Rectangle 13" x="0" y="116" width="151" height="58" />
+      <rounded-rectangle id="2:49" name="Rectangle 12" x="0" y="174" width="151" height="58" />
+      <rounded-rectangle id="2:48" name="Rectangle 11" x="0" y="232" width="151" height="58" />
+      <rounded-rectangle id="2:44" name="Rectangle 10" x="0" y="290" width="151" height="58" />
+      <rounded-rectangle id="2:98" name="Rectangle 16" x="0" y="348" width="151" height="58" />
+      <rounded-rectangle id="2:99" name="Rectangle 17" x="0" y="406" width="151" height="58" />
+      <rounded-rectangle id="2:100" name="Rectangle 18" x="0" y="464" width="151" height="58" />
+      <rounded-rectangle id="2:101" name="Rectangle 19" x="0" y="522" width="151" height="58" />
+    </frame>
+    <frame id="2:85" name="Frame 8" x="1191" y="518" width="151" height="580">
+      <rounded-rectangle id="2:78" name="Rectangle 31" x="0" y="0" width="151" height="58" />
+      <rounded-rectangle id="2:77" name="Rectangle 30" x="0" y="58" width="151" height="58" />
+      <rounded-rectangle id="2:76" name="Rectangle 29" x="0" y="116" width="151" height="58" />
+      <rounded-rectangle id="2:75" name="Rectangle 28" x="0" y="174" width="151" height="58" />
+      <rounded-rectangle id="2:74" name="Rectangle 27" x="0" y="232" width="151" height="58" />
+      <rounded-rectangle id="2:16" name="Rectangle 4" x="0" y="290" width="151" height="58" />
+      <rounded-rectangle id="2:94" name="Rectangle 32" x="0" y="348" width="151" height="58" />
+      <rounded-rectangle id="2:95" name="Rectangle 33" x="0" y="406" width="151" height="58" />
+      <rounded-rectangle id="2:96" name="Rectangle 34" x="0" y="464" width="151" height="58" />
+      <rounded-rectangle id="2:97" name="Rectangle 35" x="0" y="522" width="151" height="58" />
+    </frame>
+    <frame id="2:84" name="Frame 7" x="1040" y="518" width="151" height="580">
+      <rounded-rectangle id="2:83" name="Rectangle 36" x="0" y="0" width="151" height="58" />
+      <rounded-rectangle id="2:82" name="Rectangle 35" x="0" y="58" width="151" height="58" />
+      <rounded-rectangle id="2:81" name="Rectangle 34" x="0" y="116" width="151" height="58" />
+      <rounded-rectangle id="2:80" name="Rectangle 33" x="0" y="174" width="151" height="58" />
+      <rounded-rectangle id="2:79" name="Rectangle 32" x="0" y="232" width="151" height="58" />
+      <rounded-rectangle id="2:18" name="Rectangle 6" x="0" y="290" width="151" height="58" />
+      <rounded-rectangle id="2:89" name="Rectangle 37" x="0" y="348" width="151" height="58" />
+      <rounded-rectangle id="2:90" name="Rectangle 38" x="0" y="406" width="151" height="58" />
+      <rounded-rectangle id="2:91" name="Rectangle 39" x="0" y="464" width="151" height="58" />
+      <rounded-rectangle id="2:92" name="Rectangle 40" x="0" y="522" width="151" height="58" />
+    </frame>
+    <frame id="204:8926" name="Frame 11" x="889" y="518" width="151" height="580">
+      <rounded-rectangle id="204:8927" name="Rectangle 36" x="0" y="0" width="151" height="58" />
+      <rounded-rectangle id="204:8928" name="Rectangle 35" x="0" y="58" width="151" height="58" />
+      <rounded-rectangle id="204:8929" name="Rectangle 34" x="0" y="116" width="151" height="58" />
+      <rounded-rectangle id="204:8930" name="Rectangle 33" x="0" y="174" width="151" height="58" />
+      <rounded-rectangle id="204:8931" name="Rectangle 32" x="0" y="232" width="151" height="58" />
+      <rounded-rectangle id="204:8932" name="Rectangle 6" x="0" y="290" width="151" height="58" />
+      <rounded-rectangle id="204:8933" name="Rectangle 37" x="0" y="348" width="151" height="58" />
+      <rounded-rectangle id="204:8934" name="Rectangle 38" x="0" y="406" width="151" height="58" />
+      <rounded-rectangle id="204:8935" name="Rectangle 39" x="0" y="464" width="151" height="58" />
+      <rounded-rectangle id="204:8936" name="Rectangle 40" x="0" y="522" width="151" height="58" />
+    </frame>
+    <frame id="2:87" name="Frame 10" x="1493" y="518" width="151" height="580">
+      <rounded-rectangle id="2:60" name="Rectangle 23" x="0" y="0" width="151" height="58" />
+      <rounded-rectangle id="2:59" name="Rectangle 22" x="0" y="58" width="151" height="58" />
+      <rounded-rectangle id="2:58" name="Rectangle 21" x="0" y="116" width="151" height="58" />
+      <rounded-rectangle id="2:57" name="Rectangle 20" x="0" y="174" width="151" height="58" />
+      <rounded-rectangle id="2:56" name="Rectangle 19" x="0" y="232" width="151" height="58" />
+      <rounded-rectangle id="2:55" name="Rectangle 18" x="0" y="290" width="151" height="58" />
+      <rounded-rectangle id="2:103" name="Rectangle 24" x="0" y="348" width="151" height="58" />
+      <rounded-rectangle id="2:104" name="Rectangle 25" x="0" y="406" width="151" height="58" />
+      <rounded-rectangle id="2:105" name="Rectangle 26" x="0" y="464" width="151" height="58" />
+      <rounded-rectangle id="2:106" name="Rectangle 27" x="0" y="522" width="151" height="58" />
+    </frame>
+  </frame>
+  <frame id="27:277" name="Slide 16:9 - 1" x="-1947" y="-1290" width="1920" height="1080" />
+  <frame id="30:2475" name="MacBook Pro - 1" x="-1.4210854715202004e-14" y="0" width="1440" height="900">
+    <frame id="49:7923" name="Sidebar" x="24" y="24" width="252" height="843">
+      <text id="49:7924" name="МОЙ ГАРАЖ" x="16" y="16" width="147" height="32" />
+      <instance id="49:7925" name="Spacing &amp; Separator" x="16" y="48" width="220" height="32" />
+      <frame id="49:7926" name="section menu" x="16" y="80" width="220" height="40">
+        <frame id="49:7927" name="main avto" x="0" y="0" width="220" height="40">
+          <text id="49:7928" name="HONDA ACCORD SUPER PU" x="12" y="8" width="168" height="24" />
+          <instance id="49:7929" name="angle-down" x="188" y="10" width="20" height="20" />
+        </frame>
+      </frame>
+      <instance id="49:7930" name="Spacing &amp; Separator" x="16" y="120" width="220" height="16" />
+      <instance id="49:7931" name="menu_item" x="16" y="136" width="220" height="40" />
+      <instance id="49:7932" name="Spacing &amp; Separator" x="16" y="176" width="220" height="16" />
+      <frame id="49:7933" name="section menu" x="16" y="192" width="220" height="579">
+        <frame id="49:7934" name="title menu item" x="0" y="0" width="220" height="20">
+          <text id="49:7935" name="Автомобиль" x="0" y="2" width="200" height="16" />
+          <instance id="49:7936" name="gear-light" x="200" y="0" width="20" height="20" />
+        </frame>
+        <frame id="49:7937" name="menu" x="0" y="28" width="220" height="250">
+          <instance id="49:7938" name="menu_item" x="0" y="0" width="220" height="40" />
+          <instance id="49:7939" name="menu_item" x="0" y="42" width="220" height="40" />
+          <instance id="49:7940" name="menu_item" x="0" y="84" width="220" height="40" />
+          <instance id="49:7941" name="menu_item" x="0" y="126" width="220" height="40" />
+          <instance id="49:7942" name="menu_item" x="0" y="168" width="220" height="40" />
+          <instance id="49:7943" name="menu_item" x="0" y="210" width="220" height="40" />
+        </frame>
+      </frame>
+      <instance id="76:8906" name="Spacing &amp; Separator" x="16" y="771" width="220" height="16" />
+      <frame id="76:8871" name="section menu" x="16" y="482" width="220" height="305" hidden="true">
+        <frame id="76:8872" name="title menu item" x="0" y="0" width="220" height="16">
+          <text id="76:8873" name="Другое" x="0" y="0" width="220" height="16" />
+          <instance id="76:8874" name="circle-plus" x="200" y="0" width="20" height="20" hidden="true" />
+        </frame>
+        <frame id="76:8875" name="menu" x="0" y="24" width="220" height="40">
+          <instance id="76:8876" name="menu_item" x="0" y="0" width="220" height="40" />
+        </frame>
+      </frame>
+      <frame id="49:7944" name="section menu" x="16" y="787" width="220" height="40">
+        <frame id="49:7945" name="Frame 17" x="0" y="0" width="220" height="40">
+          <instance id="49:7946" name="menu_item" x="0" y="0" width="220" height="40" hidden="true" />
+          <instance id="53:8786" name="Button" x="0" y="0" width="220" height="40" />
+          <instance id="49:7947" name="menu_item" x="0" y="84" width="236" height="40" hidden="true" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="53:8461" name="Header" x="300" y="24" width="1116" height="120">
+      <frame id="53:8185" name="Title" x="24" y="24" width="308" height="72">
+        <frame id="53:8462" name="Frame 23" x="0" y="0" width="308" height="40">
+          <text id="53:8179" name="HONDA ACCORD" x="0" y="0" width="252" height="40" />
+          <instance id="53:8463" name="Button" x="268" y="0" width="40" height="40" />
+        </frame>
+        <frame id="53:8184" name="data" x="0" y="48" width="305" height="24">
+          <text id="53:8181" name="2011" x="0" y="0" width="31" height="24" />
+          <text id="53:8458" name="•" x="39" y="0" width="6" height="24" />
+          <text id="53:8182" name="2,4" x="53" y="0" width="22" height="24" />
+          <text id="53:8459" name="•" x="83" y="0" width="6" height="24" />
+          <text id="53:8183" name="190 000 км." x="97" y="0" width="90" height="24" />
+          <instance id="76:8822" name="Link" x="195" y="2" width="110" height="20" />
+        </frame>
+      </frame>
+      <frame id="53:8741" name="Right" x="672" y="40" width="420" height="40">
+        <instance id="53:8735" name="Button" x="324" y="0" width="40" height="40" hidden="true" />
+        <frame id="53:8742" name="avatr_block" x="262" y="0" width="158" height="40">
+          <instance id="53:8684" name="Avatar" x="0" y="0" width="40" height="40" />
+          <instance id="53:8747" name="Link" x="52" y="8" width="106" height="24" />
+        </frame>
+      </frame>
+    </frame>
+    <frame id="210:12085" name="Frame 25" x="300" y="168" width="1116" height="224">
+      <symbol id="76:8851" name="card" x="0" y="0" width="356" height="224" />
+      <instance id="76:8852" name="card" x="380" y="0" width="356" height="224" />
+      <frame id="208:12068" name="card" x="760" y="0" width="356" height="224">
+        <frame id="208:12069" name="Title" x="24" y="24" width="308" height="32">
+          <text id="208:12070" name="Обслуживание" x="0" y="0" width="308" height="32" />
+          <instance id="208:12071" name="Status" x="0" y="36" width="107" height="24" hidden="true" />
+        </frame>
+        <frame id="210:12082" name="Frame 24" x="24" y="72" width="308" height="88">
+          <text id="208:12079" name="9,0 л/100 км" x="0" y="0" width="308" height="40" />
+          <text id="210:12080" name="за последние 2 полных заправки" x="0" y="40" width="308" height="20" />
+        </frame>
+        <text id="210:12083" name="16 заправок: 12 345 ₽/мес." x="24" y="176" width="308" height="24" />
+      </frame>
+    </frame>
+  </frame>
+  <boolean-operation id="426:815" name="Union" x="0" y="0" width="0" height="0" />
+</canvas>

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дизайн-система СТРАНА — кейс Дмитрия Дружкова</title>
+<meta name="description" content="Как я создал и внедрил единую дизайн-систему для 17 цифровых продуктов СТРАНА Девелопмент — от архитектуры и токенов до компонентов.">
+
+<!--
+  Источник макета: Figma «A», фрейм «Портфолио/Страна/DS» (node 442:901, 1440×3132).
+  Общие стили, скрипт и ассеты лежат в корне сайта, поэтому пути начинаются с «../».
+  Шапка и подвал здесь — копия разметки главной: сборки в проекте нет, а кейсов
+  будет шесть, поэтому шаблон пока дублируется руками.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Inter — только для демо типографики в секции 03: в макете «Aa» набраны Inter,
+     а не Neue Montreal. Подмножество из двух глифов (text=Aa) — это три файла
+     по ~1 КБ вместо четырёх начертаний целиком -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&text=Aa&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<!-- Метка «JS доступен»: без неё блоки с .reveal остаются видимыми -->
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113074775', 'ym');
+
+    ym(113074775, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+    /* Счётчик инициализирован с ssr:true — автоматический хит отключён, и без
+       этого вызова просмотры страницы кейса не попадают в статистику */
+    ym(113074775, 'hit', location.href);
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<!-- Пиксель Метрики для случая с выключенным JS — как на главной, вынесен в body -->
+<!-- Yandex.Metrika counter -->
+<noscript><div><img src="https://mc.yandex.ru/watch/113074775" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- Шапка кейса (Figma 442:1126): белая полоса 88 с нижней границей, бренд слева.
+     Состояния «поверх фото» у неё нет — стили в блоке 11 -->
+<header class="header header--solid" id="header">
+  <div class="header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__name">ДМИТРИЙ ДРУЖКОВ</span>
+      <span class="brand__role">— ПРОДУКТОВЫЙ ДИЗАЙНЕР</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../index.html#about">Обо мне</a></li>
+        <li><a class="nav__link" href="../index.html#work">Мои работы</a></li>
+        <li><a class="nav__link" href="../index.html#contacts">Контакты</a></li>
+      </ul>
+      <a class="btn btn--cta" href="../index.html#contacts">Связаться</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button"
+            aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- СУБ-ХЕДЕР (Figma 442:1145): возврат к работам и кнопка на UI-кит,
+       104 = pt 32 + строка 40 + pb 32, нижней обводки у фрейма нет.
+       Ссылка ведёт на файл UI-кита, а не на
+       файл портфолио (решение Дмитрия) -->
+  <div class="sub-header">
+    <div class="container">
+      <div class="sub-header__row">
+        <a class="sub-header__back" href="../index.html#work">← Мои работы</a>
+        <a class="btn--figma"
+           href="https://www.figma.com/design/nP1ksNtiUNX6zkJu4HtzBq/%F0%9F%91%91-Strana-Ui-Kit?node-id=6876-42703"
+           target="_blank" rel="noopener">
+          <img src="../assets/icons/case/figma.png" alt="" width="16" height="16">
+          Открыть Figma ↗
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ХИРО (Figma 442:1152): 490 = медиа 426 + pb 64, колонки 672 + 32 + 672 -->
+  <section class="case-hero">
+    <div class="container">
+      <div class="case-hero__inner">
+
+        <div class="case-hero__text">
+          <div class="case-hero__head">
+            <p class="case-hero__num">01</p>
+            <!-- Перенос после «—» задан вручную: см. комментарий к .case-hero__title -->
+            <h1 class="case-hero__title">СТРАНА —<br>дизайн-система</h1>
+          </div>
+
+          <p class="case-hero__lead">Создал и внедрил единую дизайн-систему для <strong>17 цифровых продуктов компании</strong> — от архитектуры и токенов до компонентов и интеграции в продукты.</p>
+
+          <ul class="case-hero__tags">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">Web · iOS</li>
+            <li class="pill pill--accent">3 месяца</li>
+          </ul>
+        </div>
+
+        <!-- Обложка — тот же кадр, что у карточки «01 Дизайн система» на главной:
+             фрейм использует этот файл, отдельная копия не нужна -->
+        <div class="case-hero__media">
+          <img src="../assets/img/project-01.png" alt="Фрагмент интерфейса дизайн-системы СТРАНА"
+               width="1672" height="941" fetchpriority="high">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ПОКАЗАТЕЛИ (Figma 484:297): 116 = pt 40 + строка 76, четыре значения по 320
+       и разделители 32. Иконок здесь нет — в отличие от главной -->
+  <section class="stats stats--plain" aria-label="Ключевые показатели проекта">
+    <div class="container">
+      <ul class="stats__row">
+        <li class="stats__item">
+          <div class="stats__text">
+            <p class="stats__value">17</p>
+            <p class="stats__label">продуктов</p>
+          </div>
+        </li>
+        <li class="stats__divider" aria-hidden="true"><img src="../assets/icons/stat-divider.svg" alt="" width="32" height="76"></li>
+        <li class="stats__item">
+          <div class="stats__text">
+            <p class="stats__value">100+</p>
+            <p class="stats__label">компонентов</p>
+          </div>
+        </li>
+        <li class="stats__divider" aria-hidden="true"><img src="../assets/icons/stat-divider.svg" alt="" width="32" height="76"></li>
+        <li class="stats__item">
+          <div class="stats__text">
+            <p class="stats__value">2</p>
+            <p class="stats__label">платформы</p>
+          </div>
+        </li>
+        <li class="stats__divider" aria-hidden="true"><img src="../assets/icons/stat-divider.svg" alt="" width="32" height="76"></li>
+        <li class="stats__item">
+          <div class="stats__text">
+            <p class="stats__value">3 месяца</p>
+            <p class="stats__label">до внедрения</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ИНФО-КАРТОЧКИ (Figma 442:1199): задача, роль, результат -->
+  <section class="info-columns" aria-label="Задача, роль и результат">
+    <div class="container">
+      <div class="info-columns__row">
+
+        <article class="info-card reveal">
+          <div class="info-card__head">
+            <img class="info-card__icon" src="../assets/icons/case/file-text.svg" alt="" width="24" height="24">
+            <h2 class="info-card__title">Задача</h2>
+          </div>
+          <p class="info-card__text">Создать единую дизайн-систему с нуля для нескольких цифровых продуктов и объединить разрозненные интерфейсы в общую систему.</p>
+        </article>
+
+        <article class="info-card reveal">
+          <div class="info-card__head">
+            <img class="info-card__icon" src="../assets/icons/case/user.svg" alt="" width="24" height="24">
+            <h2 class="info-card__title">Моя роль</h2>
+          </div>
+          <p class="info-card__text">Продуктовый дизайнер и автор системы: определил архитектуру, спроектировал токены и компоненты, сформировал правила использования и подготовил документацию для внедрения.</p>
+        </article>
+
+        <article class="info-card reveal">
+          <div class="info-card__head">
+            <img class="info-card__icon" src="../assets/icons/case/trending-up.svg" alt="" width="24" height="24">
+            <h2 class="info-card__title">Результат</h2>
+          </div>
+          <!-- В макете двойная точка («в Web и iOS-продуктах.. Команды») — опечатка -->
+          <p class="info-card__text">Система была спроектирована и внедрена за 3 месяца и использовалась в Web и iOS-продуктах. Команды получили единую основу для проектирования и разработки интерфейсов.</p>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 КОНТЕКСТ (Figma 442:1223): 400 = 336 картинка + отбивка 64 -->
+  <section class="case-section" aria-labelledby="case-01">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">01</p>
+          <h2 class="case-section__title" id="case-01">Контекст</h2>
+          <div class="case-section__body">
+            <p>Компания развивала несколько цифровых продуктов, но интерфейсы постепенно расходились: разные подходы к компонентам, стилям и поведению элементов усложняли поддержку и замедляли разработку. Задача — собрать эти решения в единую масштабируемую систему, которая работает сразу на нескольких платформах.</p>
+          </div>
+        </div>
+
+        <!-- Рамка секции — 672×336 (ровно 2:1, 442:1228), кадр 1344×672 ровно в 2×:
+             обрезки по object-fit: cover нет вовсе. Прежняя заглушка была 1376×768
+             (≈1.79:1) и теряла около 10 % высоты -->
+        <div class="case-media case-media--context reveal">
+          <img src="../assets/img/case-ds/context.jpg" alt="График проекта в системе СТРОИТЕЛЬ: секции, несущие конструкции и стройконтроль"
+               width="1344" height="672" loading="lazy">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 ЧТО БЫЛО СДЕЛАНО (Figma 442:1233): четыре шага по 156 с гэпом 16 -->
+  <section class="case-section" aria-labelledby="case-02">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">02</p>
+          <h2 class="case-section__title" id="case-02">Что было сделано</h2>
+          <div class="case-section__body">
+            <p>Провёл аудит существующих интерфейсов и определил ключевые проблемы. На основе анализа сформировал архитектуру дизайн-системы, спроектировал токены и библиотеку компонентов, подготовил документацию и сопровождал внедрение вместе с командами разработки.</p>
+          </div>
+        </div>
+
+        <!-- Перенос в подписях задан вручную: в макете у каждой ровно две строки,
+             а замена Neue Montreal на Inter Tight делает естественный перенос
+             непредсказуемым -->
+        <ul class="case-media step-cards reveal">
+          <li class="step-card">
+            <span class="step-card__badge"><img class="step-card__icon" src="../assets/icons/case/search.svg" alt="" width="20" height="20"></span>
+            <p class="step-card__label">Анализ<br>и аудит</p>
+          </li>
+          <li class="step-card">
+            <span class="step-card__badge"><img class="step-card__icon" src="../assets/icons/case/hexagon-nodes.svg" alt="" width="20" height="20"></span>
+            <p class="step-card__label">Принципы<br>и архитектура</p>
+          </li>
+          <li class="step-card">
+            <span class="step-card__badge"><img class="step-card__icon" src="../assets/icons/case/flask-gear.svg" alt="" width="20" height="20"></span>
+            <p class="step-card__label">Компоненты<br>и гайдлайны</p>
+          </li>
+          <li class="step-card">
+            <span class="step-card__badge"><img class="step-card__icon" src="../assets/icons/case/rocket-launch.svg" alt="" width="20" height="20"></span>
+            <p class="step-card__label">Внедрение<br>и поддержка</p>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 АРХИТЕКТУРА (Figma 451:1287): белая карточка с демо токенов -->
+  <section class="case-section" aria-labelledby="case-03">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">03</p>
+          <h2 class="case-section__title" id="case-03">Архитектура системы</h2>
+          <div class="case-section__body">
+            <p>Спроектировал архитектуру дизайн-системы на основе токенов — цветов, типографики, отступов, теней и других базовых свойств. Такая структура позволила использовать единые принципы на Web, iOS и масштабировать систему без дублирования решений.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <p class="media-card__title">Дизайн-токены</p>
+
+          <div class="token-demos">
+            <div class="token-demo token-demo--colors">
+              <p class="token-demo__label">Цвета</p>
+              <div class="token-demo__swatches">
+                <span class="token-demo__swatch token-demo__swatch--purple"></span>
+                <span class="token-demo__swatch token-demo__swatch--blue"></span>
+                <span class="token-demo__swatch token-demo__swatch--orange"></span>
+                <span class="token-demo__swatch token-demo__swatch--navy"></span>
+              </div>
+            </div>
+
+            <div class="token-demo">
+              <p class="token-demo__label">Типографика</p>
+              <p class="token-demo__type"><span>Aa</span><span>Aa</span><span>Aa</span></p>
+            </div>
+
+            <div class="token-demo">
+              <p class="token-demo__label">Отступы</p>
+              <div class="token-demo__spacing">
+                <span class="token-demo__step token-demo__step--1"></span>
+                <span class="token-demo__step token-demo__step--2"></span>
+                <span class="token-demo__step token-demo__step--3"></span>
+              </div>
+            </div>
+
+            <div class="token-demo">
+              <p class="token-demo__label">Тени</p>
+              <div class="token-demo__shadows">
+                <span class="token-demo__shadow token-demo__shadow--1"></span>
+                <span class="token-demo__shadow token-demo__shadow--2"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 КОМПОНЕНТЫ (Figma 452:1364): веер из четырёх скриншотов, кроп 624×206.
+       Ссылки на ассеты живут ограниченно, все файлы скачаны в assets/img/case-ds -->
+  <section class="case-section" aria-labelledby="case-04">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">04</p>
+          <h2 class="case-section__title" id="case-04">Компоненты</h2>
+          <div class="case-section__body">
+            <p>Спроектировал 100+ переиспользуемых компонентов — от базовых элементов интерфейса до сложных виджетов и паттернов. Для компонентов определил состояния, варианты, правила использования и взаимодействие между элементами.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="collage collage--components">
+            <div class="collage__item collage__item--tilt collage__item--1">
+              <img src="../assets/img/case-ds/component-1.png" alt="" width="1324" height="822" loading="lazy">
+            </div>
+            <div class="collage__item collage__item--tilt collage__item--2">
+              <img src="../assets/img/case-ds/component-2.png" alt="" width="1672" height="952" loading="lazy">
+            </div>
+            <div class="collage__item collage__item--tilt collage__item--3">
+              <img src="../assets/img/case-ds/component-3.png" alt="" width="1444" height="1250" loading="lazy">
+            </div>
+            <div class="collage__item collage__item--tilt-small collage__item--4">
+              <img src="../assets/img/case-ds/component-4.png" alt="" width="1190" height="1122" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ДИЗАЙН-СИСТЕМА В ПРОДУКТАХ (Figma 483:257): два наложенных экрана,
+       кроп 624×352, акцентная строка в конце текста -->
+  <section class="case-section" aria-labelledby="case-05">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">05</p>
+          <h2 class="case-section__title" id="case-05">Дизайн-система в продуктах</h2>
+          <div class="case-section__body">
+            <p>Дизайн-система была внедрена в 17 цифровых продуктов компании. Единые компоненты, токены и принципы позволили сохранить общий визуальный язык разных продуктовых сценариев.</p>
+          </div>
+          <!-- В макете между «компонентов» и «·» два пробела — оставлен один -->
+          <p class="case-section__summary">17 продуктов · 100+ компонентов · 3 месяца</p>
+        </div>
+
+        <!-- Нижнее поле 32, а не 24: в макете карточка 672×408 при клипе 624×352
+             в точке (24,24) — то есть снизу остаётся 32. В карточках 03 и 04
+             поля симметричные, здесь — нет; повторил как в макете -->
+        <div class="case-media media-card media-card--product reveal">
+          <div class="collage collage--product">
+            <div class="collage__item collage__item--filters">
+              <img src="../assets/img/case-ds/product-filters.png" alt="" width="1440" height="900" loading="lazy">
+            </div>
+            <div class="collage__item collage__item--questions">
+              <img src="../assets/img/case-ds/product-questions.png" alt="" width="1440" height="1580" loading="lazy">
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ПОДВАЛ — тот же, что на главной (Figma 486:382): три колонки,
+     обо мне / компетенции / контакты -->
+<footer class="footer footer--flush" id="about">
+  <div class="container">
+    <div class="footer__grid">
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Обо мне</h2>
+        <div class="footer__card">
+          <p class="footer__text">Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена.</p>
+          <a class="footer__cv" href="https://dopler.lineband.ru/CVDDV.pdf"
+             target="_blank" rel="noopener">Скачать CV · PDF</a>
+        </div>
+      </section>
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Компетенции</h2>
+        <div class="footer__card">
+          <ul class="footer__skills">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX/UI</li>
+            <li class="pill pill--accent">Complex Products</li>
+            <li class="pill pill--accent">Design Leadership</li>
+            <li class="pill pill--accent">Research</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="footer__col reveal" id="contacts">
+        <h2 class="footer__title">Контакты</h2>
+        <div class="footer__card">
+          <ul class="footer__contacts">
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-email.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="mailto:dopler@lineband.ru">dopler@lineband.ru</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-telegram.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="https://t.me/Dmitry_Druzhkov" target="_blank" rel="noopener">@Dmitry_Druzhkov</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-phone.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="tel:+79037624574">+7 903 762 45 74</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+html,body{margin:0;background:#fff}canvas{display:block}
+</style></head><body>
+<canvas id="c"></canvas>
+<script>
+var img = new Image();
+img.onload = function () {
+  var c = document.getElementById('c'), x = c.getContext('2d');
+  c.width = 1440; c.height = 461;
+  x.drawImage(img, 0, 3386, 1440, 461, 0, 0, 1440, 461);
+};
+img.src = 'case05-render.png';
+</script></body></html>
