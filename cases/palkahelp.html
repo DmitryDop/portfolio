@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Палка-выручалка — кейс Дмитрия Дружкова</title>
+<meta name="description" content="Как я собрал PALKAHELP: от идеи и дизайна до разработки, деплоя и первой реальной заявки. Маленький продуктовый эксперимент без большой команды.">
+
+<!--
+  Источник макета: Figma «A», фрейм «Портфолио/Разное/Palkahelp» (node 1049:6353,
+  1440×3767 — высота фрейма не auto и осталась от прежней ревизии; фактическая
+  сумма блоков 3750,23). Общие стили, скрипт и ассеты лежат в корне сайта,
+  поэтому пути начинаются с «../». Шапка и подвал здесь — копия разметки
+  главной: сборки в проекте нет, поэтому шаблон пока дублируется руками.
+
+  Отличия этого фрейма от остальных кейсов:
+  • нет ни показателей, ни инфо-карточек «Задача / Моя роль / Результат» —
+    после хиро сразу идут секции;
+  • все шесть секций — одна и та же пара «текст слева + белая карточка справа»,
+    различаются только пропорции кадров (модификаторы --idea…--result);
+  • в левой колонке секции 04 стоит реплика (.case-quote) — в макете это
+    фрейм «q» (1049:9681) с акцентной линией слева;
+  • в суб-хедерe кнопка ведёт не в Figma, а на живой сайт: в макете её текст —
+    «Palkahelp.ru ↗» (1049:6370), иконка Figma (1049:6368) скрыта. Правка
+    Дмитрия, 2026-10-02;
+  • кадр секции 06 (1074:8727) в макете обёрнут в ссылку на palkahelp.ru —
+    тоже правка 2026-10-02.
+
+  Ритм отбивок. Хиро кончается на 490 (медиа 426 + pb 64), дальше все секции
+  идут встык: у каждой pb 64 и pt 0, кроме первой, у которой есть и pt 64 —
+  отсюда 128 от кадра хиро до первой карточки, как в макете. Высоту каждой
+  секции задаёт правая колонка, и после правки 2026-10-02 («hug блоку»)
+  карточка везде равна 48 + высота кадра — хардкод не нужен:
+  64 + 347,96 + 64 = 475,96 · 343,94 + 64 = 407,94 · 347,96 + 64 = 411,96 ·
+  516 + 64 = 580 · 296,37 + 64 = 360,37 · 464 + 64 = 528. Вместе с подвалом
+  304 и шапкой с суб-хедером 192 это даёт 3750,23 — расхождение с полем
+  height фрейма (3767) целиком из его устаревшего значения.
+
+  Картинки секций — той же плотности, что в остальных кейсах: 2x. Кадры
+  выгружены ровно по рамкам макета, поэтому object-fit: cover ничего не режет;
+  скругления запечены в PNG белым (фон карточки в макете тоже белый) и
+  поэтому совпадают с .media-card без отдельного border-radius.
+-->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<!-- Метка «JS доступен»: без неё блоки с .reveal остаются видимыми -->
+<script>document.documentElement.classList.add('js');</script>
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function(m,e,t,r,i,k,a){
+        m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+        m[i].l=1*new Date();
+        for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+        k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)
+    })(window, document,'script','https://mc.yandex.ru/metrika/tag.js?id=113074775', 'ym');
+
+    ym(113074775, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLayer", referrer: document.referrer, url: location.href, accurateTrackBounce:true, trackLinks:true});
+
+    /* Счётчик инициализирован с ssr:true — автоматический хит отключён, и без
+       этого вызова просмотры страницы кейса не попадают в статистику */
+    ym(113074775, 'hit', location.href);
+</script>
+<!-- /Yandex.Metrika counter -->
+</head>
+<body>
+
+<!-- Пиксель Метрики для случая с выключенным JS — как на главной, вынесен в body -->
+<!-- Yandex.Metrika counter -->
+<noscript><div><img src="https://mc.yandex.ru/watch/113074775" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+<!-- /Yandex.Metrika counter -->
+
+<!-- Шапка кейса (1049:6354): белая полоса 88 с нижней границей (#e5eaef, 1px
+     INSIDE), бренд слева. Состояния «поверх фото» у неё нет — стили в блоке 11 -->
+<header class="header header--solid" id="header">
+  <div class="header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__name">ДМИТРИЙ ДРУЖКОВ</span>
+      <span class="brand__role">— ПРОДУКТОВЫЙ ДИЗАЙНЕР</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../index.html#about">Обо мне</a></li>
+        <li><a class="nav__link" href="../index.html#work">Мои работы</a></li>
+        <li><a class="nav__link" href="../index.html#contacts">Контакты</a></li>
+      </ul>
+      <a class="btn btn--cta" href="../index.html#contacts">Связаться</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button"
+            aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+  <!-- СУБ-ХЕДЕР: возврат к работам и кнопка на живой сайт (1049:6364).
+       Кнопка — тот же .btn--figma, но без иконки: в макете узел 1049:6368
+       скрыт, а текст заменён на «Palkahelp.ru ↗». Габарит сходится сам:
+       18 + 86 + 18 = 122, как в макете -->
+  <div class="sub-header">
+    <div class="container">
+      <div class="sub-header__row">
+        <a class="sub-header__back" href="../index.html#work">← Мои работы</a>
+        <a class="btn--figma" href="https://palkahelp.ru" target="_blank" rel="noopener">Palkahelp.ru ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ХИРО (1049:6372): колонки 671 + 32 + 672, высота 490 = медиа 426 + pb 64.
+       Левый блок 239 = заголовок 109 (номер 24 + гэп 8 + строка 77) + гэп 24 +
+       лид 48 + гэп 24 + плашки 34. Заголовок в макете — одна строка, поэтому
+       жёсткого переноса здесь нет, в отличие от кейсов 01–03.
+       Кадр «palka» (1049:6388) выгружен вместе с запечённым скруглением
+       радиусом 24 — обводка .case-hero__media его не меняет -->
+  <section class="case-hero">
+    <div class="container">
+      <div class="case-hero__inner">
+
+        <div class="case-hero__text">
+          <div class="case-hero__head">
+            <p class="case-hero__num">01</p>
+            <h1 class="case-hero__title">Палка-выручалка</h1>
+          </div>
+
+          <p class="case-hero__lead">Маленький продуктовый эксперимент: от идеи и дизайна до разработки, деплоя и первой реальной заявки.</p>
+
+          <ul class="case-hero__tags">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">AI-assisted</li>
+            <li class="pill pill--accent">Web</li>
+            <li class="pill pill--accent">Pet Project</li>
+          </ul>
+        </div>
+
+        <div class="case-hero__media">
+          <img src="../assets/img/case-07/hero.png" alt="Схема пользовательского пути — от первого экрана до оформления заказа — и ноутбук с главной страницей PALKAHELP"
+               width="1344" height="852" fetchpriority="high">
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 01 КОНТЕКСТ (1049:6389): pt 64 + карточка 347,96 + pb 64 = 475,96.
+       Кадр 1078:8743 в макете — 624×299,96, нормализовано до 624/300 -->
+  <section class="case-section case-section--top" aria-labelledby="case-01">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">01</p>
+          <h2 class="case-section__title" id="case-01">От идеи до работающего продукта</h2>
+          <div class="case-section__body">
+            <p>PALKAHELP начался как небольшой эксперимент: хотелось проверить, насколько быстро сегодня можно пройти весь путь от идеи до работающего продукта без большой команды.</p>
+            <p>Я отвечал за продуктовую логику, UX/UI и визуальную часть, а ИИ использовал как инструмент для разработки, настройки инфраструктуры и запуска.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--idea">
+            <img src="../assets/img/case-07/section-01.png" alt="Ноутбук с главной страницей PALKAHELP: заголовок «У вас проблемы?» и каталог бейсбольных бит" width="1248" height="600" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 СЦЕНАРИЙ (1049:6443): карточка 343,94 + pb 64 = 407,94.
+       Кадр 1084:6498 — 624×295,94, нормализовано до 624/296 -->
+  <section class="case-section" aria-labelledby="case-02">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">02</p>
+          <h2 class="case-section__title" id="case-02">Сначала сценарий, потом интерфейс</h2>
+          <div class="case-section__body">
+            <p>Основной сценарий специально сделали максимально коротким: пользователь выбирает бейсбольную биту, указывает количество и сразу переходит к заказу.</p>
+            <p>От классической корзины отказались — для трёх товаров она только добавляла лишний шаг. В карточке оставили количество и прямой CTA «Заказать», а в форме всегда видно, какой товар выбран.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--flow">
+            <img src="../assets/img/case-07/section-02.png" alt="Карточка биты с количеством и кнопкой «Заказать», окно оформления заказа и подтверждение «Вызов принят»" width="1248" height="592" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 ПРОД (1049:6650): карточка 347,96 + pb 64 = 411,96.
+       Кадр 1072:8709 — 624×299,96, нормализовано до 624/300 -->
+  <section class="case-section" aria-labelledby="case-03">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">03</p>
+          <h2 class="case-section__title" id="case-03">Из Figma — сразу в прод</h2>
+          <div class="case-section__body">
+            <p>После дизайна сайт был собран и развернут на собственном сервере: домен, HTTPS, формы, отправка заявок, политика обработки данных и техническая инфраструктура.</p>
+            <p>Вместо передачи макетов отдельной команде разработки дизайн практически сразу превращался в работающий интерфейс.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--deploy">
+            <img src="../assets/img/case-07/section-03.png" alt="Окно браузера с сайтом palkahelp.ru и окно терминала с подключением к серверу по ssh" width="1248" height="600" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 ИИ (1049:6660): карточка 516 + pb 64 = 580. Кадр 1072:8704 — 624×468,
+       это единственная пропорция фрейма, совпавшая с кейсом 06 без правки.
+       Левая колонка здесь выше остальных (320): под текстом стоит реплика
+       «q» (1049:9681) — 88 = поля 8 + три строки 24 + 8, гэп 16 от текста -->
+  <section class="case-section" aria-labelledby="case-04">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">04</p>
+          <h2 class="case-section__title" id="case-04">ИИ как часть рабочего процесса</h2>
+          <div class="case-section__body">
+            <p>ИИ использовался не ради отдельной функции продукта, а как рабочий инструмент на всём пути: обсуждение сценариев, проверка решений, генерация вариантов, работа с кодом и деплоем.</p>
+            <p>Он сильно ускорял работу — но не отменял необходимость самому понимать, что происходит.</p>
+          </div>
+          <p class="case-quote">В какой-то момент я около четырёх часов пытался объяснить ИИ ошибку в вёрстке. В итоге исправил её сам — и только после этого выяснилось, что всё это время была выбрана не та модель.</p>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--ai">
+            <img src="../assets/img/case-07/section-04.png" alt="Человек и робот за мониторами: на экранах — этапы работы над продуктом, от идей и исследований до запуска" width="1248" height="936" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 ЗАПУСК (1049:6672): карточка 296,37 + pb 64 = 360,37. Правый кадр —
+       не картинка, а группа «post» (1072:8721) из картинки и вектора поверх;
+       выгружена целиком, 624×248,37, нормализовано до 624/248 -->
+  <section class="case-section" aria-labelledby="case-05">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">05</p>
+          <h2 class="case-section__title" id="case-05">Запуск</h2>
+          <div class="case-section__body">
+            <p>После публикации сайт стал настоящим продуктом: пользователь мог открыть его, выбрать товар, заполнить форму и отправить заказ.</p>
+            <p>И потом произошло главное. Пришла первая настоящая заявка.</p>
+            <p>Никаких миллионов пользователей, инвестраунда и графика роста на 480%.</p>
+            <p>Просто человек нажал кнопку — и весь собранный сценарий отработал от начала до конца.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--launch">
+            <img src="../assets/img/case-07/section-05.png" alt="Письмо «Заявка с сайта palkahelp.ru»: номер заявки, имя, телефон и позиция «Аргумент Diamond» на 15 999 ₽" width="1248" height="497" loading="lazy">
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 ЧТО ПОЛУЧИЛОСЬ (1049:6679): карточка 464 + pb 64 = 528. Кадр 1074:8727 —
+       624×416. В макете он обёрнут в ссылку на живой сайт (правка Дмитрия,
+       2026-10-02), поэтому <a> стоит между .case-media__shot и <img>, а alt
+       картинки работает ещё и текстом ссылки -->
+  <section class="case-section" aria-labelledby="case-06">
+    <div class="container">
+      <div class="case-section__inner">
+
+        <div class="case-section__text reveal">
+          <p class="case-section__num">06</p>
+          <h2 class="case-section__title" id="case-06">Что получилось</h2>
+          <div class="case-section__body">
+            <p>Не стартап. Не единорог. Не концепт на Behance.</p>
+            <p>Работающий маленький продукт, который прошёл путь от идеи до живого запуска.</p>
+            <p>Для меня этот эксперимент был важен ещё и потому, что граница между дизайнером и разработкой стала гораздо тоньше: сегодня небольшую продуктовую гипотезу можно не только нарисовать — её можно самому довести до пользователя.</p>
+          </div>
+        </div>
+
+        <div class="case-media media-card reveal">
+          <div class="case-media__shot case-media__shot--result">
+            <a class="case-media__link" href="https://palkahelp.ru" target="_blank" rel="noopener">
+              <img src="../assets/img/case-07/section-06.png" alt="Сайт PALKAHELP работает: ноутбук с главной страницей и бейсбольная бита" width="1248" height="832" loading="lazy">
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ПОДВАЛ — тот же, что на главной: три колонки, обо мне / компетенции / контакты -->
+<footer class="footer footer--flush" id="about">
+  <div class="container">
+    <div class="footer__grid">
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Обо мне</h2>
+        <div class="footer__card">
+          <p class="footer__text">Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до продакшена.</p>
+          <a class="footer__cv" href="https://dopler.lineband.ru/CVDDV.pdf"
+             target="_blank" rel="noopener">Скачать CV · PDF</a>
+        </div>
+      </section>
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Компетенции</h2>
+        <div class="footer__card">
+          <ul class="footer__skills">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX/UI</li>
+            <li class="pill pill--accent">Complex Products</li>
+            <li class="pill pill--accent">Design Leadership</li>
+            <li class="pill pill--accent">Research</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="footer__col reveal" id="contacts">
+        <h2 class="footer__title">Контакты</h2>
+        <div class="footer__card">
+          <ul class="footer__contacts">
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-email.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="mailto:dopler@lineband.ru">dopler@lineband.ru</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-telegram.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="https://t.me/Dmitry_Druzhkov" target="_blank" rel="noopener">@Dmitry_Druzhkov</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-phone.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="tel:+79037624574">+7 903 762 45 74</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+
+<script src="../js/main.js"></script>
+</body>
+</html>

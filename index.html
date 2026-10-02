@@ -138,18 +138,21 @@
         <h2 class="section__title">Мои работы</h2>
       </div>
 
-      <!-- Табы портфолио: два экрана одного блока (Figma 402:3423 / 402:3456).
-           Активный — с подчёркиванием 4px и цветом акцента, неактивный —
-           цветом текста. Разметка по паттерну ARIA tabs: стрелки, Home/End. -->
+      <!-- Табы портфолио: три экрана одного блока (Figma 402:3423 / 402:3456 /
+           1048:6185). Активный — с подчёркиванием 4px и цветом акцента,
+           неактивный — цветом текста. Разметка по паттерну ARIA tabs:
+           стрелки, Home/End. -->
       <div class="tabs" id="portfolio-tabs" role="tablist" aria-label="Портфолио">
         <button class="tabs__tab" id="tab-sd" type="button" role="tab"
                 aria-selected="true" aria-controls="panel-sd">Страна Девелопмент</button>
         <button class="tabs__tab" id="tab-bru" type="button" role="tab"
                 aria-selected="false" aria-controls="panel-bru" tabindex="-1">Banki.ru</button>
+        <button class="tabs__tab" id="tab-raznoe" type="button" role="tab"
+                aria-selected="false" aria-controls="panel-raznoe" tabindex="-1">Разное</button>
       </div>
 
       <div class="panel" id="panel-sd" role="tabpanel" aria-labelledby="tab-sd" tabindex="0">
-        <!-- Период дат под табами (Figma 760:5055, узел 940:9329): 16/24, вес 500,
+        <!-- Период дат под табами (Figma 760:5055, узел 940:9329; у Banki.ru — 949:11217): 16/24, вес 500,
              цвет текста, во всю ширину. Свой у каждой панели — период относится
              к содержимому таба, поэтому лежит в панели, а не под переключателем -->
         <p class="panel__period">2023 — 2026</p>
@@ -207,11 +210,9 @@
 
           <!-- Третья карточка с готовой страницей кейса: как и первые две — ссылка,
                а не кнопка-заглушка, поэтому role="button" и tabindex сняты.
-               Тексты — из макета главной (файл A), а не из фрейма кейса 563:1010:
-               и подзаголовок про ценообразование, и набор плашек UX/UI, Web, B2B,
-               Веб-приложение стоят только на карточке главной. Заголовок кейса
-               там же короче — «Веб-приложение «Реактор»» вместо «Реактор —
-               шахматка квартир» -->
+               Тексты — из макета главной (файл A, карточка-инстанс 760:5090,
+               правка 2026-10-02): «Реактор» в названии больше нет — заголовок
+               «Шахматка квартир», описание про систему ценообразования -->
           <article class="project reveal">
             <div class="project__media">
               <img src="assets/img/project-03.png" alt="" width="1536" height="1024" loading="lazy">
@@ -219,9 +220,9 @@
             <div class="project__body">
               <div class="project__head">
                 <p class="project__num">03</p>
-                <h3 class="project__title">Веб-приложение «Реактор»</h3>
+                <h3 class="project__title">Шахматка квартир</h3>
               </div>
-              <p class="project__desc">Система динамического ценообразования повышает точность корректировки цен и выручку, экономя время на управленческие решения.</p>
+              <p class="project__desc">Система динамического ценообразования для управления ценами, остатками и корректировками квартир.</p>
               <ul class="project__tags">
                 <li class="tag">UX/UI</li>
                 <li class="tag">Web</li>
@@ -230,7 +231,7 @@
               </ul>
             </div>
             <a class="project__link" href="cases/reactor.html"
-               aria-label="Веб-приложение «Реактор» — открыть кейс"></a>
+               aria-label="Шахматка квартир — открыть кейс"></a>
           </article>
 
           <!-- Четвёртая карточка с готовой страницей кейса: как и предыдущие три —
@@ -309,11 +310,41 @@
            убран. Без .reveal: панель показывается кликом, а не приезжает
            при скролле — иначе до срабатывания наблюдателя она прозрачная -->
       <div class="panel" id="panel-bru" role="tabpanel" aria-labelledby="tab-bru" hidden>
-        <!-- Период дат для этой вкладки (Figma 760:6379, узел 948:11214) -->
-        <p class="panel__period">2003 — 2008</p>
+        <!-- Период дат для этой вкладки (Figma 760:6379, узел 949:11217) -->
+        <p class="panel__period">2010 — 2023</p>
 
         <div class="empty">
           <a class="empty__link" href="https://www.figma.com/proto/YTlJcCwU4kQrqnFL8pDjOk/%D0%9F%D0%BE%D1%80%D1%82%D1%84%D0%BE%D0%BB%D0%B8%D0%BE?node-id=1-2&amp;p=f&amp;viewport=821%2C902%2C0.1&amp;t=22S03bPLWQC0iqFZ-1&amp;scaling=contain&amp;content-scaling=fixed&amp;starting-point-node-id=1%3A2&amp;page-id=0%3A1" target="_blank" rel="noopener">Посмотреть портфолио в Figma</a>
+        </div>
+      </div>
+
+      <!-- Экран «Разное» (Figma 1048:6156): одна карточка в первой колонке сетки
+           (инстанс 1048:6279, узел 1048:6278). Строки периода дат у этого таба
+           в кадре нет — карточка встаёт через 32 после табов, как и в макете
+           (Title 163 → row1 195), поэтому .panel__period здесь не выводится.
+           Без .reveal: панель показывается кликом, а не приезжает при скролле -->
+      <div class="panel" id="panel-raznoe" role="tabpanel" aria-labelledby="tab-raznoe" hidden>
+        <div class="projects">
+          <article class="project">
+            <div class="project__media">
+              <img src="assets/img/project-07.png" alt="" width="1536" height="1024" loading="lazy">
+            </div>
+            <div class="project__body">
+              <div class="project__head">
+                <p class="project__num">01</p>
+                <h3 class="project__title">Палка-выручалка</h3>
+              </div>
+              <p class="project__desc">Придумал продукт, собрал интерфейс, подключил ИИ, задеплоил и получил первую заявку. Потому что иногда проще сделать, чем согласовывать.</p>
+              <ul class="project__tags">
+                <li class="tag">Product Design</li>
+                <li class="tag">AI-assisted</li>
+                <li class="tag">Web</li>
+                <li class="tag">Pet Project</li>
+              </ul>
+            </div>
+            <a class="project__link" href="cases/palkahelp.html"
+               aria-label="Палка-выручалка — открыть кейс"></a>
+          </article>
         </div>
       </div>
     </div>

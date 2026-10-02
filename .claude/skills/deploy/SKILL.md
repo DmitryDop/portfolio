@@ -11,13 +11,13 @@ description: Деплой портфолио на production-сервер SWEB �
 ## Environment
 
 Server:
-`sweb`
+`lineba`
 
 Remote path:
 `/home/l/linebaru/dopler/public_html`
 
 Production URL:
-`https://dopler.lineband.ru/`
+`http://dopler.lineband.ru/`
 
 Deployment tool:
 `rsync`
@@ -90,10 +90,11 @@ Deployment tool:
 
 После загрузки:
 
-* проверь наличие `index.html` на сервере;
-* проверь, что файл доступен;
-* если возможно, проверь production-сайт;
-* сообщи пользователю результат проверки.
+- проверь наличие `index.html` на сервере;
+- проверь, что размер `index.html` соответствует локальному файлу;
+- проверь HTTP-статус Production URL;
+- убедись, что Production URL отдаёт страницу;
+- сообщи пользователю результат проверки.
 
 ## macOS / rsync compatibility
 
