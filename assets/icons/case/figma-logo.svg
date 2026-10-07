@@ -1,0 +1,8 @@
+<svg width="16" height="16" viewBox="0 0 38 57" fill="none" xmlns="http://www.w3.org/2000/svg">
+<!-- Логотип Figma, сплошная заливка Text-Icon/Contrast-Themed #f0f5ff -->
+<path fill="#f0f5ff" d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0Z"/>
+<path fill="#f0f5ff" d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0Z"/>
+<path fill="#f0f5ff" d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19Z"/>
+<path fill="#f0f5ff" d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5Z"/>
+<path fill="#f0f5ff" d="M0 28.5A9.5 9.5 0 0 1 9.5 19H19v19H9.5A9.5 9.5 0 0 1 0 28.5Z"/>
+</svg>
