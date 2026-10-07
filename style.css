@@ -969,8 +969,10 @@ html { scroll-behavior: smooth; }
 }
 .sub-header__back:hover { color: var(--color-accent); }
 
-/* Кнопка на UI-кит (442:1148): 173×40 = поля 18/10, иконка 16, гэп 8, строка 20.
-   Высота задана явно: в Figma обводка 1px лежит внутри бокса 40 */
+/* Кнопка (760:6249): 173×40 = поля 18/10, иконка 16, гэп 8, строка 20.
+   Заливка Surface/Action/default #005ffc, текст Text-Icon/Contrast-Themed
+   #f0f5ff, обводки у новой кнопки нет; hover — Surface/Action-heavy #004CCA.
+   Высота задана явно: строка + поля дают ровно 40 */
 .btn--figma {
   display: inline-flex;
   flex: 0 0 auto;
@@ -978,18 +980,17 @@ html { scroll-behavior: smooth; }
   gap: var(--space-xs);
   height: 40px;
   padding: 10px 18px;
-  border: 1px solid var(--color-border-soft);
   border-radius: 12px;
-  background: var(--color-surface);
+  background: var(--Surface-Action-default, #005ffc);
   font-size: var(--fs-body-sm);
   line-height: var(--lh-body-sm);
   font-weight: 500;
-  color: var(--color-text);
+  color: var(--Text-Icon-Contrast-Themed, #f0f5ff);
   text-decoration: none;
   white-space: nowrap;
-  transition: border-color .2s ease, color .2s ease;
+  transition: background .2s ease;
 }
-.btn--figma:hover { border-color: var(--color-accent); color: var(--color-accent); }
+.btn--figma:hover { background: var(--Surface-Action-heavy, #004CCA); }
 .btn--figma img { display: block; flex: 0 0 auto; width: 16px; height: 16px; }
 
 /* ----------------------------- Хиро кейса -------------------------------- */
