@@ -13,6 +13,9 @@ When generating text responses, documentation, or commits in Russian, you must a
 
 
 ## Deployment
+- Follow `AGENTS.md`, `.agents/skills/deploy/SKILL.md`, and `docs/production-protocol.md`.
+- Real uploads, including rollback, require an explicit `DEPLOY` command for the reviewed plan. No check bypass is allowed.
+- Upload a snapshot of the pinned commit, verify SHA-256 content, and record verified history. Do not infer success from a SHA, size, or mtime.
 - Never delete remote files without explicit confirmation.
 - Never use destructive deployment commands without explicit confirmation.
 - Always verify the deployment after upload.

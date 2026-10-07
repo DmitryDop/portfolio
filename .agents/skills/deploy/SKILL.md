@@ -1,353 +1,103 @@
 ---
 name: deploy
-description: Деплой портфолио на production-сервер SpaceWeb через rsync. Используй этот Skill при запросах на деплой, публикацию или обновление production-версии сайта.
+description: Проверяемый deploy portfolio из зафиксированного Git commit через rsync.
 ---
 
 # Deploy
 
-## Purpose
-
-Безопасно задеплоить текущую версию portfolio на production.
-
-Пользователь всегда является финальным лицом, принимающим решение о деплое.
-
----
-
-## Environment
-
-Server (SSH alias):
-
-`lineba`
-
-Remote path:
-
-`/home/l/linebaru/dopler/public_html`
-
-Production URL:
-
-`https://dopler.lineband.ru/`
-
-Deployment tool:
-
-`rsync`
-
-Работай только из корневой папки проекта.
-
----
-
-# Deployment modes
-
-## 1. SAFE DEPLOY — режим по умолчанию
-
-Если пользователь просто просит:
-
-- `деплой`
-- `задеплой`
-- `выложи`
-- `обнови прод`
-- `deploy`
-
-используй SAFE DEPLOY.
-
-### Before deployment
-
-1. Убедись, что находишься в корне проекта.
-2. Выполни `git status`.
-3. Покажи:
-   - текущую ветку;
-   - текущий commit;
-   - изменённые файлы;
-   - untracked-файлы.
-4. Убедись, что production-версия соответствует конкретному Git commit:
-   - production-файлы не должны содержать незакоммиченные изменения;
-   - если есть production-relevant uncommitted changes — остановись и предложи сначала commit.
-5. Если настроен `origin`:
-   - выполни `git fetch origin`;
-   - проверь, что текущий commit отправлен в GitHub;
-   - если локальная ветка и `origin/main` расходятся — остановись и сообщи пользователю.
-6. Определи production-файлы проекта.
-7. Убедись, что запрещённые и служебные файлы не попадут на сервер.
-8. Запусти доступные для проекта проверки.
-9. Выполни `rsync` только в режиме dry-run (`-n`).
-10. Не выполняй настоящий deploy на этом этапе.
-
-### Checks for portfolio
-
-Portfolio — статический сайт.
-
-Минимально проверь:
-
-- наличие `index.html`;
-- наличие `style.css`;
-- существование локальных файлов, на которые ссылаются изменённые HTML/CSS/JS;
-- отсутствие случайно добавленных secrets и локальных конфигураций;
-- при наличии проектных тестов или lint-команд — выполни их.
-
-Не придумывай проверки, которых в проекте нет.
-
-### rsync
-
-Для portfolio используй совместимые с macOS параметры:
-
-`-rvz`
-
-Для dry-run добавляй:
-
-`-n`
-
-Не используй без отдельной необходимости:
-
-`-a`
-
-`--delete`
-
-`--delete-excluded`
-
-Источник deploy — корень проекта.
-
-Deployment target:
-
-`lineba:/home/l/linebaru/dopler/public_html/`
-
-### Deployment preview
-
-После проверок и dry-run покажи короткий итог:
-
-- branch;
-- commit;
-- Git sync status;
-- какие файлы будут загружены;
-- какие файлы исключены;
-- результаты проверок;
-- результат dry-run;
-- deployment target;
-- будут ли удаляться файлы;
-- найденные риски.
-
-После этого остановись и спроси:
-
-`Продолжить деплой?`
-
-До явного подтверждения пользователя production не изменять.
-
----
-
-## 2. BOSS OVERRIDE
-
-Пользователь является владельцем процесса и может явно приказать выполнить немедленный deploy.
-
-Примеры:
-
-- `лей сразу`
-- `лей быстрее всё`
-- `деплой без проверок`
-- `пропусти проверки`
-- `deploy now`
-- `skip checks and deploy`
-
-При явном Boss override:
-
-1. Не спорь с пользователем.
-2. Не выполняй обычные quality checks, которые пользователь приказал пропустить.
-3. Не требуй SAFE DEPLOY.
-4. Кратко сообщи, какие проверки будут пропущены.
-5. Выполни deploy без дополнительного вопроса `Продолжить?`.
-
-### Critical safety checks
-
-Boss override НЕ отключает базовую защиту production.
-
-Даже при немедленном deploy:
-
-- production должен соответствовать конкретному Git commit;
-- не загружай `.env` и `.env.*`;
-- не загружай SSH-ключи;
-- не загружай пароли, API keys и другие secrets;
-- не загружай `.git/`;
-- не загружай `.agents/`;
-- не загружай `.claude/`;
-- не загружай `.deploy/`;
-- не загружай `.gitignore`;
-- не загружай `AGENTS.md`;
-- не загружай `CLAUDE.md`;
-- не загружай `.DS_Store`;
-- не изменяй `.well-known/`;
-- не изменяй `.htaccess`;
-- не публикуй приватные серверные файлы;
-- не используй `--delete`, если пользователь явно не разрешил удаление;
-- не удаляй файлы на production без явного разрешения пользователя.
-
-Если обнаружена непосредственная угроза публикации секрета или ключа — остановись и сообщи пользователю.
-
----
-
-# Files excluded from deployment
-
-Всегда исключай как минимум:
-
-- `.git/`
-- `.gitignore`
-- `.agents/`
-- `.claude/`
-- `.deploy/`
-- `.env`
-- `.env.*`
-- `.DS_Store`
-- `CLAUDE.md`
-- `AGENTS.md`
-- `docs/`
-- `tmp/`
-- `PLAN.md`
-- `.well-known/`
-- `.htaccess`
-
-Также исключай:
-
-- SSH private keys;
-- credentials;
-- API keys;
-- локальные конфигурационные файлы с секретами;
-- любые файлы, явно не предназначенные для production.
-
-`.well-known/` и `.htaccess` считаются серверными файлами и не должны перезаписываться обычным deploy.
-
-Если назначение файла неясно — сначала проверь его роль.
-
----
-
-# Production deletion rules
-
-По умолчанию deploy не должен удалять файлы на сервере.
-
-Не используй:
-
-`--delete`
-
-или другие destructive rsync-options без явного разрешения пользователя.
-
-Если удаление действительно необходимо:
-
-1. покажи, что будет удалено;
-2. объясни причину;
-3. запроси отдельное подтверждение.
-
-Boss override не считается автоматическим разрешением на удаление файлов, если пользователь прямо этого не сказал.
-
----
-
-# Deployment
-
-После подтверждения в SAFE DEPLOY или сразу при Boss override:
-
-1. выполни реальный `rsync`;
-2. загружай только production-файлы;
-3. используй те же exclusions, что были показаны в dry-run;
-4. не изменяй файлы вне configured remote path;
-5. не выполняй дополнительные destructive actions автоматически.
-
----
-
-# Post-deployment verification
-
-После каждого реального deploy обязательно выполни smoke-check.
-
-Проверь:
-
-1. наличие `index.html` на сервере;
-2. что `index.html` корректно загружен;
-3. HTTP status `https://dopler.lineband.ru/`;
-4. что production действительно отдаёт страницу;
-5. при необходимости — страницы кейсов или assets, затронутые текущим deploy.
-
-Проверяй только configured Production URL и пути этого проекта.
-
-Не угадывай другие домены.
-Не ищи альтернативные адреса проекта.
-
----
-
-# Deployment report
-
-После завершения сообщи:
-
-- результат deploy;
-- какие файлы были отправлены;
-- результат smoke-check;
-- HTTP status;
-- предупреждения;
-- пропущенные проверки, если использовался Boss override.
-
-Если всё прошло успешно, явно сообщи:
-
-`DEPLOY: SUCCESS`
-
-Если проверка не пройдена, не сообщай об успешном deploy.
-
----
-
-# Production version tracking
-
-После успешного production deploy и успешного smoke-check обнови локальную историю production-версий.
-
-Используй:
-
-`.deploy/production-current`
-
-и
-
-`.deploy/production-previous`
-
-Правила:
-
-1. Выполни `git rev-parse HEAD` и получи commit, который был задеплоен.
-2. Прочитай `.deploy/production-current`.
-3. Если в нём уже есть commit:
-   - запиши его в `.deploy/production-previous`.
-4. Запиши текущий deployed commit в `.deploy/production-current`.
-5. Не обновляй эти файлы, если deploy или smoke-check завершились ошибкой.
-6. Никогда не отправляй `.deploy/` на production через rsync.
-7. После обновления файлов покажи:
-   - предыдущий production commit;
-   - текущий production commit.
-
-Если содержимое `.deploy/production-current` уже совпадает с текущим deployed commit, не меняй историю повторно.
-
-## Git sync for production version
-
-После успешного обновления `.deploy/production-current` и `.deploy/production-previous`:
-
-1. Выполни `git status`.
-2. Добавь только файлы:
-   - `.deploy/production-current`
-   - `.deploy/production-previous`
-3. Создай отдельный commit:
-
-`Record production deploy <short-commit>`
-
-4. Выполни `git push`.
-
-Не включай в этот служебный commit посторонние изменения.
-
-Если `git push` завершился ошибкой:
-
-- production deploy всё равно считается выполненным;
-- сообщи, что production-version metadata не синхронизирована;
-- не скрывай ошибку;
-- не повторяй deploy из-за ошибки Git sync.
-
----
-
-# Failure handling
-
-Если любой этап завершается ошибкой:
-
-1. останови дальнейшие действия;
-2. сообщи, на каком этапе произошла ошибка;
-3. покажи текст ошибки;
-4. не скрывай проблему;
-5. не выполняй следующие destructive actions автоматически;
-6. не пытайся молча чинить production.
-
-Не заявляй об успешном deploy, если post-deployment verification не пройдена.
-
-Если исправление production требует изменения кода или конфигурации — сначала сообщи проблему пользователю и дождись решения.
+Работай из корня проекта. Прочитай `AGENTS.md` и `docs/production-protocol.md`.
+Production: `https://dopler.lineband.ru/`.
+SSH: `lineba`; remote path: `/home/l/linebaru/dopler/public_html/`.
+
+## Разрешение
+
+Реальный deploy возможен только после отдельной явной команды пользователя `DEPLOY`
+для показанных SHA, manifest и dry-run. Симуляция, «да», «лей сразу», «без проверок»
+или упоминание DEPLOY в тексте разрешением не являются. Обхода проверок нет.
+Изменение плана требует новой команды `DEPLOY`. Commit/push не запускают deploy.
+
+## Preflight
+
+1. Выполни `git pull` по AGENTS.md, если не запрещены локальные изменения.
+   В симуляции используй read-only `git ls-remote`; сообщи о пропущенных проверках.
+2. Проверь корень, Git status, ветку, HEAD, tracked/untracked changes. Остановись при
+   незакоммиченных production-файлах. Перед реальным deploy выполни `git fetch origin`
+   и проверь совпадение target с актуальным origin/main. При расхождении остановись.
+3. Зафиксируй полный `TARGET_SHA` до любой загрузки. Все последующие операции используют
+   только его. Не получай deployed commit через HEAD после загрузки.
+4. Выполни `python3 scripts/production.py inspect`. Прочитай SHA metadata и историю
+   по общему протоколу. SHA без evidence не подтверждает успешный deploy.
+5. Если current известен, сравни фактические SHA-256 всех managed-файлов на сервере
+   с его manifest; проверь HTTP и содержимое главной страницы. При расхождении остановись.
+   Если current пуст, явно сообщи: прежняя production-версия неизвестна;
+   первый deploy не создаст previous. Не угадывай прежний commit по Git history.
+6. Подготовь новый временный каталог вне проекта:
+   `python3 scripts/production.py prepare "$TARGET_SHA" "$RELEASE_DIR"`.
+   RELEASE_DIR должен ещё не существовать. Источник rsync — только его `payload/`.
+   Помощник читает blobs зафиксированного commit, отвергает symlinks/submodules,
+   формирует SHA-256 manifest в release.json вне payload и проверяет literal-ссылки.
+7. Проверь index.html/style.css, ссылки HTML/CSS/JS, assets, secrets и проектные тесты.
+   Динамические ссылки JS проверяй вручную. Missing references блокируют deploy.
+   Не копируй ресурсы из рабочей директории. Шрифты не заменяй без согласования.
+8. Перед каждым rsync вызови `check_snapshot` с первоначальным release.json и сравни
+   manifest с `commit_manifest(TARGET_SHA)`. Используй эксклюзивный snapshot;
+   не допускай параллельных операций и изменения snapshot во время загрузки.
+
+## Dry-run и загрузка
+
+Команду формирует `rsync_preview(RELEASE_DIR)`:
+`rsync -rvzcn --itemize-changes [exclusions] "$RELEASE_DIR/payload/" lineba:/home/l/linebaru/dopler/public_html/`.
+`-c` сравнивает содержимое; size/mtime не доказывают совпадение.
+Сохраняй stdout/stderr и exit code. Используй macOS-совместимые `-rvz`, не `-a`.
+Покажи SHA, current/previous и evidence, Git sync, manifest, список файлов,
+exclusions, проверки, dry-run, remote path и отсутствие удалений. При ошибке остановись.
+Запроси отдельную команду `DEPLOY` для этого плана.
+
+После неё повторно проверь snapshot, current, metadata и Git sync. Удали только `n`
+из `-rvzcn`; source, exclusions и target должны совпадать с preview.
+В симуляции реальный rsync запрещён. Не применяй `--delete`, `--delete-excluded`,
+`git reset --hard`, `git clean -fd`. Необходимые удаления требуют точного списка
+managed paths и отдельного разрешения; серверные файлы не удаляй.
+
+## Exclusions
+
+Payload содержит только tracked index.html, style.css, cases/, js/, assets/, fonts/.
+Новый production-каталог требует изменения allowlist. Проверяй secrets и внутри assets.
+Всегда исключай `.git/`, `.gitignore`, `.agents/`, `.claude/`, `.deploy/`, `.env`,
+`.env.*`, `.DS_Store`, CLAUDE.md, AGENTS.md, docs/, tmp/, PLAN.md, `.well-known/`,
+`.htaccess`, scripts/, tests/. Не загружай ключи, credentials, secrets и неизвестные
+конфигурации. Не меняй файлы вне configured remote path и серверные файлы.
+
+## Verification и metadata
+
+После rsync проверь SHA-256 каждого managed-файла на сервере и HTTP 200 + SHA-256
+декодированного тела каждого URL manifest, включая index.html и главную страницу `/`.
+Запросы только к configured URL, без redirect на другие домены. Учитывай compression.
+Сохрани фактические результаты и журнал команды, не подставляй ожидаемые hashes.
+Проверь защищённые серверные файлы до/после. HTTP 200 или size/mtime недостаточны.
+
+Только после полной verification запиши успешное событие и metadata по протоколу,
+используя первоначальный TARGET_SHA. Если upload/smoke-check завершился ошибкой,
+не обновляй успешную историю; сообщи о возможной частичной загрузке.
+Ошибка записи metadata не повод повторять deploy. Историю не исправляй молча.
+Покажи current, previous, event id и verification. `DEPLOY: SUCCESS` допустим только
+после всех проверок и согласованной истории. Commit history.json, SHA-файлов и evidence
+и push — только с отдельным разрешением, никогда автоматически.
+
+
+## Baseline существующей production
+
+При пустой истории и metadata можно подготовить read-only план:
+`python3 scripts/production.py baseline-plan <SHA>`.
+Прочитай раздел baseline в docs/production-protocol.md. Baseline — наблюдение,
+не исторический deploy; нельзя добавлять rsync_exit=0 по предположению.
+После read-only verification покажи SHA, manifest hash, результаты и дополнительные
+серверные файлы. Ничего автоматически не записывай. Требуется отдельное подтверждение
+владельца этого adoption-плана через доверенный канал. Сейчас канал отсутствует,
+save_baseline намеренно блокируется. Не обходи guard через _persist_history,
+ручную запись JSON, локальный флаг или переменную окружения.
+
+После baseline перед следующим deploy обязательно собери новое observation A
+ДО загрузки B и передай его в transition как live_current. При расхождении остановись
+до rsync. Только после успешной загрузки/verification B состояние станет B/A.
+Следуй production-testing.md при локальной проверке; тестовое разрешение не переносится на production.
