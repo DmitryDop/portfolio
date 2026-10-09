@@ -157,6 +157,20 @@
   if (tablist) {
     var tabs = Array.prototype.slice.call(tablist.querySelectorAll('[role="tab"]'));
 
+    var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Активный таб всегда виден целиком: на телефоне полоса табов скроллится
+    // по горизонтали, поэтому после переключения (клавиши, инициализация,
+    // resize) дотягиваем полосу до выбранного таба. block: 'nearest' —
+    // вертикальный скролл страницы не трогаем
+    function scrollTabIntoView(tab) {
+      tab.scrollIntoView({
+        inline: 'nearest',
+        block: 'nearest',
+        behavior: reducedMotion ? 'auto' : 'smooth'
+      });
+    }
+
     function selectTab(tab, moveFocus) {
       tabs.forEach(function (item) {
         var isOn = item === tab;
@@ -170,6 +184,7 @@
       });
 
       if (moveFocus) tab.focus();
+      scrollTabIntoView(tab);
     }
 
     tabs.forEach(function (tab, i) {
@@ -191,6 +206,16 @@
         selectTab(next, true);
       });
     });
+
+    // Начальное положение: при загрузке и на повороте экрана выбранный таб
+    // тоже должен быть виден, полоса — без смещения
+    var selected = tabs.filter(function (item) { return item.getAttribute('aria-selected') === 'true'; })[0];
+    if (selected) {
+      scrollTabIntoView(selected);
+      window.addEventListener('resize', function () {
+        scrollTabIntoView(selected);
+      });
+    }
   }
 
   /* ------------------------- Появление блоков ----------------------------- */

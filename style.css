@@ -560,6 +560,23 @@ a { color: inherit; }
   color: var(--color-accent);
 }
 
+/* На телефоне табы в строку не помещаются: вместо переноса — горизонтальный
+   свайп. Полоса тянется до краёв вьюпорта (отрицательные поля компенсируют
+   поля .container, свои поля возвращают отступ табам), скроллбар скрыт,
+   табы не сжимаются и не переносятся */
+@media (max-width: 720px) {
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    margin-inline: calc(-1 * var(--gutter));
+    padding-inline: var(--gutter);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tabs__tab { flex: 0 0 auto; }
+}
+
 /* Панель таба: период дат и содержимое (в разметке — обёртка вокруг .projects
    или .empty). Период (Figma 940:9329 «period» в кадре «Портфолио/Стрвнв» и
    949:11216 в «Портфолио/Bankiru») — блок 40 = поле 16 сверху + строка 16/24,
