@@ -159,16 +159,23 @@
 
     var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Активный таб всегда виден целиком: на телефоне полоса табов скроллится
-    // по горизонтали, поэтому после переключения (клавиши, инициализация,
-    // resize) дотягиваем полосу до выбранного таба. block: 'nearest' —
-    // вертикальный скролл страницы не трогаем
-    function scrollTabIntoView(tab) {
-      tab.scrollIntoView({
-        inline: 'nearest',
-        block: 'nearest',
-        behavior: reducedMotion ? 'auto' : 'smooth'
-      });
+    // При выборе таба прокручиваем только его горизонтальную полосу.
+    // scrollIntoView затрагивает и страницу; resize на мобильном возникает
+    // даже при скрытии адресной строки и не должен возвращать к работам.
+    function scrollTabHorizontally(tab) {
+      var bounds = tablist.getBoundingClientRect();
+      var item = tab.getBoundingClientRect();
+      var left = bounds.left + tablist.clientLeft;
+      var right = left + tablist.clientWidth;
+      var distance = item.left < left ? item.left - left :
+                     item.right > right ? item.right - right : 0;
+
+      if (distance) {
+        tablist.scrollBy({
+          left: distance,
+          behavior: reducedMotion ? 'auto' : 'smooth'
+        });
+      }
     }
 
     function selectTab(tab, moveFocus) {
@@ -183,8 +190,8 @@
         if (panel) panel.hidden = !isOn;
       });
 
-      if (moveFocus) tab.focus();
-      scrollTabIntoView(tab);
+      if (moveFocus) tab.focus({ preventScroll: true });
+      scrollTabHorizontally(tab);
     }
 
     tabs.forEach(function (tab, i) {
@@ -207,15 +214,6 @@
       });
     });
 
-    // Начальное положение: при загрузке и на повороте экрана выбранный таб
-    // тоже должен быть виден, полоса — без смещения
-    var selected = tabs.filter(function (item) { return item.getAttribute('aria-selected') === 'true'; })[0];
-    if (selected) {
-      scrollTabIntoView(selected);
-      window.addEventListener('resize', function () {
-        scrollTabIntoView(selected);
-      });
-    }
   }
 
   /* ------------------------- Тизер нового кейса -------------------------- */
