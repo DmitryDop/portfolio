@@ -1623,6 +1623,9 @@ html { scroll-behavior: smooth; }
 }
 
 /* DIAMOND (Figma 1477:4337): exported media crops, shared case layout. */
+.case-diamond .case-media__shot { border-radius: 16px; }
+/* 1485:13993 — коллаж в макете имеет прямые углы. */
+.case-diamond .case-media__shot--diamond-02 { border-radius: 0; }
 .case-media__shot--diamond-01 { aspect-ratio: 624 / 316; }
 .case-media__shot--diamond-02 { aspect-ratio: 624 / 560; }
 .case-media__shot--diamond-03 { aspect-ratio: 624 / 358; }
