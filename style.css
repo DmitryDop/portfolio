@@ -1621,3 +1621,85 @@ html { scroll-behavior: smooth; }
   .case-band { padding: var(--space-2xl) 0; }
   .case-band__inner { gap: var(--space-lg); }
 }
+
+/* DIAMOND (Figma 1477:4337): exported media crops, shared case layout. */
+.case-media__shot--diamond-01 { aspect-ratio: 624 / 316; }
+.case-media__shot--diamond-02 { aspect-ratio: 624 / 560; }
+.case-media__shot--diamond-03 { aspect-ratio: 624 / 358; }
+.case-media__shot--diamond-04 { aspect-ratio: 624 / 468; }
+.case-media__shot--diamond-05 { aspect-ratio: 624 / 461; }
+.case-media__shot--diamond-06 { aspect-ratio: 624 / 416; }
+.case-media__shot--diamond-07 { aspect-ratio: 624 / 416; }
+.case-media__shot--diamond-08 { aspect-ratio: 624 / 416; }
+
+/* Тизер DIAMOND — Figma 1499:4606. Ни подложки, ни блокировки страницы. */
+.diamond-teaser {
+  position: fixed;
+  z-index: 40;
+  right: max(32px, env(safe-area-inset-right));
+  bottom: max(24px, env(safe-area-inset-bottom));
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-lg);
+  width: 474px;
+  max-width: calc(100% - 32px);
+  padding: var(--space-lg);
+  border-radius: var(--radius-lg);
+  background: var(--color-text);
+  color: #f0f5ff;
+  box-shadow: 0 16px 40px -8px rgba(3, 41, 100, .15);
+  animation: diamond-teaser-enter .55s cubic-bezier(.22, 1, .36, 1) both;
+}
+.diamond-teaser__logo { flex: 0 0 auto; width: 101.77px; height: 72px; }
+.diamond-teaser__content { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.diamond-teaser__title { padding-right: 32px; font-size: 16px; line-height: 24px; font-weight: 700; }
+.diamond-teaser__text { font-size: var(--fs-body-sm); line-height: var(--lh-body-sm); }
+.diamond-teaser__link {
+  align-self: flex-start;
+  position: relative;
+  font-size: var(--fs-body-sm);
+  line-height: 16px;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+/* Зона нажатия 44px без увеличения визуального расстояния между строками. */
+.diamond-teaser__link::after { content: ""; position: absolute; inset: -14px 0; }
+.diamond-teaser__link:hover { text-decoration: underline; }
+.diamond-teaser__close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  border-radius: 12px;
+}
+.diamond-teaser__close img { width: 24px; height: 24px; }
+.diamond-teaser__close:hover { background: rgba(255, 255, 255, .1); }
+@keyframes diamond-teaser-enter {
+  from { opacity: 0; transform: translateY(calc(100% + 32px)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 540px) {
+  .diamond-teaser {
+    right: max(16px, env(safe-area-inset-right));
+    bottom: max(16px, env(safe-area-inset-bottom));
+    gap: var(--space-sm);
+    padding: var(--space-md);
+  }
+  .diamond-teaser__logo { width: 56px; height: auto; }
+  .diamond-teaser__title { padding-right: 28px; }
+  .diamond-teaser__close { top: 6px; right: 6px; }
+}
+@media (max-width: 360px), (max-height: 480px) {
+  .diamond-teaser__logo { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .diamond-teaser { animation: none; }
+}

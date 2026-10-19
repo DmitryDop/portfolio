@@ -218,6 +218,68 @@
     }
   }
 
+  /* ------------------------- Тизер нового кейса -------------------------- */
+
+  (function () {
+    var teaser = document.getElementById('diamond-teaser');
+    if (!teaser) return;
+
+    var storageKey = 'portfolio:diamond-teaser:seen';
+    // Если storage недоступен, оставляем тизер скрытым: не повторяем его
+    // на каждой загрузке и не прерываем остальной интерактив страницы.
+    try {
+      if (window.sessionStorage.getItem(storageKey)) return;
+    } catch (error) {
+      return;
+    }
+
+    var previousFocus = document.activeElement;
+
+    function rememberFocus(event) {
+      if (!teaser.contains(event.target)) previousFocus = event.target;
+    }
+
+    function dismiss() {
+      var restoreFocus = teaser.contains(document.activeElement);
+      teaser.hidden = true;
+      document.removeEventListener('keydown', onEscape, true);
+      document.removeEventListener('focusin', rememberFocus);
+      if (restoreFocus) {
+        var target = previousFocus;
+        if (!target || target === document.body || !target.isConnected) {
+          target = burger && burger.getClientRects().length ? burger : document.querySelector('.nav__link');
+        }
+        if (target) target.focus({ preventScroll: true });
+      }
+    }
+
+    function onEscape(event) {
+      if (event.key === 'Escape' && !menuIsOpen()) dismiss();
+    }
+
+    function show() {
+      if (document.hidden) return;
+      document.removeEventListener('visibilitychange', show);
+      try {
+        // Запоминаем сам показ, чтобы даже перезагрузка без закрытия
+        // не вызывала второе появление в этой вкладке.
+        window.sessionStorage.setItem(storageKey, '1');
+      } catch (error) {
+        return;
+      }
+      teaser.hidden = false;
+      teaser.querySelector('button').addEventListener('click', dismiss);
+      teaser.querySelector('a').addEventListener('click', dismiss);
+      document.addEventListener('keydown', onEscape, true);
+      document.addEventListener('focusin', rememberFocus);
+    }
+
+    window.setTimeout(function () {
+      if (document.hidden) document.addEventListener('visibilitychange', show);
+      else show();
+    }, 2000);
+  })();
+
   /* ------------------------- Появление блоков ----------------------------- */
 
   var revealItems = document.querySelectorAll('.reveal');
