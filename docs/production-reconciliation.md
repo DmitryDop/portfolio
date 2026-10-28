@@ -78,6 +78,10 @@ CLI отклоняет JSON с повторяющимися ключами. П�
 
 Evidence содержит фактические stdout/stderr SSH, exit codes, HTTPS URL/status/hashes,
 inventory и время. Ожидаемые hashes не подставляются как результаты наблюдения.
+Имена в `extra_paths` и ключах `protected` представлены как содержимое JSON-строки
+без внешних кавычек (`inventory_path_encoding=json-string-content`). Это обратимое
+представление сохраняет нестандартные байты старых Unix-имён и не меняет canonical
+hashing истории. Исходный SSH JSON также остаётся в transcript.
 Managed symlinks запрещены. `.htaccess` и `.well-known/` не изменяются.
 
 В историю добавляется ровно одно событие `operation=reconciliation`,

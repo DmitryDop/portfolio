@@ -218,13 +218,18 @@ def collect_observation(repo, plan, challenge):
     if first != second:
         raise ValueError('Production changed during observation')
     root = next((status, sha) for name, status, sha in rows if not name)
+    # Unix filenames can contain surrogateescaped bytes. Keep an unambiguous,
+    # reversible JSON-string representation without changing historical canonical().
+    inventory_path = lambda name: json.dumps(name, ensure_ascii=True)[1:-1]
     evidence = {'kind': 'observation', 'started_at': started, 'verified_at': now().isoformat(),
                 'challenge': challenge, 'target': p.REMOTE, 'url': p.URL,
                 'http_status': root[0], 'root_sha256': root[1],
                 'remote_sha256': second['hashes'],
                 'http_sha256': {n: h for n, s, h in rows if n},
                 'http_statuses': {n: s for n, s, h in rows if n},
-                'extra_paths': second['extra_paths'], 'protected': second['protected'],
+                'inventory_path_encoding': 'json-string-content',
+                'extra_paths': sorted(inventory_path(n) for n in second['extra_paths']),
+                'protected': {inventory_path(n): h for n, h in second['protected'].items()},
                 'transcript': json.dumps({'ssh_before': first_log, 'http': rows, 'ssh_after': second_log})}
     p.verify_evidence(manifest, evidence, 'observation')
     return evidence

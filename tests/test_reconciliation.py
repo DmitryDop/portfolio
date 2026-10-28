@@ -454,7 +454,8 @@ class ReconciliationTests(unittest.TestCase):
         snapshot=p.commit_manifest(self.repo,self.c)
         manifest = self.plan['manifest']
         hashes = {n:p.digest((self.site/n).read_bytes()) for n in manifest}
-        remote = {'hashes':hashes,'extra_paths':['CV.pdf'],'protected':{}}
+        remote = {'hashes':hashes, 'extra_paths':['CV.pdf', 'legacy-\udcff', 'name-z', 'name-а', r'legacy-\udcff'],
+                  'protected':{'.well-known/legacy-\udcff': p.digest(b'local test')}}
         def ssh(command, **kwargs):
             self.assertEqual(command[0],'/usr/bin/ssh')
             self.assertIn('StrictHostKeyChecking=yes',command)
@@ -478,6 +479,12 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(len(log['http']),len(manifest)+1)
         self.assertEqual(ev['remote_sha256'],hashes)
         self.assertEqual(ev['http_sha256'],hashes)
+        self.assertEqual(ev['inventory_path_encoding'], 'json-string-content')
+        self.assertIn(r'legacy-\udcff', ev['extra_paths'])
+        self.assertIn(r'.well-known/legacy-\udcff', ev['protected'])
+        self.assertTrue(p.canonical(ev))
+        self.assertEqual(json.loads('"' + r'legacy-\udcff' + '"'), 'legacy-\udcff')
+        self.assertEqual(len(ev['extra_paths']), len(set(ev['extra_paths'])))
 
     def test_collector_ssh_failure_does_not_make_http_requests(self):
         snapshot=p.commit_manifest(self.repo,self.c)
