@@ -113,17 +113,23 @@ save_baseline намеренно блокируется. Не обходи guard
 Покажи полный SHA, canonical manifest SHA-256, hash плана, recorded current/previous,
 политику `previous=''` и все ожидаемые изменения metadata. План не разрешает запись.
 
-Применение требует отдельного разрешения владельца и проверенного внешнего SSHSIG
-receipt для полного плана через независимого подписанта. Trust store должен быть
-заранее установлен системным администратором вне проекта; не создавай доверие сам.
-`DEPLOY`, локальные флаги и строка approval не заменяют receipt. Не снимай baseline guard.
-Запись — только публичным `save_reconciliation`; новое SSH/HTTPS наблюдение собирается
-под общим metadata.lock. Не подставляй прошлые результаты и не вызывай внутренний writer.
+Для новой reconciliation действует согласованная политика `owner-explicit-v1`.
+Сначала выполни read-only `reconciliation-check <PLAN_FILE>`, покажи результаты
+и полный hash плана. Затем получи отдельную команду владельца `RECONCILE <PLAN_HASH>`.
+Только после неё разрешён `reconciliation-apply <PLAN_FILE> --confirm 'RECONCILE <PLAN_HASH>'`.
+Нельзя самостоятельно выводить согласие из задачи, общего «да», переменной окружения
+или команды `DEPLOY`. Подписант, trust store и root-runner для этого пути не нужны.
+Не снимай отдельный baseline guard. Новое SSH/HTTPS наблюдение собирается под общим
+metadata.lock; перед записью обязательно создаётся постоянный архив metadata.
+Не подставляй прошлые результаты и не вызывай внутренний writer.
 
 При `reconciliation-pending.json` останови все обычные операции. Read-only диагностика:
 `PYTHONDONTWRITEBYTECODE=1 python3 scripts/production.py reconciliation-recovery-plan`.
-Восстановление требует отдельного подписанного recovery-плана и публичного
-`recover_reconciliation`. История не переписывается; завершить можно только зеркала
+Восстановление требует отдельной команды владельца `RECOVER <RECOVERY_PLAN_HASH>`
+для показанного плана и публичного `recover_reconciliation` либо CLI
+`reconciliation-recover <PLAN_FILE> --confirm 'RECOVER <RECOVERY_PLAN_HASH>'`.
+Проверяй исходную постоянную резервную копию; архивы не перезаписывай.
+История не переписывается; завершить можно только зеркала
 зафиксированной транзакции либо отменить ещё не зафиксированную запись.
 Stale lock не удаляй без проверки процесса и отдельного разрешения.
 

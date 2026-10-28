@@ -2,8 +2,11 @@
 
 Версия схемы: 1. Сервер: `lineba:/home/l/linebaru/dopler/public_html/`.
 URL: `https://dopler.lineband.ru/`. Baseline, reconciliation, deploy и rollback используют одну историю.
-Помощник `scripts/production.py` работает только локально: он не выполняет rsync,
-SSH, HTTP, commit или push. CLI не записывает metadata. Функция `save_history`
+Помощник `scripts/production.py` не выполняет rsync, commit или push.
+Команда `reconciliation-check` только читает SSH/HTTPS и metadata.
+`reconciliation-apply` и `reconciliation-recover` могут записывать metadata
+только после отдельного подтверждения точного hash плана. Остальные команды
+подготовки и диагностики metadata не записывают. Функция `save_history`
 предназначена только для записи после фактической успешной verification;
 её нельзя вызывать с synthetic evidence вне изолированных тестовых repos.
 
@@ -68,7 +71,7 @@ live state неподтверждённым: остановись, не пере
 | Состояние и успешная операция | Новый current | Новый previous |
 | --- | --- | --- |
 | Оба пусты, история отсутствует/пуста; baseline A | A | пусто |
-| Непустая согласованная история; owner-signed reconciliation A | A | пусто |
+| Непустая согласованная история; owner-confirmed reconciliation A | A | пусто |
 | Оба пусты, история отсутствует; deploy A | A | пусто |
 | A / пусто; повторный deploy A | A | пусто |
 | A / пусто; deploy B | B | A |
@@ -87,6 +90,12 @@ Rollback target обязан совпадать с previous валидной и�
 в [production-reconciliation.md](production-reconciliation.md). Она не снимает ограничения
 baseline и не восстанавливает неизвестного предшественника. Правила ниже относятся
 к первоначальной baseline adoption; её прежний guard остаётся закрытым.
+Для reconciliation действует `owner-explicit-v1`: отдельное подтверждение
+владельцем точного hash плана без SSHSIG и root-runner. Это процедурное согласие,
+а не криптографическая аттестация. В событии сохраняется `confirmation`.
+Существующие подписанные события читаются без преобразования; новые записи
+не используют legacy-подтверждение. Сначала создаётся постоянная резервная копия
+metadata, затем применяется существующий WAL и общая блокировка.
 
 Baseline подтверждает только наблюдаемое состояние в момент свежей verification.
 Он не подтверждает исторический успех rsync или полный smoke-check прошлого deploy.
@@ -174,7 +183,7 @@ inspect намеренно останавливается. Не повторяй
 
 При `reconciliation-pending.json` обычные операции блокируются. Новая процедура
 восстановления из write-ahead journal применяется только к reconciliation;
-она не ремонтирует произвольные старые ошибки metadata. Подписанный recovery-план
+она не ремонтирует произвольные старые ошибки metadata. Подтверждённый владельцем recovery-план
 разрешает завершить зеркала после commit журнала либо отменить ещё не зафиксированную
 операцию. Автоматический ремонт и удаление stale lock запрещены. Подробности —
 в [production-reconciliation.md](production-reconciliation.md).

@@ -53,7 +53,7 @@ Bundled quick_validate skills не запустился: в системном P
 Фактическая adoption **НЕ ДОСТУПНА**: защищённый owner channel ещё не подключён.
 Ни production verification, ни baseline adoption в этом запуске не выполнялись.
 
-## Локальные тесты reconciliation
+## Архив: тесты reconciliation с SSHSIG, версия 88b395c
 
 `tests/test_reconciliation.py` добавляет 38 тестов к 47 существующим проверкам.
 Все записи выполняются исключительно во временных disposable Git repos.
@@ -81,8 +81,35 @@ Bundled quick_validate skills не запустился: в системном P
 не проверяют реальные host keys/TLS и не подтверждают production readiness окружения.
 Применение требует отдельной подготовки по `docs/production-reconciliation.md`.
 
-Последний локальный запуск:
+Локальный запуск исходной реализации:
 `PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v` —
 **PASS: 85 тестов, 83.155 s, OK**. `git diff --check` — PASS.
 Исходные bytes production metadata, HEAD `540dd63…` и файлы сайта сохранены.
 Реальная reconciliation, recovery, deploy, rollback и настройка доверия не выполнялись.
+
+## Действующие тесты упрощённой reconciliation
+
+Политика новых операций — `owner-explicit-v1`, согласно архитектурному ревью
+и отдельному разрешению владельца. Новые тесты не создают ключей и не настраивают
+доверие. Временные Git repos и сетевые имитации из существующего набора сохранены.
+
+Вместо тестов SSHSIG проверяются точное подтверждение плана, отказ при общем «да»,
+`DEPLOY`, неверном hash или изменённом плане. Сохранены проверки SHA-256, истории,
+неизвестного previous, гонок, WAL, ошибок fsync и восстановления без upload.
+Проверяются постоянный архив metadata, отказ при ошибке/повторном архивировании,
+целостность исходной копии при recovery, отдельное подтверждение восстановления
+и аудит recovery в том же каталоге backups. CLI проходит локальный цикл
+plan → read-only check → owner-confirmed apply; JSON с повторными ключами отвергается.
+Историческая совместимость подписанного события проверяется синтетической записью
+без генерации ключей и без разрешения новых операций по legacy-плану.
+
+Все записи выполняются только во временных repos. Тесты не подключаются к серверу,
+не пишут реальные production metadata и не доказывают применение reconciliation.
+
+Результат локального запуска 2026-10-29:
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v` —
+**PASS: 81 тест (47 существующих + 34 адаптированных reconciliation), 78.649 s, OK**.
+`git diff --check` — PASS. Проверка локального плана для d25e672… подтверждает
+98 файлов, ожидаемый manifest SHA-256 и пустой previous; сеть не использовалась.
+Реальные metadata побайтно сохранены, каталог backups и WAL/lock в проекте
+не создавались. HEAD остался 88b395c…; commit/push и production-операций не было.

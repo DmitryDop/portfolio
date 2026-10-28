@@ -1,6 +1,6 @@
-"""Disposable Git repos, local content, synthetic network and test-only owner key.
+"""Disposable Git repos, local content and synthetic network; no keys or production writes.
 
-No production server, actual metadata or installed trust store is used.
+No production server or actual metadata is used.
 """
 import copy
 import io
@@ -12,25 +12,14 @@ import unittest
 import uuid
 from datetime import timedelta
 from pathlib import Path
-from unittest.mock import patch, Mock
+from unittest.mock import patch
 
 from scripts import production as p
 from scripts import reconciliation as r
 
 
 class ReconciliationTests(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
-        cls.keys_temp = tempfile.TemporaryDirectory()
-        cls.keys = Path(cls.keys_temp.name)
-        cls.key = cls.keys / 'test-owner'
-        subprocess.run(['ssh-keygen', '-q', '-t', 'ed25519', '-N', '', '-f', str(cls.key)], check=True)
-        cls.signers = cls.keys / 'allowed_signers'
-        cls.signers.write_text(r.OWNER + ' ' + cls.key.with_suffix('.pub').read_text())
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.keys_temp.cleanup()
 
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
@@ -83,26 +72,13 @@ class ReconciliationTests(unittest.TestCase):
                 'extra_paths': ['CV.pdf'], 'protected': {},
                 'transcript': 'LOCAL TEST ONLY: filesystem hashes, simulated SSH/HTTPS'}
 
-    def receipt(self, plan):
-        claims = {'purpose': plan['operation'], 'plan_hash': plan['hash'],
-                  'operation_id': plan['operation_id'], 'receipt_id': str(uuid.uuid4()),
-                  'issued_at': (r.now() - timedelta(seconds=2)).isoformat(),
-                  'expires_at': (r.now() + timedelta(minutes=5)).isoformat()}
-        return self.sign_claims(claims)
 
-    def sign_claims(self, claims):
-        file = self.root / ('claims-' + str(uuid.uuid4()))
-        file.write_bytes(p.canonical(claims))
-        subprocess.run(['ssh-keygen', '-Y', 'sign', '-f', str(self.key),
-                        '-n', r.NAMESPACE + claims['purpose'], str(file)],
-                       check=True, capture_output=True)
-        return {'claims': claims, 'signature': Path(str(file) + '.sig').read_text()}
-
-    def save(self, plan=None, receipt=None, collector=None):
+    def save(self, plan=None, statement=None, collector=None):
         plan = plan or self.plan
-        with patch.object(r, 'trusted_signers', return_value=self.signers), \
-                patch.object(r, 'collect_observation', side_effect=collector or self.observation):
-            return r.save_reconciliation(self.repo, plan, receipt or self.receipt(plan))
+        if statement is None:
+            statement = r.expected_confirmation(plan)
+        with patch.object(r, 'collect_observation', side_effect=collector or self.observation):
+            return r.save_reconciliation(self.repo, plan, statement)
 
     def interrupted(self, call):
         actual = r.atomic_write
@@ -119,8 +95,7 @@ class ReconciliationTests(unittest.TestCase):
 
     def recover(self, plan=None):
         plan = plan or r.prepare_recovery_plan(self.repo)
-        with patch.object(r, 'trusted_signers', return_value=self.signers):
-            return r.recover_reconciliation(self.repo, plan, self.receipt(plan))
+        return r.recover_reconciliation(self.repo, plan, r.expected_confirmation(plan))
 
     def test_plan_is_read_only_and_binds_metadata_manifest_repo(self):
         r.check_plan(self.repo, self.plan)
@@ -130,7 +105,7 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(self.plan['previous'], '')
         self.assertEqual(self.plan['recorded_previous'], self.a)
 
-    def test_owner_signature_success_and_history_immutable(self):
+    def test_confirmed_reconciliation_archives_metadata_and_preserves_history(self):
         state = self.save()
         self.assertEqual(state[1:], (self.c, ''))
         self.assertEqual(state[0]['events'][:-1], self.old_history['events'])
@@ -140,6 +115,49 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(event['parent'], self.old_history['events'][-1]['hash'])
         self.assertEqual(event['plan']['recorded_previous'], self.a)
         self.assertFalse((self.repo / '.deploy' / r.PENDING).exists())
+        archive = r.backup_path(self.repo, event['id'])
+        journal = json.loads(archive.read_bytes())
+        self.assertEqual(r.decode_bytes(journal['before']), self.old)
+        self.assertEqual(r.parse_state(self.repo, r.decode_bytes(journal['after'])), state)
+        self.assertEqual(event['confirmation']['statement'], r.expected_confirmation(self.plan))
+        self.assertNotIn('owner_receipt', event)
+
+    def test_missing_wrong_or_stale_owner_confirmation_never_collects_or_writes(self):
+        for statement in [None, True, 'yes', 'DEPLOY', 'RECONCILE ' + '0' * 64]:
+            with self.subTest(statement=statement), patch.object(r, 'collect_observation') as collect:
+                with self.assertRaises(PermissionError):
+                    r.save_reconciliation(self.repo, self.plan, statement)
+                collect.assert_not_called()
+        changed = copy.deepcopy(self.plan)
+        changed['reason'] = 'A different reviewed plan'
+        changed = r.seal({k: v for k, v in changed.items() if k != 'hash'})
+        with self.assertRaises(PermissionError):
+            self.save(changed, r.expected_confirmation(self.plan))
+        self.assertEqual(p.metadata_bytes(self.repo), self.old)
+
+    def test_backup_failure_or_archive_reuse_cannot_change_metadata(self):
+        with patch.object(r, 'write_backup', side_effect=OSError('archive unavailable')):
+            with self.assertRaises(OSError): self.save()
+        self.assertEqual(p.metadata_bytes(self.repo), self.old)
+        self.assertFalse((self.repo / '.deploy' / r.PENDING).exists())
+        # Crash after the permanent archive, before any WAL/metadata replacement.
+        with patch.object(r, 'atomic_write', side_effect=OSError('WAL not written')):
+            with self.assertRaises(OSError): self.save()
+        archive = r.backup_path(self.repo, self.plan['operation_id'])
+        original_archive = archive.read_bytes()
+        with self.assertRaises(FileExistsError): self.save()
+        self.assertEqual(archive.read_bytes(), original_archive)
+        self.assertEqual(p.metadata_bytes(self.repo), self.old)
+
+    def test_recovery_requires_the_original_permanent_backup(self):
+        self.interrupted(3)
+        archive = r.backup_path(self.repo, self.plan['operation_id'])
+        original = archive.read_bytes()
+        archive.write_bytes(b'corrupt backup')
+        with self.assertRaises(ValueError): r.prepare_recovery_plan(self.repo)
+        archive.write_bytes(original)
+        self.assertEqual(self.recover()[1:], (self.c, ''))
+        self.assertEqual(archive.read_bytes(), original)
 
     def test_empty_or_no_drift_history_cannot_reconcile(self):
         with self.assertRaisesRegex(ValueError, 'No production drift'):
@@ -157,43 +175,16 @@ class ReconciliationTests(unittest.TestCase):
         plan = r.seal({**self.plan, 'previous': self.b})
         with self.assertRaises(ValueError): r.check_plan(self.repo, plan)
 
-    def test_trust_store_missing_or_user_controlled_is_rejected(self):
-        receipt = self.receipt(self.plan)
-        for path in (self.root / 'missing', self.signers):
-            with patch.object(r, 'SIGNERS', path), patch.object(r, 'collect_observation') as collect:
-                with self.assertRaises(PermissionError): r.save_reconciliation(self.repo, self.plan, receipt)
-                collect.assert_not_called()
-        self.assertEqual(p.metadata_bytes(self.repo), self.old)
-
-    def test_forged_signature_and_boolean_flag_rejected(self):
-        receipt = self.receipt(self.plan); receipt['signature'] = 'approved=true'
-        with patch.dict(os.environ, {'RECONCILIATION_APPROVED': 'true', 'DEPLOY': '1'}):
-            with self.assertRaises(PermissionError): self.save(receipt=receipt)
-        self.assertEqual(p.metadata_bytes(self.repo), self.old)
-
-    def test_owner_receipt_wrong_plan_purpose_future_expired_rejected(self):
-        for field, value in [('plan_hash', '0' * 64), ('purpose', 'reconciliation-recovery'),
-                             ('operation_id', str(uuid.uuid4())),
-                             ('issued_at', (r.now() + timedelta(minutes=1)).isoformat()),
-                             ('expires_at', (r.now() - timedelta(seconds=1)).isoformat())]:
-            with self.subTest(field=field):
-                claims = self.receipt(self.plan)['claims']; claims[field] = value
-                with self.assertRaises(PermissionError): self.save(receipt=self.sign_claims(claims))
-        self.assertEqual(p.metadata_bytes(self.repo), self.old)
-
-    def test_modified_claims_without_resigning_rejected(self):
-        receipt = self.receipt(self.plan)
-        receipt['claims']['receipt_id'] = str(uuid.uuid4())
-        with self.assertRaises(PermissionError): self.save(receipt=receipt)
 
     def test_bypass_via_upload_or_internal_legacy_writer_rejected(self):
         with patch.object(r, 'metadata_lock'):
+            confirmation = r.owner_confirmation(self.plan, r.expected_confirmation(self.plan))
             evidence = {**self.upload(self.c), 'kind': 'observation',
                         'started_at': r.now().isoformat(), 'challenge': 'test',
                         'extra_paths': [], 'protected': {}}
             del evidence['rsync_exit']
             evidence['verified_at'] = r.now().isoformat()
-            result = r.candidate(self.repo, self.plan, evidence, self.receipt(self.plan))
+            result = r.candidate(self.repo, self.plan, evidence, confirmation)
         with self.assertRaises(PermissionError): p.save_history(self.repo, result, self.old)
         with self.assertRaises(PermissionError): p._persist_history(self.repo, result, self.old)
         with self.assertRaises(ValueError):
@@ -239,9 +230,10 @@ class ReconciliationTests(unittest.TestCase):
         self.assertEqual(p.metadata_bytes(self.repo), self.old)
 
     def test_duplicate_plan_and_operation_not_replayed(self):
-        receipt = self.receipt(self.plan); self.save(receipt=receipt)
+        statement = r.expected_confirmation(self.plan)
+        self.save(statement=statement)
         actual = p.metadata_bytes(self.repo)
-        with self.assertRaises(ValueError): self.save(receipt=receipt)
+        with self.assertRaises(ValueError): self.save(statement=statement)
         self.assertEqual(p.metadata_bytes(self.repo), actual)
 
     def test_reconciliation_then_deploy_and_rollback_require_live_current(self):
@@ -268,6 +260,7 @@ class ReconciliationTests(unittest.TestCase):
     def test_crash_after_history_commit_repairs_mirrors_without_new_event(self):
         for fail_at in [3, 4]:
             with self.subTest(fail_at=fail_at):
+                self.plan = r.prepare_plan(self.repo, self.c, 'New separately reviewed recovery scenario')
                 self.interrupted(fail_at)
                 plan = r.prepare_recovery_plan(self.repo)
                 self.assertEqual(plan['action'], 'finish-mirrors')
@@ -279,15 +272,18 @@ class ReconciliationTests(unittest.TestCase):
                 # Reset disposable fixture, never actual production metadata.
                 for n, data in self.old.items(): (self.repo / '.deploy' / n).write_bytes(data)
 
-    def test_recovery_requires_separate_signed_plan_and_no_network(self):
+    def test_recovery_requires_separate_confirmation_and_no_network(self):
         self.interrupted(3)
         plan = r.prepare_recovery_plan(self.repo)
-        with patch.object(r, 'trusted_signers', return_value=self.signers), patch.object(r, 'collect_observation') as collect:
+        with patch.object(r, 'collect_observation') as collect:
             with self.assertRaises(PermissionError):
-                r.recover_reconciliation(self.repo, plan, self.receipt(self.plan))
-            state = r.recover_reconciliation(self.repo, plan, self.receipt(plan))
+                r.recover_reconciliation(self.repo, plan, r.expected_confirmation(self.plan))
+            state = self.recover(plan)
             collect.assert_not_called()
         self.assertEqual(state[1:], (self.c, ''))
+        recovery_audit = json.loads(r.backup_path(self.repo, plan['operation_id']).read_bytes())
+        self.assertEqual(recovery_audit['confirmation']['statement'], r.expected_confirmation(plan))
+        self.assertEqual(recovery_audit['recovery_of'], self.plan['operation_id'])
 
     def test_recovery_refuses_tampering_or_foreign_metadata(self):
         self.interrupted(3)
@@ -327,8 +323,9 @@ class ReconciliationTests(unittest.TestCase):
         count = 0
         def fail(path):
             nonlocal count
-            count += 1
-            if count == 2: raise OSError('fsync failed')
+            if path == self.repo / '.deploy':
+                count += 1
+                if count == 3: raise OSError('history fsync failed')
             actual(path)
         with patch.object(r, 'fsync_directory', side_effect=fail):
             with self.assertRaises(OSError): self.save()
@@ -365,7 +362,8 @@ class ReconciliationTests(unittest.TestCase):
         state = self.save()
         bad = copy.deepcopy(state[0]); event = bad['events'][-1]
         event['plan']['previous'] = self.b; event['plan'] = r.seal({k:v for k,v in event['plan'].items() if k!='hash'})
-        event['owner_receipt']['claims']['plan_hash'] = event['plan']['hash']
+        event['confirmation']['plan_hash'] = event['plan']['hash']
+        event['confirmation']['statement'] = r.expected_confirmation(event['plan'])
         bad['events'][-1] = r.seal({k:v for k,v in event.items() if k!='hash'})
         with self.assertRaises(ValueError): p.validate_history(self.repo,bad,self.c,self.b)
 
@@ -375,7 +373,7 @@ class ReconciliationTests(unittest.TestCase):
         path.unlink(); path.symlink_to(external)
         with self.assertRaises(ValueError): self.save()
 
-    def test_cli_plan_is_local_read_only(self):
+    def test_cli_plan_check_and_explicit_apply_use_the_same_workflow(self):
         import contextlib
         import sys
         output = io.StringIO()
@@ -384,44 +382,64 @@ class ReconciliationTests(unittest.TestCase):
             p.main(); collect.assert_not_called()
         self.assertEqual(json.loads(output.getvalue())['commit'],self.c)
         self.assertEqual(p.metadata_bytes(self.repo),self.old)
+        plan_file = self.root / 'plan.json'
+        plan_file.write_text('{"operation":"wrong","operation":"reconciliation"}')
+        with patch.object(sys, 'argv', ['production.py', '--repo', str(self.repo),
+                                       'reconciliation-apply', str(plan_file), '--confirm',
+                                       r.expected_confirmation(self.plan)]), \
+                patch.object(r, 'save_reconciliation') as apply:
+            with self.assertRaisesRegex(ValueError, 'Duplicate plan JSON key'):
+                p.main()
+            apply.assert_not_called()
+        plan_file.write_text(json.dumps(self.plan))
+        # The read-only network preflight uses simulated transport, not the server.
+        def unlocked_observation(repo, plan, challenge):
+            evidence = self.upload(self.c)
+            del evidence['rsync_exit']
+            evidence.update(kind='observation', challenge=challenge,
+                            started_at=r.now().isoformat(), verified_at=r.now().isoformat(),
+                            extra_paths=[], protected={})
+            return evidence
+        with patch.object(sys, 'argv', ['production.py', '--repo', str(self.repo),
+                                       'reconciliation-check', str(plan_file)]), \
+                contextlib.redirect_stdout(io.StringIO()), \
+                patch.object(r, 'collect_observation', side_effect=unlocked_observation):
+            p.main()
+        self.assertEqual(p.metadata_bytes(self.repo), self.old)
+        self.assertFalse((self.repo / '.deploy/backups').exists())
+        with patch.object(sys, 'argv', ['production.py', '--repo', str(self.repo),
+                                       'reconciliation-apply', str(plan_file), '--confirm',
+                                       r.expected_confirmation(self.plan)]), \
+                contextlib.redirect_stdout(io.StringIO()), \
+                patch.object(r, 'collect_observation', side_effect=self.observation):
+            p.main()
+        self.assertEqual(p.load_history(self.repo)[1:], (self.c, ''))
+
+    def test_legacy_signed_event_is_readable_but_cannot_be_used_for_new_write(self):
+        state = self.save()
+        archived = copy.deepcopy(state[0])
+        event = archived['events'][-1]
+        confirmed_at = event.pop('confirmation')['confirmed_at']
+        plan = event['plan']
+        plan.pop('confirmation_policy')
+        plan.pop('backup')
+        event['plan'] = r.seal({k: v for k, v in plan.items() if k != 'hash'})
+        # Synthetic historical fixture only, preserving the old reader contract.
+        event['owner_receipt'] = {'signature': 'ARCHIVED LOCAL TEST FIXTURE', 'claims': {
+            'purpose': 'reconciliation', 'plan_hash': event['plan']['hash'],
+            'operation_id': event['id'], 'receipt_id': str(uuid.uuid4()),
+            'issued_at': confirmed_at,
+            'expires_at': (r.timestamp(confirmed_at) + timedelta(minutes=5)).isoformat()}}
+        archived['events'][-1] = r.seal({k: v for k, v in event.items() if k != 'hash'})
+        original = copy.deepcopy(archived)
+        p.validate_history(self.repo, archived, self.c, '')
+        self.assertEqual(archived, original)
+        with self.assertRaises(ValueError):
+            r.save_reconciliation(self.repo, event['plan'], r.expected_confirmation(event['plan']))
 
     def test_http_redirect_policy_blocks_all_redirects(self):
         with self.assertRaises(ValueError): r.NoRedirect().redirect_request(None,None,302,'',{},'https://other.invalid')
 
-    def test_reused_receipt_id_rejected_even_with_new_valid_owner_signature(self):
-        state = self.save()
-        plan = r.prepare_plan(self.repo, self.d, 'second unrelated drift')
-        receipt = self.receipt(plan)
-        receipt['claims']['receipt_id'] = state[0]['events'][-1]['owner_receipt']['claims']['receipt_id']
-        receipt = self.sign_claims(receipt['claims'])
-        self.publish_local(self.d)
-        with self.assertRaisesRegex(ValueError, 'receipt replay'): self.save(plan, receipt)
-
-    def test_expiry_during_observation_stops_before_journal(self):
-        actual = r.require_owner_confirmation
-        calls = 0
-        def expire(plan, receipt):
-            nonlocal calls
-            calls += 1
-            if calls == 2: raise PermissionError('receipt expired during observation')
-            actual(plan, receipt)
-        with patch.object(r,'require_owner_confirmation',side_effect=expire):
-            with self.assertRaises(PermissionError): self.save()
-        self.assertEqual(p.metadata_bytes(self.repo),self.old)
-        self.assertFalse((self.repo/'.deploy'/r.PENDING).exists())
-
-    def test_expiry_during_candidate_validation_stops_before_journal(self):
-        actual=r.require_owner_confirmation
-        calls=0
-        def expire(plan,receipt):
-            nonlocal calls
-            calls+=1
-            if calls==3: raise PermissionError('expired immediately before WAL commit')
-            actual(plan,receipt)
-        with patch.object(r,'require_owner_confirmation',side_effect=expire):
-            with self.assertRaises(PermissionError): self.save()
-        self.assertEqual(p.metadata_bytes(self.repo),self.old)
-        self.assertFalse((self.repo/'.deploy'/r.PENDING).exists())
 
     def test_changed_metadata_between_approval_and_lock_is_rejected(self):
         actual = r.require_owner_confirmation
@@ -497,22 +515,6 @@ class ReconciliationTests(unittest.TestCase):
                 patch.object(r.subprocess,'run',side_effect=replies),patch.object(r,'build_opener',return_value=Opener()):
             with self.assertRaisesRegex(ValueError,'changed during observation'):
                 r.collect_observation(self.repo,self.plan,'challenge')
-
-    def test_recovery_rechecks_original_signature_not_just_journal_hash(self):
-        self.interrupted(3)
-        pending=self.repo/'.deploy'/r.PENDING
-        journal=json.loads(pending.read_bytes())
-        after=r.decode_bytes(journal['after']); history=json.loads(after['history.json'])
-        event=history['events'][-1]; event['owner_receipt']['signature']='FORGED'
-        history['events'][-1]=r.seal({k:v for k,v in event.items() if k!='hash'})
-        after['history.json']=p.canonical(history)+b'\n'
-        journal['after']=r.encode_bytes(after)
-        journal=r.seal({k:v for k,v in journal.items() if k!='hash'})
-        pending.write_bytes(p.canonical(journal)+b'\n')
-        (self.repo/'.deploy/history.json').write_bytes(after['history.json'])
-        plan=r.prepare_recovery_plan(self.repo)
-        with self.assertRaises(PermissionError): self.recover(plan)
-        self.assertTrue(pending.exists())
 
 
 if __name__ == '__main__':

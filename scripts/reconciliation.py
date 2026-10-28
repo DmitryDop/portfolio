@@ -1,7 +1,7 @@
-"""Read-only production observation and owner-signed metadata reconciliation.
+"""Production observation and metadata reconciliation for a trusted local operator.
 
-No uploads, local shell execution, key generation or trust bootstrap. The public write
-APIs require an SSHSIG receipt from an independently provisioned owner key.
+Owner consent names the exact plan hash; it is recorded, not cryptographically
+attested. No uploads, key provisioning or independent runner are required.
 """
 import concurrent.futures
 import contextlib
@@ -9,7 +9,6 @@ import copy
 import json
 import os
 import shlex
-import stat
 import subprocess
 import tempfile
 import uuid
@@ -20,9 +19,7 @@ from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from scripts import production as p
 
-SIGNERS = Path('/etc/portfolio-production/allowed_signers')
-OWNER = 'portfolio-owner'
-NAMESPACE = 'portfolio-production-'
+CONFIRMATION_POLICY = 'owner-explicit-v1'
 PENDING = 'reconciliation-pending.json'
 METADATA = ('history.json', 'production-current', 'production-previous')
 MAX_AGE = timedelta(minutes=10)
@@ -54,7 +51,7 @@ def fingerprints(values):
 
 def check_metadata_paths(repo):
     base = Path(repo) / '.deploy'
-    if base.is_symlink() or any((base / n).is_symlink() for n in (*METADATA, PENDING)):
+    if base.is_symlink() or any((base / n).is_symlink() for n in (*METADATA, PENDING, 'backups')):
         raise ValueError('Metadata symlinks are forbidden')
 
 
@@ -81,7 +78,10 @@ def prepare_plan(repo, revision, reason):
         raise ValueError('No production drift: target content already recorded')
     if p.metadata_bytes(repo) != original:
         raise ValueError('Metadata changed while preparing plan')
-    return seal({'operation': 'reconciliation', 'operation_id': str(uuid.uuid4()),
+    operation_id = str(uuid.uuid4())
+    return seal({'operation': 'reconciliation', 'operation_id': operation_id,
+                 'confirmation_policy': CONFIRMATION_POLICY,
+                 'backup': 'backups/' + operation_id + '.json',
                  'repo': str(repo.resolve()), 'commit': sha, 'manifest': manifest,
                  'manifest_sha256': p.digest(p.canonical(manifest)),
                  'target': p.REMOTE, 'url': p.URL, 'before': current,
@@ -93,11 +93,14 @@ def prepare_plan(repo, revision, reason):
 def check_plan(repo, plan):
     check_metadata_paths(repo)
     check_seal(plan)
-    if (plan['operation'] != 'reconciliation' or plan['target'] != p.REMOTE
+    if (plan['operation'] != 'reconciliation' or plan.get('confirmation_policy') != CONFIRMATION_POLICY
+            or plan['target'] != p.REMOTE
             or plan['url'] != p.URL or plan['repo'] != str(Path(repo).resolve())
             or plan['previous'] != '' or not plan['reason'].strip()):
         raise ValueError('Invalid reconciliation plan or target')
     uuid.UUID(plan['operation_id'])
+    if plan['backup'] != 'backups/' + plan['operation_id'] + '.json':
+        raise ValueError('Invalid backup path in reconciliation plan')
     history, current, previous = p.load_history(repo)
     if (not history['events'] or plan['history_tip'] != history['events'][-1]['hash']
             or plan['before'] != current or plan['recorded_previous'] != previous
@@ -110,19 +113,8 @@ def check_plan(repo, plan):
     return history, current, previous
 
 
-def trusted_signers():
-    """Fixed OS-admin trust store, never a key supplied by the repo or caller."""
-    resolved = SIGNERS.resolve(strict=True)
-    for path in (resolved, *resolved.parents):
-        info = path.stat()
-        if info.st_uid != 0 or info.st_mode & (stat.S_IWGRP | stat.S_IWOTH):
-            raise PermissionError('Owner trust store must be root-owned and not group/world writable')
-    if not resolved.is_file():
-        raise PermissionError('Owner trust store must be a regular file')
-    return resolved
-
-
 def check_claims(plan, receipt, at=None):
+    """Read legacy SSHSIG events without rewriting their historical evidence."""
     claims = receipt['claims']
     if (set(claims) != {'purpose', 'plan_hash', 'operation_id', 'receipt_id', 'issued_at', 'expires_at'}
             or claims['purpose'] != plan['operation'] or claims['plan_hash'] != plan['hash']
@@ -136,31 +128,31 @@ def check_claims(plan, receipt, at=None):
         raise PermissionError('Owner receipt expired or not yet valid')
 
 
-def require_owner_confirmation(plan, receipt):
-    """Verify an external owner signature; no flags, env or callback approvals."""
-    check_claims(plan, receipt, now())
-    verify_owner_signature(plan, receipt)
+def expected_confirmation(plan):
+    actions = {'reconciliation': 'RECONCILE', 'reconciliation-recovery': 'RECOVER'}
+    return actions[plan['operation']] + ' ' + plan['hash']
 
 
-def verify_owner_signature(plan, receipt):
-    """Verify archived signatures without treating their expired consent as new."""
-    check_claims(plan, receipt)
-    try:
-        signers = trusted_signers()
-    except (OSError, PermissionError) as exc:
-        raise PermissionError('Trusted owner confirmation unavailable') from exc
-    signature = receipt['signature']
-    if not isinstance(signature, str) or len(signature) > 16384:
-        raise PermissionError('Invalid owner signature')
-    with tempfile.TemporaryDirectory(prefix='portfolio-owner-verify-') as directory:
-        sig = Path(directory) / 'receipt.sig'
-        sig.write_text(signature)
-        result = subprocess.run(
-            ['/usr/bin/ssh-keygen', '-Y', 'verify', '-f', str(signers), '-I', OWNER,
-             '-n', NAMESPACE + plan['operation'], '-s', str(sig)],
-            input=p.canonical(receipt['claims']), capture_output=True, timeout=15)
-    if result.returncode:
-        raise PermissionError('Owner signature verification failed')
+def owner_confirmation(plan, statement):
+    """Record separately obtained owner consent; never infer it from task intent."""
+    if not isinstance(statement, str) or statement != expected_confirmation(plan):
+        raise PermissionError('Explicit owner confirmation of the exact plan hash required')
+    return {'policy': CONFIRMATION_POLICY, 'purpose': plan['operation'],
+            'plan_hash': plan['hash'], 'operation_id': plan['operation_id'],
+            'statement': statement, 'confirmed_at': now().isoformat()}
+
+
+def require_owner_confirmation(plan, confirmation, at=None):
+    """Workflow authorization for a cooperative operator, not a signature guard."""
+    if (plan.get('confirmation_policy') != CONFIRMATION_POLICY
+            or set(confirmation) != {'policy', 'purpose', 'plan_hash', 'operation_id', 'statement', 'confirmed_at'}
+            or confirmation['policy'] != CONFIRMATION_POLICY
+            or confirmation['purpose'] != plan['operation']
+            or confirmation['plan_hash'] != plan['hash']
+            or confirmation['operation_id'] != plan['operation_id']
+            or confirmation['statement'] != expected_confirmation(plan)
+            or timestamp(confirmation['confirmed_at']) > (at or now())):
+        raise PermissionError('Owner confirmation differs from the reviewed plan')
 
 
 class NoRedirect(HTTPRedirectHandler):
@@ -251,15 +243,31 @@ def check_observation(plan, evidence, challenge, started):
         raise ValueError('Missing server inventory')
 
 
-def validate_event(repo, event, prefix, before, old_previous):
-    """Historical validation is structural; signature was checked at write time.
+def check_remote(repo, plan):
+    """Read-only preflight to review before owner consent; apply observes again."""
+    check_plan(repo, plan)
+    started, challenge = now(), str(uuid.uuid4())
+    evidence = collect_observation(repo, plan, challenge)
+    check_observation(plan, evidence, challenge, started)
+    check_plan(repo, plan)
+    return evidence
 
-    As with legacy uploads, a hash chain is not an independent trust anchor.
-    Expired receipts must remain auditable without rewriting old events.
-    """
-    plan, receipt = event['plan'], event['owner_receipt']
+
+def validate_event(repo, event, prefix, before, old_previous):
+    """Preserve both old signed events and new explicit-consent events verbatim."""
+    plan = event['plan']
     check_seal(plan)
-    check_claims(plan, receipt, timestamp(event['evidence']['started_at']))
+    observed_at = timestamp(event['evidence']['started_at'])
+    if plan.get('confirmation_policy') == CONFIRMATION_POLICY:
+        require_owner_confirmation(plan, event['confirmation'], observed_at)
+        if ('owner_receipt' in event
+                or plan['backup'] != 'backups/' + event['id'] + '.json'):
+            raise ValueError('Mixed reconciliation authorization formats')
+    elif 'confirmation_policy' not in plan:
+        # Compatibility reader only. New plans/writes never use this branch.
+        check_claims(plan, event['owner_receipt'], observed_at)
+    else:
+        raise ValueError('Unknown reconciliation confirmation policy')
     if (not prefix['events'] or plan['operation'] != 'reconciliation'
             or event['id'] != plan['operation_id'] or event['commit'] != plan['commit']
             or event['manifest'] != plan['manifest'] or plan['before'] != before
@@ -271,9 +279,11 @@ def validate_event(repo, event, prefix, before, old_previous):
             or event['manifest'] == p.commit_manifest(repo, before)[1]
             or 'before_evidence' in event):
         raise ValueError('Invalid reconciliation event')
-    for old in prefix['events']:
-        if old.get('owner_receipt', {}).get('claims', {}).get('receipt_id') == receipt['claims']['receipt_id']:
-            raise ValueError('Owner receipt replay')
+    if 'owner_receipt' in event:
+        for old in prefix['events']:
+            if (old.get('owner_receipt', {}).get('claims', {}).get('receipt_id')
+                    == event['owner_receipt']['claims']['receipt_id']):
+                raise ValueError('Owner receipt replay')
     evidence = event['evidence']
     if (timestamp(evidence['verified_at']) < timestamp(evidence['started_at'])
             or timestamp(evidence['verified_at']) - timestamp(evidence['started_at']) > MAX_AGE
@@ -282,13 +292,13 @@ def validate_event(repo, event, prefix, before, old_previous):
         raise ValueError('Invalid reconciliation observation')
 
 
-def candidate(repo, plan, evidence, receipt):
+def candidate(repo, plan, evidence, confirmation):
     """Pure candidate, not authorization and not a persistence API."""
     history, current, previous = check_plan(repo, plan)
     event = {'id': plan['operation_id'], 'operation': 'reconciliation',
              'commit': plan['commit'], 'before': current, 'manifest': plan['manifest'],
              'evidence': copy.deepcopy(evidence), 'parent': history['events'][-1]['hash'],
-             'plan': copy.deepcopy(plan), 'owner_receipt': copy.deepcopy(receipt)}
+             'plan': copy.deepcopy(plan), 'confirmation': copy.deepcopy(confirmation)}
     event = seal(event)
     result = {'schema': 1, 'events': [*history['events'], event]}, plan['commit'], ''
     p.validate_history(repo, *result)
@@ -355,6 +365,32 @@ def parse_state(repo, values):
     return history, current, previous
 
 
+def backup_path(repo, operation_id):
+    # Canonical UUID only: no caller-controlled relative path in the journal.
+    if str(uuid.UUID(operation_id)) != operation_id:
+        raise ValueError('Invalid backup operation ID')
+    path = Path(repo) / '.deploy' / 'backups' / (operation_id + '.json')
+    if path.parent.is_symlink() or path.is_symlink():
+        raise ValueError('Backup symlinks are forbidden')
+    return path
+
+
+def write_backup(repo, operation_id, data):
+    """Permanent, exclusive backup of the same transaction used by the WAL."""
+    path = backup_path(repo, operation_id)
+    path.parent.mkdir(exist_ok=True)
+    fsync_directory(path.parent.parent)
+    # Never replace an archive, including an incomplete archive from a failed run.
+    fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    with os.fdopen(fd, 'wb') as stream:
+        stream.write(data)
+        stream.flush()
+        os.fsync(stream.fileno())
+    fsync_directory(path.parent)
+    if path.read_bytes() != data:
+        raise ValueError('Backup verification failed')
+
+
 def _persist_transaction(repo, result, original):
     """Internal storage only. Caller owns metadata.lock and verified authority."""
     base = Path(repo) / '.deploy'
@@ -369,11 +405,15 @@ def _persist_transaction(repo, result, original):
     journal = seal({'schema': 1, 'operation_id': result[0]['events'][-1]['id'],
                     'before': encode_bytes(original), 'after': encode_bytes(updates)})
     event = result[0]['events'][-1]
-    require_owner_confirmation(event['plan'], event['owner_receipt'])
+    require_owner_confirmation(event['plan'], event['confirmation'])
     if p.metadata_bytes(repo) != original:
         raise ValueError('Metadata changed before transaction commit')
-    # WAL is durable before the first metadata replacement. History is commit point.
-    atomic_write(base / PENDING, p.canonical(journal) + b'\n')
+    data = p.canonical(journal) + b'\n'
+    write_backup(repo, event['id'], data)
+    if p.metadata_bytes(repo) != original:
+        raise ValueError('Metadata changed during backup; no transaction committed')
+    # Archive and WAL are durable before metadata replacement. History is commit point.
+    atomic_write(base / PENDING, data)
     for name in METADATA:
         atomic_write(base / name, updates[name])
     # A pending WAL blocks normal reads/writes even if all mirrors are complete.
@@ -384,20 +424,21 @@ def _persist_transaction(repo, result, original):
     fsync_directory(base)
 
 
-def save_reconciliation(repo, plan, receipt):
-    """The only public reconciliation write API. Fail closed without owner trust."""
-    plan, receipt = copy.deepcopy(plan), copy.deepcopy(receipt)
+def save_reconciliation(repo, plan, statement):
+    """Apply only a separately owner-confirmed plan, with fresh evidence under lock."""
+    plan = copy.deepcopy(plan)
     check_plan(repo, plan)
-    require_owner_confirmation(plan, receipt)
+    confirmation = owner_confirmation(plan, statement)
+    require_owner_confirmation(plan, confirmation)
     with metadata_lock(repo):
         check_plan(repo, plan)
         original = p.metadata_bytes(repo)
         started, challenge = now(), str(uuid.uuid4())
         evidence = collect_observation(repo, plan, challenge)
         check_observation(plan, evidence, challenge, started)
-        require_owner_confirmation(plan, receipt)  # expiry/revocation during observation
+        require_owner_confirmation(plan, confirmation)
         check_plan(repo, plan)
-        result = candidate(repo, plan, evidence, receipt)
+        result = candidate(repo, plan, evidence, confirmation)
         _persist_transaction(repo, result, original)
         return p.load_history(repo)
 
@@ -410,9 +451,13 @@ def read_pending(repo):
     check_seal(journal)
     if journal['schema'] != 1:
         raise ValueError('Unknown transaction schema')
+    if backup_path(repo, journal['operation_id']).read_bytes() != raw:
+        raise ValueError('Pending transaction differs from permanent metadata backup')
     before, after = decode_bytes(journal['before']), decode_bytes(journal['after'])
     old, new = parse_state(repo, before), parse_state(repo, after)
     event = new[0]['events'][-1]
+    if event['plan'].get('confirmation_policy') != CONFIRMATION_POLICY:
+        raise ValueError('Legacy pending transaction requires a separately reviewed migration')
     if (new[0]['events'][:-1] != old[0]['events'] or event['operation'] != 'reconciliation'
             or event['id'] != journal['operation_id']
             or event['plan']['metadata_sha256'] != fingerprints(before)):
@@ -434,39 +479,50 @@ def prepare_recovery_plan(repo):
     raw, before, after, actual, action, event = read_pending(repo)
     result = parse_state(repo, after if action == 'finish-mirrors' else before)
     return seal({'operation': 'reconciliation-recovery', 'operation_id': str(uuid.uuid4()),
+                 'confirmation_policy': CONFIRMATION_POLICY,
                  'repo': str(Path(repo).resolve()), 'pending_sha256': p.digest(raw),
                  'metadata_sha256': fingerprints(actual), 'action': action,
                  'event_id': event['id'], 'commit': event['commit'],
                  'result_current': result[1], 'result_previous': result[2],
                  'manifest_sha256': p.digest(p.canonical(event['manifest'])),
+                 'backup': event['plan']['backup'],
                  'target': p.REMOTE, 'url': p.URL})
 
 
-def recover_reconciliation(repo, plan, receipt):
-    """Explicit owner-signed recovery only; no deploy, new event or live adoption."""
-    plan, receipt = copy.deepcopy(plan), copy.deepcopy(receipt)
+def recover_reconciliation(repo, plan, statement):
+    """Owner-confirmed recovery only; no deploy, new event or live adoption."""
+    plan = copy.deepcopy(plan)
     check_seal(plan)
     if (plan['operation'] != 'reconciliation-recovery'
             or plan['repo'] != str(Path(repo).resolve())
             or plan['target'] != p.REMOTE or plan['url'] != p.URL):
         raise ValueError('Invalid recovery plan')
-    require_owner_confirmation(plan, receipt)
+    confirmation = owner_confirmation(plan, statement)
+    require_owner_confirmation(plan, confirmation)
     with metadata_lock(repo):
         raw, before, after, actual, action, event = read_pending(repo)
         result = parse_state(repo, after if action == 'finish-mirrors' else before)
         if (p.digest(raw) != plan['pending_sha256'] or fingerprints(actual) != plan['metadata_sha256']
                 or action != plan['action'] or event['id'] != plan['event_id']
                 or event['commit'] != plan['commit']
+                or plan['backup'] != event['plan']['backup']
                 or plan['result_current'] != result[1] or plan['result_previous'] != result[2]
                 or plan['manifest_sha256'] != p.digest(p.canonical(event['manifest']))):
             raise ValueError('Recovery state changed since approval')
-        require_owner_confirmation(plan, receipt)
-        verify_owner_signature(event['plan'], event['owner_receipt'])
-        require_owner_confirmation(plan, receipt)
+        require_owner_confirmation(plan, confirmation)
         base = Path(repo) / '.deploy'
         if (p.metadata_bytes(repo) != actual
                 or (base / PENDING).read_bytes() != raw):
             raise ValueError('Recovery state changed during owner verification')
+        recovery_archive = seal({
+            'schema': 1, 'operation_id': plan['operation_id'],
+            'before': encode_bytes(actual),
+            'after': encode_bytes(after if action == 'finish-mirrors' else before),
+            'plan': plan, 'confirmation': confirmation,
+            'recovery_of': event['id'], 'pending_sha256': p.digest(raw)})
+        write_backup(repo, plan['operation_id'], p.canonical(recovery_archive) + b'\n')
+        if p.metadata_bytes(repo) != actual or (base / PENDING).read_bytes() != raw:
+            raise ValueError('Recovery state changed during backup')
         if action == 'finish-mirrors':
             # Never re-upload, rewrite history, append or replay reconciliation.
             for name in METADATA[1:]:

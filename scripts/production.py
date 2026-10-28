@@ -346,7 +346,7 @@ def _persist_history(repo, result, expected_bytes, baseline_refresh=None):
     """Internal storage, NOT an authorization boundary; isolated tests may exercise it."""
     if result is not None:
         if result[0]['events'][-1]['operation'] == 'reconciliation':
-            raise PermissionError('Reconciliation requires its owner-signed transaction API')
+            raise PermissionError('Reconciliation requires its owner-confirmed transaction API')
         validate_history(repo, *result)
     base = Path(repo) / '.deploy'
     base.mkdir(exist_ok=True)
@@ -406,6 +406,11 @@ def main():
     reconciliation_parser.add_argument('revision')
     reconciliation_parser.add_argument('--reason', required=True)
     commands.add_parser('reconciliation-recovery-plan')
+    for command in ('reconciliation-check', 'reconciliation-apply', 'reconciliation-recover'):
+        command_parser = commands.add_parser(command)
+        command_parser.add_argument('plan_file')
+        if command != 'reconciliation-check':
+            command_parser.add_argument('--confirm', required=True)
     args = parser.parse_args()
     if args.command == 'inspect':
         _, current, previous = load_history(args.repo)
@@ -418,6 +423,26 @@ def main():
                 if args.command == 'reconciliation-plan'
                 else reconciliation.prepare_recovery_plan(args.repo))
         print(json.dumps(plan, indent=2))
+    elif args.command in ('reconciliation-check', 'reconciliation-apply', 'reconciliation-recover'):
+        from scripts import reconciliation
+        def unique_keys(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError('Duplicate plan JSON key: ' + key)
+                result[key] = value
+            return result
+        plan = json.loads(Path(args.plan_file).read_text(), object_pairs_hook=unique_keys)
+        if args.command == 'reconciliation-check':
+            print(json.dumps(reconciliation.check_remote(args.repo, plan), indent=2))
+        else:
+            apply = (reconciliation.save_reconciliation if args.command == 'reconciliation-apply'
+                     else reconciliation.recover_reconciliation)
+            history, current, previous = apply(args.repo, plan, args.confirm)
+            print(json.dumps({'event_id': history['events'][-1]['id'],
+                              'current': current, 'previous': previous or None,
+                              'backup': ('backups/' + plan['operation_id'] + '.json'
+                                         if args.command == 'reconciliation-recover' else plan['backup'])}, indent=2))
     elif args.command == 'check':
         sha = git(args.repo, 'rev-parse', '--verify', args.revision + '^{commit}').decode().strip()
         files, _ = commit_manifest(args.repo, sha)

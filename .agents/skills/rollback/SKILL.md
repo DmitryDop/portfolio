@@ -61,6 +61,12 @@ current/previous, HTTP/SHA-256 verification и `ROLLBACK: SUCCESS`.
 
 ## Совместимость с baseline
 
+После reconciliation current подтверждён наблюдением, а неизвестный previous пуст.
+До следующего подтверждённого deploy автоматического rollback target нет.
+Старые исторические commits не назначай previous по предположению.
+Восстановление прерванной записи metadata выполняется отдельной существующей
+reconciliation recovery-процедурой и не является загрузкой rollback.
+
 Baseline A подтверждает наблюдаемое содержимое A, а не успех исторического rsync.
 Один baseline имеет previous пусто: rollback target ещё нет. После успешного deploy B
 с live verification A target становится A. Baseline evidence допустим как основание
