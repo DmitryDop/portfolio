@@ -636,6 +636,8 @@ a { color: inherit; }
    растянутая на всю площадь карточки, — см. .project__link ниже */
 .project { position: relative; display: flex; flex-direction: column; cursor: pointer; }
 
+.project--upcoming { cursor: default; }
+
 /* Обводка фокуса повторяет силуэт карточки: у неё скруглены верх (по картинке)
    и низ (по белой части), а глобальное :focus-visible { border-radius: 4px }
    нарисовало бы прямоугольник */
@@ -672,6 +674,8 @@ a { color: inherit; }
    overflow: hidden, поэтому кадр не вылезает за скруглённые углы. */
 .project:hover .project__media img,
 .project:focus-visible .project__media img { transform: scale(1.06); }
+
+.project--upcoming:hover .project__media img { transform: none; }
 
 .project__body {
   position: relative;
@@ -840,6 +844,11 @@ a { color: inherit; }
   line-height: var(--lh-body-sm);
   font-weight: 500;
   white-space: nowrap;
+}
+
+.tag--upcoming {
+  background: var(--color-text);
+  color: var(--color-surface);
 }
 
 @media (max-width: 640px) {
