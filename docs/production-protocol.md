@@ -1,7 +1,7 @@
 # Production release protocol
 
 Версия схемы: 1. Сервер: `lineba:/home/l/linebaru/dopler/public_html/`.
-URL: `https://dopler.lineband.ru/`. Baseline, deploy и rollback используют одну историю.
+URL: `https://dopler.lineband.ru/`. Baseline, reconciliation, deploy и rollback используют одну историю.
 Помощник `scripts/production.py` работает только локально: он не выполняет rsync,
 SSH, HTTP, commit или push. CLI не записывает metadata. Функция `save_history`
 предназначена только для записи после фактической успешной verification;
@@ -28,7 +28,7 @@ Readonly files снижают риск случайной записи, но н�
 
 Каждое событие содержит:
 
-- `id`: уникальный UUID операции; `operation`: baseline, deploy или rollback;
+- `id`: уникальный UUID операции; `operation`: baseline, reconciliation, deploy или rollback;
 - `commit`: первоначальный TARGET_SHA; `before`: подтверждённый current до операции;
 - `manifest`: все production paths и их SHA-256 из этого commit;
 - `parent`: hash предыдущего события, пустая строка для первого;
@@ -68,6 +68,7 @@ live state неподтверждённым: остановись, не пере
 | Состояние и успешная операция | Новый current | Новый previous |
 | --- | --- | --- |
 | Оба пусты, история отсутствует/пуста; baseline A | A | пусто |
+| Непустая согласованная история; owner-signed reconciliation A | A | пусто |
 | Оба пусты, история отсутствует; deploy A | A | пусто |
 | A / пусто; повторный deploy A | A | пусто |
 | A / пусто; deploy B | B | A |
@@ -81,6 +82,11 @@ Rollback target обязан совпадать с previous валидной и�
 Первый deploy не восстанавливает сведения о неизвестной старой production-версии.
 
 ## Baseline adoption существующей production
+
+Для непустой истории предусмотрена отдельная операция `reconciliation`, описанная
+в [production-reconciliation.md](production-reconciliation.md). Она не снимает ограничения
+baseline и не восстанавливает неизвестного предшественника. Правила ниже относятся
+к первоначальной baseline adoption; её прежний guard остаётся закрытым.
 
 Baseline подтверждает только наблюдаемое состояние в момент свежей verification.
 Он не подтверждает исторический успех rsync или полный smoke-check прошлого deploy.
@@ -165,6 +171,13 @@ inspect намеренно останавливается. Не повторяй
 после проверки отсутствия активной операции и отдельного согласования.
 
 ## Пустая и legacy metadata
+
+При `reconciliation-pending.json` обычные операции блокируются. Новая процедура
+восстановления из write-ahead journal применяется только к reconciliation;
+она не ремонтирует произвольные старые ошибки metadata. Подписанный recovery-план
+разрешает завершить зеркала после commit журнала либо отменить ещё не зафиксированную
+операцию. Автоматический ремонт и удаление stale lock запрещены. Подробности —
+в [production-reconciliation.md](production-reconciliation.md).
 
 Отсутствующие/пустые оба SHA-файла и отсутствие событий означают unknown current
 и отсутствие target. Непустой SHA без событий, повреждённый JSON, отсутствующий

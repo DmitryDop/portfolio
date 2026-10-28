@@ -52,3 +52,37 @@ Bundled quick_validate skills не запустился: в системном P
 Зависимости не устанавливались; YAML frontmatter проверен отдельно Ruby/Psych.
 Фактическая adoption **НЕ ДОСТУПНА**: защищённый owner channel ещё не подключён.
 Ни production verification, ни baseline adoption в этом запуске не выполнялись.
+
+## Локальные тесты reconciliation
+
+`tests/test_reconciliation.py` добавляет 38 тестов к 47 существующим проверкам.
+Все записи выполняются исключительно во временных disposable Git repos.
+Файлы реального `.deploy/` не используются как цели записи.
+
+Проверяются:
+
+- неизменность старых событий, новое observation-событие, пустой неизвестный previous;
+- привязка плана к SHA, manifest, checkout и точным bytes metadata;
+- реальные SSHSIG sign/verify на временном тестовом ключе; неверные подписи,
+  изменённые claims, истёкшие/будущие receipts, повтор receipt ID и операции;
+- отказ без независимого trust store, запрет обхода через baseline/обычный writer;
+- новые observations под lock, SHA-256 и статусы SSH/HTTPS, challenge и время;
+- сборщик с подменёнными сетевыми транспортами и локальный запуск remote-reader
+  на временных файлах; запрет redirects, SSH failures, symlinks и гонок на сервере;
+- смена metadata до lock и во время observation, истечение approval перед WAL;
+- сбои записи WAL, history, обоих зеркал, fsync и финальной очистки WAL;
+- отдельный подписанный recovery-план, проверка исходной подписи, отказ при
+  чужих bytes и stale lock, повторное прерывание восстановления;
+- совместимость с последующим deploy/rollback и обязательным live_current;
+- CLI подготовки плана без сети/записи и чтение новой истории через CLI inspect.
+
+Подмена пути тестового signer происходит только внутри unit-тестов; это не установка
+доверия и не подтверждение владельца production. Тесты не запускают SSH/HTTPS к сайту,
+не проверяют реальные host keys/TLS и не подтверждают production readiness окружения.
+Применение требует отдельной подготовки по `docs/production-reconciliation.md`.
+
+Последний локальный запуск:
+`PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests -v` —
+**PASS: 85 тестов, 83.155 s, OK**. `git diff --check` — PASS.
+Исходные bytes production metadata, HEAD `540dd63…` и файлы сайта сохранены.
+Реальная reconciliation, recovery, deploy, rollback и настройка доверия не выполнялись.

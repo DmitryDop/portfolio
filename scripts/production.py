@@ -7,10 +7,14 @@ import posixpath
 import re
 import shlex
 import subprocess
+import sys
 import tempfile
 from datetime import datetime
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote, urlsplit
+
+if __package__ in (None, ''):
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 REMOTE = 'lineba:/home/l/linebaru/dopler/public_html/'
 URL = 'https://dopler.lineband.ru/'
@@ -133,7 +137,9 @@ def empty_history():
 def pointers(history):
     current = previous = ''
     for event in history['events']:
-        if event['commit'] != current:
+        if event['operation'] == 'reconciliation':
+            current, previous = event['commit'], ''
+        elif event['commit'] != current:
             previous, current = current, event['commit']
     return current, previous
 
@@ -150,7 +156,7 @@ def verify_evidence(manifest, evidence, operation='deploy'):
             or evidence['root_sha256'] != manifest['index.html']
             or not evidence['transcript'].strip()):
         raise ValueError('Incomplete or failed production verification')
-    if operation in ('baseline', 'observation'):
+    if operation in ('baseline', 'observation', 'reconciliation'):
         if evidence.get('kind') != 'observation' or 'rsync_exit' in evidence:
             raise ValueError('Observation must not claim an upload result')
     elif evidence.get('kind', 'upload') != 'upload' or evidence.get('rsync_exit') != 0:
@@ -171,7 +177,7 @@ def validate_history(repo, history, current, previous):
             raise ValueError('Duplicate/empty operation id')
         ids.add(event['id'])
         before, old_previous = pointers(prefix)
-        if event['before'] != before or event['operation'] not in ('baseline', 'deploy', 'rollback'):
+        if event['before'] != before or event['operation'] not in ('baseline', 'deploy', 'rollback', 'reconciliation'):
             raise ValueError('Invalid history transition')
         if event['operation'] == 'baseline' and (prefix['events'] or before or old_previous):
             raise ValueError('Baseline requires empty history and metadata')
@@ -181,14 +187,18 @@ def validate_history(repo, history, current, previous):
         if event['manifest'] != expected:
             raise ValueError('Manifest differs from Git commit')
         verify_evidence(expected, event['evidence'], event['operation'])
+        if event['operation'] == 'reconciliation':
+            from scripts import reconciliation
+            reconciliation.validate_event(repo, event, prefix, before, old_previous)
         if 'before_evidence' in event:
             if not before:
                 raise ValueError('No current version to observe')
             _, before_manifest = commit_manifest(repo, before)
             verify_evidence(before_manifest, event['before_evidence'], 'observation')
         # Existing upload events remain valid without rewriting their hashes.
-        # Every new upload after a baseline must include observation of old current.
-        elif event['operation'] != 'baseline' and any(e['operation'] == 'baseline' for e in prefix['events']):
+        # New uploads after baseline/reconciliation require observation of current.
+        elif event['operation'] in ('deploy', 'rollback') and any(
+                e['operation'] in ('baseline', 'reconciliation') for e in prefix['events']):
             raise ValueError('Missing live verification of baseline-derived current')
         prefix['events'].append(event)
         head = event['hash']
@@ -214,7 +224,7 @@ def transition(repo, history, current, previous, sha, evidence, operation, opera
     event = {'id': operation_id, 'operation': operation, 'commit': sha,
              'before': current, 'manifest': manifest, 'evidence': evidence,
              'parent': history['events'][-1]['hash'] if history['events'] else ''}
-    if current and any(e['operation'] == 'baseline' for e in history['events']):
+    if current and any(e['operation'] in ('baseline', 'reconciliation') for e in history['events']):
         if live_current is None:
             raise ValueError('Missing live verification of current')
     if live_current is not None:
@@ -232,6 +242,8 @@ def transition(repo, history, current, previous, sha, evidence, operation, opera
 
 def load_history(repo):
     base = Path(repo) / '.deploy'
+    if (base / 'reconciliation-pending.json').exists():
+        raise ValueError('Pending reconciliation: inspect recovery-plan; no automatic repair')
     def read(name):
         path = base / name
         return path.read_text().strip() if path.exists() else ''
@@ -325,14 +337,16 @@ def save_history(repo, result, expected_bytes):
 
     History is authoritative. An interrupted mirror update deliberately fails closed.
     """
-    if result[0]['events'][-1]['operation'] == 'baseline':
-        raise PermissionError('Use save_baseline with separate owner confirmation and fresh verification')
+    if result[0]['events'][-1]['operation'] in ('baseline', 'reconciliation'):
+        raise PermissionError('Use dedicated save API with separate owner confirmation and fresh verification')
     return _persist_history(repo, result, expected_bytes)
 
 
 def _persist_history(repo, result, expected_bytes, baseline_refresh=None):
     """Internal storage, NOT an authorization boundary; isolated tests may exercise it."""
     if result is not None:
+        if result[0]['events'][-1]['operation'] == 'reconciliation':
+            raise PermissionError('Reconciliation requires its owner-signed transaction API')
         validate_history(repo, *result)
     base = Path(repo) / '.deploy'
     base.mkdir(exist_ok=True)
@@ -388,12 +402,22 @@ def main():
     check_parser.add_argument('revision', nargs='?', default='HEAD')
     baseline_parser = commands.add_parser('baseline-plan')
     baseline_parser.add_argument('revision', nargs='?', default='HEAD')
+    reconciliation_parser = commands.add_parser('reconciliation-plan')
+    reconciliation_parser.add_argument('revision')
+    reconciliation_parser.add_argument('--reason', required=True)
+    commands.add_parser('reconciliation-recovery-plan')
     args = parser.parse_args()
     if args.command == 'inspect':
         _, current, previous = load_history(args.repo)
         print(json.dumps({'current': current or None, 'previous': previous or None}))
     elif args.command == 'baseline-plan':
         print(json.dumps(prepare_baseline_plan(args.repo, args.revision), indent=2))
+    elif args.command in ('reconciliation-plan', 'reconciliation-recovery-plan'):
+        from scripts import reconciliation
+        plan = (reconciliation.prepare_plan(args.repo, args.revision, args.reason)
+                if args.command == 'reconciliation-plan'
+                else reconciliation.prepare_recovery_plan(args.repo))
+        print(json.dumps(plan, indent=2))
     elif args.command == 'check':
         sha = git(args.repo, 'rev-parse', '--verify', args.revision + '^{commit}').decode().strip()
         files, _ = commit_manifest(args.repo, sha)

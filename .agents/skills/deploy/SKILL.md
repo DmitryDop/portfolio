@@ -101,3 +101,34 @@ save_baseline намеренно блокируется. Не обходи guard
 ДО загрузки B и передай его в transition как live_current. При расхождении остановись
 до rsync. Только после успешной загрузки/verification B состояние станет B/A.
 Следуй production-testing.md при локальной проверке; тестовое разрешение не переносится на production.
+
+## Reconciliation непустой истории
+
+Если production отличается от записанного current, останови deploy. Существующую
+историю не очищай и не переписывай. Для сверки предусмотрено отдельное наблюдение
+`reconciliation`, а не baseline adoption или фиктивный deploy.
+
+Прочитай `docs/production-reconciliation.md`. Только локальный read-only план:
+`PYTHONDONTWRITEBYTECODE=1 python3 scripts/production.py reconciliation-plan <FULL_SHA> --reason <REASON>`.
+Покажи полный SHA, canonical manifest SHA-256, hash плана, recorded current/previous,
+политику `previous=''` и все ожидаемые изменения metadata. План не разрешает запись.
+
+Применение требует отдельного разрешения владельца и проверенного внешнего SSHSIG
+receipt для полного плана через независимого подписанта. Trust store должен быть
+заранее установлен системным администратором вне проекта; не создавай доверие сам.
+`DEPLOY`, локальные флаги и строка approval не заменяют receipt. Не снимай baseline guard.
+Запись — только публичным `save_reconciliation`; новое SSH/HTTPS наблюдение собирается
+под общим metadata.lock. Не подставляй прошлые результаты и не вызывай внутренний writer.
+
+При `reconciliation-pending.json` останови все обычные операции. Read-only диагностика:
+`PYTHONDONTWRITEBYTECODE=1 python3 scripts/production.py reconciliation-recovery-plan`.
+Восстановление требует отдельного подписанного recovery-плана и публичного
+`recover_reconciliation`. История не переписывается; завершить можно только зеркала
+зафиксированной транзакции либо отменить ещё не зафиксированную запись.
+Stale lock не удаляй без проверки процесса и отдельного разрешения.
+
+После reconciliation прежние подтверждённые версии остаются историческими событиями;
+неизвестный непосредственный предшественник не назначается для rollback.
+Перед следующим deploy обязательно свежее `live_current`. Commit/push metadata
+по-прежнему требуют отдельного разрешения. Код, unit-тесты и подготовка плана
+не являются доказательством применения на production.
