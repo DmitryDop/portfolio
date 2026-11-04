@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Клюёт — кейс Дмитрия Дружкова</title>
+<meta name="description" content="Спроектировал и разработал приложение для рыболовов с помощью AI — от исследования пользовательских задач до работающего MVP.">
+<!-- Утверждённый макет: TYNqJkD1n3JizBkifaOE8t / 1520:6412.
+     Все img экспортированы из Figma в PNG 2×; тексты перенесены дословно.
+     Шрифты, навигация и анимации используют существующие стили сайта. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../assets/css/klyuet.css">
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="case-klyuet">
+<header class="header header--solid" id="header">
+  <div class="header__inner">
+    <a class="brand" href="../index.html">
+      <span class="brand__name">ДМИТРИЙ ДРУЖКОВ</span>
+      <span class="brand__role">— ПРОДУКТОВЫЙ ДИЗАЙНЕР</span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Основная навигация">
+      <ul class="nav__list">
+        <li><a class="nav__link" href="../index.html#about">Обо&nbsp;мне</a></li>
+        <li><a class="nav__link" href="../index.html#work">Мои работы</a></li>
+        <li><a class="nav__link" href="../index.html#contacts">Контакты</a></li>
+      </ul>
+      <a class="btn btn--cta" href="../index.html#contacts">Связаться</a>
+    </nav>
+
+    <button class="burger" id="burger" type="button"
+            aria-expanded="false" aria-controls="nav" aria-label="Открыть меню">
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+      <span class="burger__line"></span>
+    </button>
+  </div>
+</header>
+<main>
+  <div class="sub-header">
+    <div class="container"><div class="sub-header__row">
+      <a class="sub-header__back" href="../index.html#work">← Мои работы</a>
+    </div></div>
+  </div>
+  <section class="case-hero">
+    <div class="container"><div class="case-hero__inner">
+      <div class="case-hero__text">
+        <div class="case-hero__head">
+          <p class="case-hero__num">03</p>
+          <h1 class="case-hero__title">Клюёт. От идеи до работающего iOS-приложения</h1>
+        </div>
+        <p class="case-hero__lead">Спроектировал и разработал приложение для рыболовов с помощью AI — от исследования пользовательских задач до работающего MVP.</p>
+        <ul class="case-hero__tags">
+          <li class="pill pill--accent">iOS App</li>
+          <li class="pill pill--accent">Product Design</li>
+          <li class="pill pill--accent">AI Development</li>
+        </ul>
+      </div>
+      <div class="case-hero__media">
+        <img src="../assets/img/case-klyuet/hero.png" width="1344" height="852" fetchpriority="high" alt="Два iPhone с экраном запуска «Клюёт» и картой рыболовных мест на фоне реки на рассвете">
+      </div>
+    </div></div>
+  </section>
+  <section class="case-section case-section--top" aria-labelledby="case-01">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+        <p class="case-section__num">01</p>
+        <h2 class="case-section__title" id="case-01">Проблема</h2>
+        <div class="case-section__body"><p>Информация о рыболовных местах разбросана по форумам, чатам и картам. Часто непонятно, где ловили недавно, на что клевало и стоит ли вообще ехать. При этом точными координатами хороших мест рыболовы делиться не спешат.</p></div>
+
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/section-01.png" width="1248" height="632" loading="lazy" alt="Форум, чат рыболовов и карта: информация о местах разбросана между разными сервисами">
+      </div>
+    </div></div>
+  </section>
+  <section class="case-section" aria-labelledby="case-02">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+        <p class="case-section__num">02</p>
+        <h2 class="case-section__title" id="case-02">Исследование</h2>
+        <div class="case-section__body"><p>Начал с пользовательских сценариев и интервью с рыболовами. Изучил, как выбирают место, какой информации доверяют и почему не хотят раскрывать координаты. Эти наблюдения легли в основу первой версии продукта.</p></div>
+
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/section-02.png" width="1248" height="628" loading="lazy" alt="Карточки интервью с рыболовами и выводы: карта с местами, приватность координат, свежие отчёты об уловах">
+      </div>
+    </div></div>
+  </section>
+  <section class="case-section" aria-labelledby="case-03">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+        <p class="case-section__num">03</p>
+        <h2 class="case-section__title" id="case-03">Проектирование</h2>
+        <div class="case-section__body"><p>Построил основные сценарии вокруг карты: поиск места, просмотр свежих отчётов, публикация улова и ведение журнала. Отдельно проработал приватность координат, фильтры и поведение интерфейса на небольшом экране.</p></div>
+
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/section-03.png" width="1248" height="760" loading="lazy" alt="Сценарий от поиска места на карте до публикации улова на трёх экранах приложения">
+      </div>
+    </div></div>
+  </section>
+  <section class="case-section" aria-labelledby="case-04">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+        <p class="case-section__num">04</p>
+        <h2 class="case-section__title" id="case-04">Дизайн-система</h2>
+        <div class="case-section__body"><p>Создал дизайн-систему для iOS: цветовые токены, типографику, компоненты, состояния и светлую и тёмную темы. Это помогло сохранять единый визуальный язык и быстрее переносить решения из Figma в приложение.</p></div>
+
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/section-04.png" width="1248" height="594" loading="lazy" alt="Компоненты, палитра и экраны приложения в светлой и тёмной темах">
+      </div>
+    </div></div>
+  </section>
+  <section class="case-section" aria-labelledby="case-05">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+        <p class="case-section__num">05</p>
+        <h2 class="case-section__title" id="case-05">Разработка с AI</h2>
+        <div class="case-section__body"><p>Использовал AI для реализации приложения на React Native и Expo. Сам проверял сценарии на iPhone, находил ошибки и управлял доработками. Например, исправил поведение формы при открытии клавиатуры — от обнаружения проблемы до успешного QA.</p></div>
+
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/section-05.png" width="1248" height="680" loading="lazy" alt="Форма на iPhone до и после исправления поведения при открытой клавиатуре">
+      </div>
+    </div></div>
+  </section>
+  <section class="klyuet-mvp" aria-labelledby="case-06">
+    <div class="container">
+      <div class="case-section__text klyuet-mvp__text reveal">
+        <p class="case-section__num">06</p>
+        <h2 class="case-section__title" id="case-06">Работающий MVP</h2>
+        <div class="case-section__body"><p>Реализовал основные сценарии: карту рыболовных мест, фильтры, отчёты об уловах, журнал, избранное и настройки. Провёл ручное QA, исправил найденные проблемы&#32;
+и подготовил рабочий MVP для дальнейшего развития.</p></div>
+      </div>
+      <img class="klyuet-mvp__image reveal" src="../assets/img/case-klyuet/section-06.png" width="1716" height="1144" loading="lazy" alt="Три iPhone с журналом рыбалок, картой мест и отчётом об улове в работающем MVP">
+    </div>
+  </section>
+  <section class="case-section case-section--top" aria-labelledby="case-certificate">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+
+        <h2 class="case-section__title" id="case-certificate">Курсовой проект и сертификат</h2>
+        <div class="case-section__body"><p>«Клюёт» стал моим курсовым проектом, но с самого начала я развивал его как самостоятельный продукт. Обучение дало возможность пройти полный цикл — от продуктовой гипотезы до работающего мобильного приложения.</p></div>
+        <p class="case-section__link"><a href="../assets/img/case-klyuet/certificate-full.png" data-certificate>Посмотреть сертификат</a></p>
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/certificate.png" width="1248" height="632" loading="lazy" alt="Сертификат курса «Вайб-кодинг на Claude Code» на имя Дмитрия Дружкова">
+      </div>
+    </div></div>
+  </section>
+  <section class="case-section" aria-labelledby="case-result">
+    <div class="container"><div class="case-section__inner">
+      <div class="case-section__text reveal">
+
+        <h2 class="case-section__title" id="case-result">Результат и дальнейшие планы</h2>
+        <div class="case-section__body"><p>Из собственной идеи получился работающий iOS-продукт с дизайн-системой и основными пользовательскими сценариями. Следующий этап — завершить подготовку к релизу, проверить продукт на реальных пользователях и развивать его на основе обратной связи.</p></div>
+
+      </div>
+      <div class="case-media media-card reveal">
+        <img class="klyuet-image" src="../assets/img/case-klyuet/result.png" width="1248" height="632" loading="lazy" alt="Приложение «Клюёт» на iPhone на столе в рыбацкой хижине">
+      </div>
+    </div></div>
+  </section>
+</main>
+<footer class="footer footer--flush" id="about">
+  <div class="container">
+    <div class="footer__grid">
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Обо&nbsp;мне</h2>
+        <div class="footer__card">
+          <p class="footer__text">Продуктовый дизайнер с 20+ годами в digital и опытом создания сложных B2B/B2C-продуктов и дизайн-систем. Проектирую интерфейсы, выстраиваю процессы и помогаю командам доводить решения до&nbsp;продакшена.</p>
+          <a class="footer__cv" href="https://dopler.lineband.ru/CVDDV.pdf"
+             target="_blank" rel="noopener">Скачать CV · PDF</a>
+        </div>
+      </section>
+
+      <section class="footer__col reveal">
+        <h2 class="footer__title">Компетенции</h2>
+        <div class="footer__card">
+          <ul class="footer__skills">
+            <li class="pill pill--accent">Product Design</li>
+            <li class="pill pill--accent">Design Systems</li>
+            <li class="pill pill--accent">UX/UI</li>
+            <li class="pill pill--accent">Complex Products</li>
+            <li class="pill pill--accent">Design Leadership</li>
+            <li class="pill pill--accent">Research</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="footer__col reveal" id="contacts">
+        <h2 class="footer__title">Контакты</h2>
+        <div class="footer__card">
+          <ul class="footer__contacts">
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-email.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="mailto:dopler@lineband.ru">dopler@lineband.ru</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-telegram.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="https://t.me/Dmitry_Druzhkov" target="_blank" rel="noopener">@Dmitry_Druzhkov</a>
+            </li>
+            <li class="contact">
+              <img class="contact__icon" src="../assets/icons/contact-phone.svg" alt="" width="24" height="24">
+              <a class="contact__link" href="tel:+79037624574">+7 903 762 45 74</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</footer>
+<dialog class="certificate-viewer" aria-label="Сертификат курса" data-certificate-viewer>
+  <button class="certificate-viewer__close" type="button" aria-label="Закрыть просмотр сертификата" autofocus>×</button>
+  <div class="certificate-viewer__scroll">
+    <img class="certificate-viewer__image" src="../assets/img/case-klyuet/certificate-full.png" width="1920" height="1080" alt="Полный сертификат Дмитрия Дружкова об окончании курса «Вайб-кодинг на Claude Code»" loading="lazy">
+  </div>
+</dialog>
+<script src="../js/main.js"></script>
+<script src="../js/klyuet.js"></script>
+</body>
+</html>

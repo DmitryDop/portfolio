@@ -1,0 +1,88 @@
+/* Кейс «Клюёт»: дополнения к существующим паттернам портфолио. */
+.case-klyuet .klyuet-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+}
+.klyuet-mvp {
+  padding-block: var(--space-3xl);
+  background: #b6d5b1;
+}
+.klyuet-mvp__text {
+  max-width: 700px;
+  margin-inline: auto;
+  align-items: center;
+  text-align: center;
+}
+.klyuet-mvp__image {
+  display: block;
+  width: 100%;
+  max-width: 858px;
+  height: auto;
+  margin: var(--space-xl) auto 0;
+}
+@media (max-width: 1160px) {
+  /* Не растягиваем 2× изображения сверх их проектных размеров. */
+  .case-klyuet .case-media,
+  .case-klyuet .case-hero__media { max-width: 672px; margin-inline: auto; }
+}
+.certificate-viewer {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 64px 24px 24px;
+  border: 0;
+  background: transparent;
+  color: white;
+  overflow: hidden;
+}
+.certificate-viewer::backdrop { background: rgba(0, 0, 0, .86); }
+html:has(.certificate-viewer[open]) { overflow: hidden; }
+.certificate-viewer__close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: #222;
+  color: white;
+  font: 32px/1 sans-serif;
+  cursor: pointer;
+}
+.certificate-viewer__close:hover { background: #444; }
+.certificate-viewer__close:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+.certificate-viewer__scroll {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+.certificate-viewer__image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: zoom-in;
+}
+.certificate-viewer__scroll.is-zoomed { display: block; }
+.certificate-viewer__scroll.is-zoomed .certificate-viewer__image {
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  cursor: zoom-out;
+}
+@media (max-width: 480px) {
+  .case-klyuet .media-card { padding: var(--space-md); }
+  .certificate-viewer { padding-inline: 12px; padding-bottom: 12px; }
+}

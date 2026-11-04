@@ -219,6 +219,10 @@
   /* ------------------------- Тизер нового кейса -------------------------- */
 
   (function () {
+    // Временно отключён. Для возврата показа установите true.
+    var diamondTeaserEnabled = false;
+    if (!diamondTeaserEnabled) return;
+
     var teaser = document.getElementById('diamond-teaser');
     if (!teaser) return;
 
